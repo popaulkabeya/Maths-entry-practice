@@ -552,6 +552,59 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 #pw-new{flex:1;min-width:150px;padding:.65em .85em;border-radius:8px;border:1.5px solid var(--rule);
   background:var(--sheet-2);color:var(--ink);font-family:inherit;font-size:.92rem}
 #pw-new:focus,#pw-who:focus{outline:none;border-color:var(--pen)}
+
+/* ============ analysis ============ */
+.analysis{margin-top:2.4rem;border-top:1px solid var(--rule);padding-top:1.6rem}
+.an-h{font-size:clamp(1.35rem,2.6vw,1.8rem);margin:.4rem 0 1.1rem}
+.obs{display:flex;flex-direction:column;gap:8px}
+.ob{display:flex;gap:.9rem;align-items:flex-start;padding:.85rem 1rem;border-radius:9px;
+  background:var(--sheet);border:1px solid var(--rule)}
+.ob .oi{flex:none;width:22px;height:22px;border-radius:6px;display:grid;place-items:center;
+  font-family:"JetBrains Mono",monospace;font-weight:700;font-size:.78rem;margin-top:.05rem}
+.ob.good{border-left:3px solid var(--tick)}
+.ob.good .oi{background:var(--tick-soft);color:var(--tick)}
+.ob.warn{border-left:3px solid var(--gold)}
+.ob.warn .oi{background:var(--gold-soft);color:var(--gold)}
+.ob.bad{border-left:3px solid var(--mark)}
+.ob.bad .oi{background:var(--mark-soft);color:var(--mark)}
+.ob .ot{font-size:.93rem;line-height:1.58;color:var(--ink-soft)}
+.ob .ot b{color:var(--ink);font-weight:600}
+
+.sw{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:14px;margin-top:1.4rem}
+.sw-col{padding:1.1rem 1.25rem;border-radius:var(--r);border:1px solid var(--rule);background:var(--sheet)}
+.sw-col.good{border-top:3px solid var(--tick)}
+.sw-col.bad{border-top:3px solid var(--mark)}
+.sw-t{font-family:"JetBrains Mono",monospace;font-size:.66rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-faint);margin-bottom:.7rem}
+.sw-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem}
+.sw-col li{font-size:.9rem;line-height:1.5;padding-left:1.1rem;position:relative;color:var(--ink-soft)}
+.sw-col li::before{content:"";position:absolute;left:0;top:.55em;width:5px;height:5px;border-radius:50%}
+.sw-col.good li::before{background:var(--tick)}
+.sw-col.bad li::before{background:var(--mark)}
+.sw-col li b{color:var(--ink)}
+.sw-col li.none{padding-left:0;font-style:italic;color:var(--ink-faint)}
+.sw-col li.none::before{display:none}
+
+.plan-lede{font-size:.94rem;color:var(--ink-soft);max-width:62ch;margin-bottom:1.2rem}
+.lesson{border:1px solid var(--rule);border-radius:var(--r);background:var(--sheet);margin-bottom:10px;overflow:hidden}
+.lesson summary{display:flex;gap:.9rem;align-items:center;padding:1rem 1.15rem;cursor:pointer;list-style:none}
+.lesson summary::-webkit-details-marker{display:none}
+.lesson .ln{font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:700;flex:none;
+  padding:.3em .55em;border-radius:5px;background:var(--mark-soft);color:var(--mark)}
+.lesson .lt{font-weight:700;font-size:1rem}
+.lesson .lsc{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:.8rem;color:var(--ink-faint)}
+.lesson .lbody{padding:0 1.15rem 1.25rem;border-top:1px solid var(--rule-soft);padding-top:1rem}
+.lesson .why{font-size:.92rem;color:var(--ink-soft);line-height:1.6;margin-bottom:1rem}
+.lesson h4{margin:0 0 .5rem;font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--pen)}
+.lesson ol,.lesson .traps ul{margin:0 0 1.1rem;padding-left:1.3rem;display:flex;flex-direction:column;gap:.45rem}
+.lesson li{font-size:.91rem;line-height:1.58;color:var(--ink-soft)}
+.lesson li b{color:var(--ink)}
+.lesson .traps h4{color:var(--mark)}
+.lesson .drill{padding:.8rem 1rem;border-radius:8px;background:var(--pen-soft);font-size:.9rem;
+  color:var(--ink);line-height:1.55}
+.lesson .drill b{font-family:"JetBrains Mono",monospace;font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--pen);display:block;margin-bottom:.3rem}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
@@ -815,6 +868,30 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
       <div id="topic-rows"></div>
     </div>
 
+    <section class="analysis" id="analysis" hidden>
+      <p class="eyebrow">How you worked</p>
+      <h2 class="an-h">The paper behind the score.</h2>
+      <div class="obs" id="obs"></div>
+
+      <div class="sw">
+        <div class="sw-col good">
+          <p class="sw-t">Strengths</p>
+          <ul id="sw-good"></ul>
+        </div>
+        <div class="sw-col bad">
+          <p class="sw-t">What to work on</p>
+          <ul id="sw-bad"></ul>
+        </div>
+      </div>
+
+      <div id="plan-wrap" hidden>
+        <p class="eyebrow" style="margin:2rem 0 .3rem">Your next session</p>
+        <h2 class="an-h">Start here, not at the beginning.</h2>
+        <p class="plan-lede" id="plan-lede"></p>
+        <div id="plan"></div>
+      </div>
+    </section>
+
     <div class="rev-head">
       <p class="eyebrow" style="margin:0">Your marked script</p>
       <div class="filters">
@@ -828,6 +905,8 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
       <button class="btn btn-primary" id="again">Sit it again</button>
       <button class="btn btn-ghost" id="drill">Drill only what I got wrong</button>
       <button class="btn btn-ghost" id="mailreport" hidden>Email this report</button>
+      <button class="btn btn-ghost" id="copyreport" hidden>Copy full report</button>
+      <textarea class="rec-out" id="report-out" readonly hidden aria-label="Full report as text"></textarea>
       <button class="btn btn-ghost" id="home">Back to the two steps</button>
     </div>
   </div>
@@ -1599,10 +1678,6 @@ const ENG_TRAIN_BANK = [
  o:["excessive","enough","limited","optional"], a:1,
  w:`<span class="mq">Sufficient</span> means enough &mdash; exactly the amount required, no more. "Excessive" would be too much and "limited" too little.`},
 
-{t:"vocab", q:`The two reports were almost <span class="mq">______</span>, word for word.`,
- o:["similar","identical","related","equal"], a:1,
- w:`<span class="mq">Identical</span> means exactly the same, which is what "word for word" signals. "Similar" is weaker and would contradict the rest of the sentence.`},
-
 /* ---------------- Structure & linking ---------------- */
 {t:"link", q:`The course is demanding. <span class="mq">______</span>, most students complete it successfully.`,
  o:["Therefore","However","Moreover","For example"], a:1,
@@ -2122,8 +2197,9 @@ const SUBJECTS = {
   }
 };
 const UNLOCK_PCT = 80;
-const ALL_TOPICS = Object.assign({}, TRAIN_TOPICS, STRETCH_TOPICS, ENG_TOPICS);
-const topicName = (t) => ALL_TOPICS[t] || t;
+const ALL_TOPICS = Object.assign({}, STRETCH_TOPICS, ENG_TOPICS, TRAIN_TOPICS);
+// the paper in play names its own topics; ALL_TOPICS is only the fallback
+const topicName = (t) => (typeof TOPICS !== "undefined" && TOPICS && TOPICS[t]) || ALL_TOPICS[t] || t;
 
 let subjectKey = "maths";
 let PAPERS = SUBJECTS.maths.papers;
@@ -2622,7 +2698,7 @@ function build(indices, label){
   qMs = {}; qVisits = {}; qEnter = null; changes = 0;
   const ab = $("awaybadge");
   if (ab){ ab.hidden = true; }
-  limit = (PAPERS[paperKey] && PAPERS[paperKey].mins ? PAPERS[paperKey].mins : 0) * 60;
+  limit = (mode === "exam" && PAPERS[paperKey] && PAPERS[paperKey].mins) ? PAPERS[paperKey].mins * 60 : 0;
   t0 = Date.now();
   clearInterval(tick);
   tick = setInterval(clock, 250);
@@ -2651,6 +2727,10 @@ $("go-test").addEventListener("click", () => {
 });
 $("con-back").addEventListener("click", () => show("s-start"));
 $("con-go").addEventListener("click", async () => {
+  if (!isUnlocked()){          // the gate is checked again here, not only on the way in
+    show("s-start");
+    return;
+  }
   const btn = $("con-go");
   btn.disabled = true;
   watchFocus = $("con-focus").checked;
@@ -2894,7 +2974,24 @@ function results(score, secs, auto, rec){
   const pass = PAPERS[sess.paper] ? PAPERS[sess.paper].pass : 60;
   let band, head, note;
 
-  if (sess.paper === "train"){
+  if (sess.paper === "drill"){
+    if (pct >= 90){
+      band = ["ready","Cleared"];
+      head = "You have closed the gap.";
+      note = "These were the questions you got wrong last time, and you have just answered nearly all of them. That is what fixing a topic looks like \u2014 not re-reading it, but meeting it again and getting it right.";
+      fg.style.stroke = "var(--tick)";
+    } else if (pct >= 60){
+      band = ["close","Partly closed"];
+      head = "Better, but the same ground still gives way.";
+      note = "You have improved on the questions that caught you out, though some are still catching you. Read the explanations on the ones below before you drill them again \u2014 repeating the attempt without changing the method just rehearses the mistake.";
+      fg.style.stroke = "var(--gold)";
+    } else {
+      band = ["work","Still slipping"];
+      head = "These are the same marks going again.";
+      note = "Drilling is not working on its own here, which usually means the method has not been understood rather than not practised. Open the study plan below and work through the steps before your next attempt.";
+      fg.style.stroke = "var(--mark)";
+    }
+  } else if (sess.paper === "train"){
     if (pct >= UNLOCK_PCT){
       band = ["ready", justUnlocked ? "Test unlocked" : "Above the gate"];
       head = justUnlocked ? "That unlocks the test." : "Still above the gate.";
@@ -2941,7 +3038,7 @@ function results(score, secs, auto, rec){
                 "TIME TAKEN " + fmt(secs),
                 Math.round(secs / total) + "s PER QUESTION",
                 (blanks ? blanks + " LEFT BLANK" : null),
-                (sess.paper === "test" ? (rec.cam ? "CAMERA ON" : "CAMERA OFF") : null),
+                ((sess.paper === "test" || sess.paper === "stretch") ? (rec.cam ? "CAMERA ON" : "CAMERA OFF") : null),
                 (rec.awayCount ? "LEFT SCREEN " + rec.awayCount + "\u00d7 (" + fmt(rec.awaySecs) + ")" : null)
                ].filter(Boolean);
   $("verdict-meta").textContent = meta.join("  \u00b7  ");
@@ -2972,11 +3069,178 @@ function results(score, secs, auto, rec){
     }, 120);
   });
 
+  paintAnalysis(rec);
   $("mailreport").hidden = !(who && who.role === "student" && rec);
+  $("copyreport").hidden = !rec;
+  $("report-out").hidden = true;
   reviewFilter = (sess.paper !== "train" || score === total) ? "all" : "wrong";
   paintFilters();
   paintReview();
   show("s-results");
+}
+
+/* ---------------- what the attempt says about how you worked ---------------- */
+function median(a){
+  if (!a.length) return 0;
+  const s = a.slice().sort((x,y) => x - y);
+  return s[Math.floor(s.length / 2)];
+}
+function plural(n, w){ return n + " " + w + (n === 1 ? "" : "s"); }
+
+function analyse(rec){
+  const qs = (rec.q || []);
+  const obs = [], good = [], bad = [];
+  const answered = qs.filter(q => !q.blank);
+  const med = median(answered.map(q => q.secs));
+  const isTest = (rec.paper === "test" || rec.paper === "stretch");
+
+  // --- pace ---
+  if (isTest && typeof rec.secs === "number" && PAPERS.test && PAPERS.test.mins){
+    const budget = PAPERS.test.mins * 60, left = budget - rec.secs;
+    if (rec.expired){
+      obs.push(["bad","T","The clock ran out before you finished. <b>" + plural(rec.blanks || 0, "question") +
+        "</b> never got an answer, and every one of those is a mark you could not lose by guessing."]);
+      bad.push("Ran out of time");
+    } else if (left > budget * 0.45 && rec.score < rec.total){
+      obs.push(["warn","T","You handed in with <b>" + fmt(left) + " still on the clock</b> and dropped " +
+        plural(rec.total - rec.score, "mark") + ". Time was not what stopped you \u2014 there was room to check every answer twice."]);
+      bad.push("Finished early with marks still on the table");
+    } else if (left > 0 && left < budget * 0.08){
+      obs.push(["warn","T","You used almost the whole " + mins("test") + ", finishing with only " + fmt(left) +
+        " to spare. That is cutting it fine \u2014 on the day, one slow question would have cost you the end of the paper."]);
+    } else if (left > 0){
+      obs.push(["good","T","Your pacing was sound: finished with <b>" + fmt(left) + "</b> in hand, which is the margin you want."]);
+      good.push("Pacing under the clock");
+    }
+  }
+
+  // --- rushing ---
+  const fastFloor = Math.max(6, Math.round(med * 0.4));
+  const rushedWrong = answered.filter(q => !q.ok && q.secs > 0 && q.secs < fastFloor);
+  if (rushedWrong.length >= 3){
+    obs.push(["bad","!","<b>" + plural(rushedWrong.length, "wrong answer") + " went in under " + fastFloor +
+      " seconds</b>, against a typical " + med + " seconds for the rest. These are not gaps in knowledge, they are marks given away. Slowing down on these alone would move your score."]);
+    bad.push("Answering too fast on questions you could get right");
+  } else if (rushedWrong.length === 0 && answered.length > 10){
+    obs.push(["good","\u2713","Nothing was rushed \u2014 no wrong answer was given in less than " + fastFloor +
+      " seconds. When you got one wrong, it was not for lack of attention."]);
+    good.push("You give each question its time");
+  }
+
+  // --- getting stuck ---
+  const stuck = answered.filter(q => med > 0 && q.secs > med * 3.5).sort((a,b) => b.secs - a.secs);
+  if (stuck.length){
+    const worst = stuck[0], i = qs.indexOf(worst) + 1;
+    const lost = stuck.filter(q => !q.ok).length;
+    obs.push([lost ? "warn" : "good","\u23f1","You spent <b>" + worst.secs + " seconds on question " + i +
+      "</b>" + (stuck.length > 1 ? " and lingered on " + (stuck.length - 1) + " other" + (stuck.length > 2 ? "s" : "") : "") +
+      ". " + (lost
+        ? (lost === 1 ? "That one was still wrong" : lost + " of the questions you laboured over were still wrong") +
+          " \u2014 flag it and move on next time; the marks are cheaper elsewhere."
+        : (stuck.length === 1 ? "You stayed with it and got it right, which was the correct call."
+                              : "You stayed with them and got them right, which was the correct call."))]);
+    if (lost) bad.push("Spending too long on questions that were not going to come");
+  }
+
+  // --- fading ---
+  if (qs.length >= 12){
+    const third = Math.floor(qs.length / 3);
+    const first = qs.slice(0, third), last = qs.slice(-third);
+    const acc = a => Math.round(100 * a.filter(q => q.ok).length / a.length);
+    const a1 = acc(first), a2 = acc(last);
+    if (a1 - a2 >= 20){
+      obs.push(["bad","\u2198","You scored <b>" + a1 + "% on the opening third and " + a2 + "% on the closing third</b>. " +
+        "That is fatigue or hurry, not difficulty \u2014 the questions are not ordered by how hard they are."]);
+      bad.push("Accuracy falls away towards the end");
+    } else if (a2 - a1 >= 20){
+      obs.push(["warn","\u2197","You started at " + a1 + "% and finished at " + a2 + "%. You warmed up, which suggests the first few caught you cold. Do five training questions before the real thing."]);
+    } else if (Math.round(100 * rec.score / rec.total) >= 45){
+      obs.push(["good","\u2192","Your accuracy held steady from start to finish (" + a1 + "% to " + a2 + "%). You did not fade."]);
+      good.push("Concentration holds for the whole paper");
+    } else {
+      obs.push(["warn","\u2192","Your accuracy was level across the paper (" + a1 + "% to " + a2 +
+        "%), so this is not about tiring. The gap is in the methods themselves, which is the study plan below."]);
+    }
+  }
+
+  // --- blanks, changes, flags, focus ---
+  if (rec.blanks && !rec.expired){
+    obs.push(["bad","\u2717","<b>" + plural(rec.blanks, "question") + " left blank</b> with time remaining. " +
+      "There is no penalty for a wrong answer here, so a blank is a mark thrown away rather than lost."]);
+    bad.push("Leaving questions blank instead of guessing");
+  }
+  if (rec.changes >= 5){
+    obs.push(["warn","\u21ba","You changed your mind <b>" + rec.changes + " times</b>. Changing an answer is fine when you have found a reason; doing it often usually means the method was not settled before you chose."]);
+  }
+  const flagged = qs.filter(q => q.flag);
+  if (flagged.length){
+    const back = flagged.filter(q => q.visits > 1).length;
+    obs.push([back === flagged.length ? "good" : "warn","\u2691",
+      "You flagged " + plural(flagged.length, "question") + " and came back to " + back + " of them. " +
+      (back === flagged.length ? "That is exactly how flagging should work." : "The ones you never returned to were flagged for nothing.")]);
+    if (back === flagged.length && flagged.length >= 2) good.push("You flag and return properly");
+  }
+  if (isTest){
+    if (rec.awayCount){
+      obs.push(["bad","\u2b1a","You left the test screen <b>" + plural(rec.awayCount, "time") + ", " + fmt(rec.awaySecs) +
+        " in total</b>. In the real test you will not be able to, so a practice run with the tab switched away is not really a practice run."]);
+      bad.push("Leaving the screen mid-test");
+    } else {
+      obs.push(["good","\u2713","You never left the test screen. That is the condition the real thing will impose on you anyway."]);
+      good.push("Sat it under honest conditions");
+    }
+  }
+
+  // --- topics ---
+  const st = {};
+  Object.keys(rec.topics || {}).forEach(t => { st[t] = rec.topics[t]; });
+  const ranked = Object.keys(st).filter(t => st[t].n >= 3)
+    .map(t => ({ t, p: Math.round(100 * st[t].c / st[t].n), c: st[t].c, n: st[t].n }))
+    .sort((a,b) => a.p - b.p);
+  ranked.filter(r => r.p >= 80).forEach(r => good.push("<b>" + topicName(r.t) + "</b> \u2014 " + r.c + "/" + r.n));
+  ranked.filter(r => r.p < 60).forEach(r => bad.push("<b>" + topicName(r.t) + "</b> \u2014 " + r.c + "/" + r.n));
+
+  return { obs, good, bad, weak: ranked.filter(r => r.p < 75).slice(0, 3), ranked };
+}
+
+function paintAnalysis(rec){
+  if (!rec || !rec.q || !rec.q.length){ $("analysis").hidden = true; return; }
+  $("analysis").hidden = false;
+  const a = analyse(rec);
+
+  $("obs").innerHTML = a.obs.map(([k, i, t]) =>
+    '<div class="ob ' + k + '"><span class="oi">' + i + '</span><span class="ot">' + t + "</span></div>").join("");
+
+  const fill = (id, items, empty) => {
+    $(id).innerHTML = items.length
+      ? items.map(x => "<li>" + x + "</li>").join("")
+      : '<li class="none">' + empty + "</li>";
+  };
+  fill("sw-good", a.good, "Nothing stood out this time \u2014 which the next attempt can change.");
+  fill("sw-bad", a.bad, "Nothing to flag. Keep it there.");
+
+  if (!a.weak.length){
+    $("plan").innerHTML = "";      // do not leave the previous attempt's plan behind
+    $("plan-wrap").hidden = true;
+    return;
+  }
+  $("plan-wrap").hidden = false;
+  $("plan-lede").innerHTML = "Working through everything again is the slow way. These " +
+    (a.weak.length === 1 ? "is the topic" : "are the " + a.weak.length + " topics") +
+    " that actually cost you marks, weakest first. Fixing one properly is worth more than three more full attempts.";
+  $("plan").innerHTML = a.weak.map((r, i) => {
+    const L = LESSONS[r.t];
+    if (!L) return "";
+    return '<details class="lesson"' + (i === 0 ? " open" : "") + ">" +
+      '<summary><span class="ln">' + (i + 1) + '</span><span class="lt">' + L.title +
+      '</span><span class="lsc">' + r.c + "/" + r.n + "  \u00b7  " + r.p + "%</span></summary>" +
+      '<div class="lbody">' +
+        '<p class="why">' + L.why + "</p>" +
+        "<h4>The method</h4><ol>" + L.steps.map(x => "<li>" + x + "</li>").join("") + "</ol>" +
+        '<div class="traps"><h4>Where the marks go</h4><ul>' + L.traps.map(x => "<li>" + x + "</li>").join("") + "</ul></div>" +
+        '<div class="drill"><b>Do this next</b>' + L.drill + "</div>" +
+      "</div></details>";
+  }).join("");
 }
 
 /* ---------------- marked script ---------------- */
@@ -3023,28 +3287,95 @@ $("drill").addEventListener("click", () => {
 });
 $("home").addEventListener("click", () => { clearInterval(tick); stopCamera(); paintStart(); show("s-start"); });
 
-function reportBody(r){
+$("copyreport").addEventListener("click", () => {
+  const r = loadHistory()[0];
+  if (!r) return;
+  const txt = reportFull(r);
+  const box = $("report-out");
+  const done = () => { $("copyreport").textContent = "Copied"; setTimeout(() => { $("copyreport").textContent = "Copy full report"; }, 2000); };
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done).catch(() => { box.value = txt; box.hidden = false; box.select(); });
+  } else { box.value = txt; box.hidden = false; box.select(); }
+});
+
+function reportHead(r){
   const lines = [
-    who.name + " \u2014 maths practice report",
+    who.name + " \u2014 " + (SUBJECTS[subjectKey] ? SUBJECTS[subjectKey].name : "") + " practice report",
     "",
     r.label,
     "Score: " + r.score + "/" + r.total + "  (" + pct(r) + "%)",
     "Finished: " + stamp(r.at),
-    "Time taken: " + fmt(r.secs || 0) + (r.expired ? "  (ran out of time)" : ""),
+    "Time taken: " + fmt(r.secs || 0) + (r.expired ? "  (ran out of time)" : "")
   ];
   if (r.blanks) lines.push("Left blank: " + r.blanks);
-  if (r.paper === "test"){
+  if (r.paper === "test" || r.paper === "stretch"){
     lines.push("Pass mark for this test: " + PAPERS.test.pass + "%  \u2014  " +
                (pct(r) >= PAPERS.test.pass ? "PASSED" : "not reached"));
     lines.push("Camera: " + (r.cam ? "on throughout" : "off"));
     lines.push("Left the test screen: " + (r.awayCount ? r.awayCount + " time(s), " + fmt(r.awaySecs) + " in total" : "never"));
   }
-  lines.push("", "By topic:");
+  lines.push("", "BY TOPIC");
   Object.keys(r.topics || {}).forEach(t => {
     const x = r.topics[t];
     lines.push("  " + topicName(t) + ": " + x.c + "/" + x.n);
   });
-  lines.push("", "Sent from the maths practice app.");
+  return lines;
+}
+
+const stripTags = h => String(h).replace(/<[^>]+>/g, "");
+
+// short enough that no mail client will cut it off
+function reportBody(r){
+  const lines = reportHead(r);
+  if (r.q && r.q.length){
+    const a = analyse(r);
+    if (a.good.length){
+      lines.push("", "STRENGTHS");
+      a.good.slice(0, 6).forEach(x => lines.push("  - " + stripTags(x)));
+    }
+    if (a.bad.length){
+      lines.push("", "TO WORK ON");
+      a.bad.slice(0, 7).forEach(x => lines.push("  - " + stripTags(x)));
+    }
+    if (a.weak.length){
+      lines.push("", "STUDY PLAN");
+      a.weak.forEach((w, i) => {
+        const L = LESSONS[w.t];
+        lines.push("  " + (i + 1) + ". " + (L ? L.title : topicName(w.t)) + "  (" + w.c + "/" + w.n + ")");
+        if (L) lines.push("     " + stripTags(L.drill));
+      });
+    }
+    lines.push("", "The full analysis, with the working for every question, is on the results screen.");
+  }
+  lines.push("", "Sent from the practice app.");
+  return lines.join("\n");
+}
+
+// everything, for copying and pasting anywhere
+function reportFull(r){
+  const lines = reportHead(r);
+  if (r.q && r.q.length){
+    const a = analyse(r);
+    if (a.obs.length){
+      lines.push("", "HOW THE PAPER WAS WORKED");
+      a.obs.forEach(o => lines.push("  - " + stripTags(o[2])));
+    }
+    if (a.good.length){ lines.push("", "STRENGTHS"); a.good.forEach(x => lines.push("  - " + stripTags(x))); }
+    if (a.bad.length){ lines.push("", "TO WORK ON"); a.bad.forEach(x => lines.push("  - " + stripTags(x))); }
+    if (a.weak.length){
+      lines.push("", "STUDY PLAN");
+      a.weak.forEach((w, i) => {
+        const L = LESSONS[w.t];
+        lines.push("", "  " + (i + 1) + ". " + (L ? L.title : topicName(w.t)) + "  (" + w.c + "/" + w.n + ")");
+        if (!L) return;
+        lines.push("     Why: " + stripTags(L.why));
+        L.steps.forEach((x, j) => lines.push("     " + (j + 1) + ") " + stripTags(x)));
+        lines.push("     Watch for: " + L.traps.map(stripTags).join("  |  "));
+        lines.push("     Do this next: " + stripTags(L.drill));
+      });
+    }
+  }
+  lines.push("", "Sent from the practice app.");
   return lines.join("\n");
 }
 
