@@ -74,6 +74,7 @@
 }
 
 *{box-sizing:border-box}
+[hidden]{display:none !important}
 
 body{
   margin:0;
@@ -426,6 +427,82 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 .rec-list .rt{font-family:"JetBrains Mono",monospace;font-size:.75rem;color:var(--ink-faint);white-space:nowrap}
 .rec-out{width:100%;margin-top:1rem;min-height:150px;font-family:"JetBrains Mono",monospace;font-size:.78rem;
   padding:.8rem;border-radius:8px;border:1px solid var(--rule);background:var(--sheet-2);color:var(--ink);resize:vertical}
+
+/* ============ who is working ============ */
+.whobar{display:flex;align-items:center;gap:.8rem;padding:1.1rem 0 0;font-size:.87rem}
+.who-av{
+  width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none;
+  background:var(--pen);color:var(--sheet);font-size:.8rem;font-weight:700;
+}
+.who-t{color:var(--ink-soft)}
+.who-t b{color:var(--ink)}
+.who-t i{font-style:normal;font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-faint);margin-left:.5rem;padding:.2em .5em;border-radius:4px;background:var(--sheet-2)}
+.whobar .linkbtn{margin-left:auto;font-size:.83rem}
+
+.picker{padding:clamp(3rem,8vw,5.5rem) 0 3rem}
+.pick-h{margin:.7rem 0 1.8rem;max-width:22ch}
+.pick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.pick{
+  display:flex;align-items:center;gap:.9rem;padding:1.1rem 1.2rem;border-radius:var(--r);
+  border:1.5px solid var(--rule);background:var(--sheet);text-align:left;transition:transform .12s,border-color .15s,box-shadow .15s;
+}
+.pick:hover{transform:translateY(-2px);border-color:var(--pen);box-shadow:var(--shadow)}
+.pick .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none;
+  background:var(--pen-soft);color:var(--pen);font-family:"JetBrains Mono",monospace;font-weight:700}
+.pick.assessor .av{background:var(--gold-soft);color:var(--gold)}
+.pick .pn{font-weight:700;font-size:1rem;display:block}
+.pick .pr{font-size:.78rem;color:var(--ink-faint)}
+.pick-note{margin-top:1.6rem;font-size:.83rem;color:var(--ink-faint);line-height:1.6;max-width:60ch;
+  border-left:2px solid var(--gold);padding-left:1rem}
+.pick-note b{color:var(--ink-soft)}
+
+/* ============ assessor ============ */
+.assess{margin:2.6rem 0 0;padding:1.3rem 1.4rem;border:1px solid var(--gold);border-radius:var(--r);background:var(--sheet)}
+.as-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:1rem}
+.as-card{padding:1rem 1.1rem;border:1px solid var(--rule);border-radius:8px;background:var(--sheet-2)}
+.as-card h4{margin:0 0 .5rem;font-size:.98rem;font-family:"Karla",sans-serif;font-weight:700}
+.as-card .asl{display:flex;justify-content:space-between;font-size:.82rem;color:var(--ink-soft);padding:.18rem 0}
+.as-card .asl b{font-family:"JetBrains Mono",monospace}
+.as-card .none{font-size:.82rem;color:var(--ink-faint);font-style:italic}
+.as-mail{margin-top:1.4rem;border-top:1px solid var(--rule-soft);padding-top:1.1rem}
+.as-mail label{display:block;font-size:.83rem;color:var(--ink-soft);margin-bottom:.5rem}
+.as-mail-row{display:flex;gap:.6rem;flex-wrap:wrap}
+.as-mail input{
+  flex:1;min-width:200px;padding:.65em .85em;border-radius:8px;border:1.5px solid var(--rule);
+  background:var(--sheet-2);color:var(--ink);font-family:inherit;font-size:.92rem;
+}
+.as-mail input:focus{outline:none;border-color:var(--pen)}
+.as-note{margin-top:.6rem;font-size:.79rem;color:var(--ink-faint);line-height:1.55}
+
+/* ============ exam conditions ============ */
+.consent{padding:clamp(2.5rem,7vw,4.5rem) 0 4rem;max-width:640px}
+.con-lede{margin:.9rem 0 2rem;color:var(--ink-soft);font-size:1.02rem}
+.con-lede b{color:var(--ink)}
+.con-item{
+  display:flex;gap:1.4rem;align-items:flex-start;flex-wrap:wrap;
+  padding:1.2rem 0;border-top:1px solid var(--rule);
+}
+.con-item .con-b{flex:1;min-width:260px}
+.con-item h3{margin-bottom:.4rem;font-size:1.08rem}
+.con-item p{font-size:.9rem;color:var(--ink-soft);line-height:1.6}
+.con-item p b{color:var(--ink)}
+.con-item .switch{flex:none;padding-top:.2rem}
+.con-warn{margin-top:1.2rem;padding:.8rem 1rem;border-radius:8px;background:var(--mark-soft);
+  color:var(--mark);font-size:.87rem;border:1px solid var(--mark)}
+.con-acts{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin-top:2rem;border-top:1px solid var(--rule);padding-top:1.7rem}
+
+/* ============ camera ============ */
+.cam{
+  position:fixed;bottom:74px;right:16px;width:150px;height:113px;object-fit:cover;z-index:40;
+  border-radius:10px;border:2px solid var(--pen);background:#000;box-shadow:var(--shadow-lift);
+  transform:scaleX(-1);
+}
+@media(max-width:600px){.cam{width:104px;height:78px;bottom:70px;right:10px}}
+.awaybadge{
+  margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;
+  padding:.28em .6em;border-radius:6px;background:var(--mark-soft);color:var(--mark);border:1px solid var(--mark);
+}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
@@ -434,7 +511,20 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 <!-- ==================== START ==================== -->
 <section class="screen on" id="s-start">
   <div class="wrap">
-    <div class="hero">
+    <div class="whobar" id="whobar" hidden>
+      <span class="who-av mono" id="who-av">?</span>
+      <span class="who-t">Signed in on this device as <b id="who-name">&mdash;</b><i id="who-role"></i></span>
+      <button class="linkbtn" id="who-switch">Switch</button>
+    </div>
+
+    <div class="picker" id="picker">
+      <p class="eyebrow">Who is working?</p>
+      <h2 class="pick-h">Pick your name to keep your record separate.</h2>
+      <div class="pick-grid" id="pick-grid"></div>
+      <p class="pick-note"><b>This is not a password.</b> It keeps each person&rsquo;s attempts in their own log on this device, nothing more. Anyone using this browser can switch between them. If you want your work genuinely private, use your own phone or laptop.</p>
+    </div>
+
+    <div class="hero" id="hero" hidden>
       <div class="hero-mark"><b>MDX</b><span>maths entry test &middot; online &middot; 1h 30 &middot; official pass 40%</span></div>
       <h1>Train until it is boring. <em>Then</em> sit the test.</h1>
       <p class="lede">Preparation in two steps, and the second one stays shut until the first is done. Work the <b>60-question training set</b> as many times as you like, with the answer and the working shown after every question. Reach <b>80%</b> and the <b>timed test</b> opens: forty different questions, an hour and a half on the clock, nothing revealed until you submit.</p>
@@ -492,6 +582,19 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 
       <p class="extra" id="extra-wrap" hidden>Cleared the test already? <button class="linkbtn" id="go-stretch">Sit the stretch paper</button> &mdash; 40 harder questions, well beyond what the entry test asks for.</p>
 
+      <section class="assess" id="assess" hidden>
+        <p class="eyebrow">Assessor view &mdash; everyone who has worked on this device</p>
+        <div class="as-grid" id="as-grid"></div>
+        <div class="as-mail">
+          <label for="as-email">Where students send their reports</label>
+          <div class="as-mail-row">
+            <input type="email" id="as-email" placeholder="your.name@example.com" autocomplete="email">
+            <button class="btn btn-ghost" id="as-save">Save</button>
+          </div>
+          <p class="as-note">Stored only in this browser, never published with the site. Set it once on each device a student uses, and their report button will be addressed to you.</p>
+        </div>
+      </section>
+
       <section class="record" id="record" hidden>
         <div class="rec-head">
           <p class="eyebrow" style="margin:0">Your record &mdash; every attempt, kept</p>
@@ -530,6 +633,7 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
     <div class="bar-in">
       <span class="pos mono" id="pos">Q 01 <i>/ 40</i></span>
       <button class="btn-quiet" id="toggle-nav">All questions</button>
+      <span class="awaybadge" id="awaybadge" hidden></span>
       <span class="timer mono" id="timer">00:00</span>
     </div>
     <div class="progress"><b id="prog"></b></div>
@@ -539,6 +643,8 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
       <div style="height:14px"></div>
     </div>
   </div>
+
+  <video class="cam" id="cam" autoplay muted playsinline hidden></video>
 
   <div class="wrap qwrap">
     <div class="qhead">
@@ -557,6 +663,39 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
       <span class="spacer"></span>
       <button class="btn-quiet" id="quit">Abandon</button>
       <button class="btn btn-primary" id="next">Next</button>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== EXAM CONDITIONS ==================== -->
+<section class="screen" id="s-consent">
+  <div class="wrap">
+    <div class="consent">
+      <p class="eyebrow">Before the test starts</p>
+      <h2>Exam conditions</h2>
+      <p class="con-lede">The test runs for <b>1 hour 30</b> and submits itself when the clock reaches zero. Two things make it feel like the real thing, and you choose both.</p>
+
+      <div class="con-item">
+        <div class="con-b">
+          <h3>Your camera, on screen</h3>
+          <p>Your own face appears in the corner while you work, the way an invigilator would be in the room. <b>Nothing is recorded, saved, or sent anywhere</b> &mdash; the picture exists only on this screen and disappears the moment the test ends. Your browser will ask permission, and you can refuse.</p>
+        </div>
+        <label class="switch"><input type="checkbox" id="con-cam" checked><span class="track"></span>Turn my camera on</label>
+      </div>
+
+      <div class="con-item">
+        <div class="con-b">
+          <h3>Leaving the screen is noted</h3>
+          <p>If you switch tab or click away from the test, the time away is counted and appears in your report. Nothing stops you doing it &mdash; but in the real test you could not, so the record tells you honestly how you worked.</p>
+        </div>
+        <label class="switch"><input type="checkbox" id="con-focus" checked><span class="track"></span>Count time away</label>
+      </div>
+
+      <p class="con-warn" id="con-warn" hidden></p>
+      <div class="con-acts">
+        <button class="btn btn-primary btn-lg" id="con-go">I am ready &mdash; start the clock</button>
+        <button class="btn-quiet" id="con-back">Not yet</button>
+      </div>
     </div>
   </div>
 </section>
@@ -597,6 +736,7 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
     <div class="endbar">
       <button class="btn btn-primary" id="again">Sit it again</button>
       <button class="btn btn-ghost" id="drill">Drill only what I got wrong</button>
+      <button class="btn btn-ghost" id="mailreport" hidden>Email this report</button>
       <button class="btn btn-ghost" id="home">Back to the two steps</button>
     </div>
   </div>
@@ -1235,8 +1375,16 @@ const EXAM_BANK = [
 "use strict";
 const $ = (id) => document.getElementById(id);
 const LETTERS = ["A","B","C","D"];
-const KEY = "fortymarks.log.v2";
+const PROFILES = [
+  { id:"popaul", name:"Popaul", role:"assessor" },
+  { id:"ryan",   name:"Ryan",   role:"student"  },
+  { id:"meldie", name:"Meldie", role:"student"  }
+];
+const WHO_KEY = "fortymarks.who.v3";
+const ASSESSOR_KEY = "fortymarks.assessor.v3";
 const MAX_LOG = 500;
+const logKey = (id) => "fortymarks.log.v3." + id;
+let who = null;
 
 const PAPERS = {
   train: {
@@ -1264,6 +1412,9 @@ let cur = 0;
 let t0 = 0, tick = null, limit = 0;
 let finished = false;
 let justUnlocked = false;
+let camStream = null;
+let watchFocus = false;
+let away = { count:0, ms:0, since:null };
 let reviewFilter = "wrong";
 
 /* ---------------- helpers ---------------- */
@@ -1289,19 +1440,22 @@ function isRight(item){ return item.pick !== null && item.pick === correctPos(it
 function scoreNow(){ return sess.filter(isRight).length; }
 
 /* ---------------- stored progress ---------------- */
-let memHistory = null;   // survives a browser that blocks storage (opening the file directly, private mode)
-function loadHistory(){
-  if (memHistory) return memHistory;
-  try { memHistory = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch(e){ memHistory = []; }
-  if (!Array.isArray(memHistory)) memHistory = [];
-  return memHistory;
+let memLogs = {};   // per profile; survives a browser that blocks storage (file:// or private mode)
+function loadHistory(id){
+  const k = id || (who && who.id);
+  if (!k) return [];
+  if (memLogs[k]) return memLogs[k];
+  let v;
+  try { v = JSON.parse(localStorage.getItem(logKey(k)) || "[]"); } catch(e){ v = []; }
+  memLogs[k] = Array.isArray(v) ? v : [];
+  return memLogs[k];
 }
 function saveAttempt(rec){
   const h = loadHistory();
   rec.n = (h.length ? h[0].n : 0) + 1;          // attempts are numbered and never renumbered
   h.unshift(rec);
-  memHistory = h.slice(0, MAX_LOG);
-  try { localStorage.setItem(KEY, JSON.stringify(memHistory)); }
+  memLogs[who.id] = h.slice(0, MAX_LOG);
+  try { localStorage.setItem(logKey(who.id), JSON.stringify(memLogs[who.id])); }
   catch(e){ /* storage full or blocked: the in-memory log still holds this session */ }
 }
 function bestTrainPct(){
@@ -1309,6 +1463,79 @@ function bestTrainPct(){
     .reduce((m,r) => Math.max(m, Math.round(100 * r.score / r.total)), -1);
 }
 function isUnlocked(){ return bestTrainPct() >= UNLOCK_PCT; }
+
+/* ---------------- who is working ---------------- */
+const initials = (n) => n.slice(0,2).toUpperCase();
+
+function paintPicker(){
+  $("pick-grid").innerHTML = PROFILES.map(p => {
+    const log = loadHistory(p.id);
+    const sub = p.role === "assessor" ? "Admin and assessor"
+      : (log.length ? log.length + " attempt" + (log.length === 1 ? "" : "s") + " logged" : "No attempts yet");
+    return '<button class="pick ' + p.role + '" data-id="' + p.id + '">' +
+           '<span class="av">' + initials(p.name) + '</span>' +
+           '<span><span class="pn">' + p.name + '</span><span class="pr">' + sub + "</span></span></button>";
+  }).join("");
+  $("pick-grid").querySelectorAll(".pick").forEach(b =>
+    b.addEventListener("click", () => setWho(b.dataset.id)));
+}
+
+function setWho(id){
+  who = PROFILES.find(p => p.id === id) || null;
+  if (!who){ $("picker").hidden = false; $("whobar").hidden = true; return; }
+  try { localStorage.setItem(WHO_KEY, id); } catch(e){}
+  $("picker").hidden = true;
+  $("whobar").hidden = false;
+  $("hero").hidden = false;
+  $("who-av").textContent = initials(who.name);
+  $("who-name").textContent = who.name;
+  $("who-role").textContent = who.role;
+  $("who-av").style.background = who.role === "assessor" ? "var(--gold)" : "var(--pen)";
+  document.querySelectorAll(".hero .steps, .hero .extra").forEach(el => { el.hidden = who.role === "assessor"; });
+  paintStart();
+}
+
+$("who-switch").addEventListener("click", () => {
+  who = null;
+  try { localStorage.removeItem(WHO_KEY); } catch(e){}
+  $("whobar").hidden = true;
+  $("hero").hidden = true;
+  $("record").hidden = true;
+  $("assess").hidden = true;
+  $("picker").hidden = false;
+  paintPicker();
+  window.scrollTo({top:0, behavior:"instant"});
+});
+
+function assessorEmail(){
+  try { return localStorage.getItem(ASSESSOR_KEY) || ""; } catch(e){ return ""; }
+}
+$("as-save").addEventListener("click", () => {
+  const v = $("as-email").value.trim();
+  if (v && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ alert("That does not look like an email address."); return; }
+  try { v ? localStorage.setItem(ASSESSOR_KEY, v) : localStorage.removeItem(ASSESSOR_KEY); } catch(e){}
+  $("as-save").textContent = "Saved";
+  setTimeout(() => { $("as-save").textContent = "Save"; }, 1800);
+});
+
+function paintAssessor(){
+  if (!who || who.role !== "assessor"){ $("assess").hidden = true; return; }
+  $("assess").hidden = false;
+  $("as-email").value = assessorEmail();
+  $("as-grid").innerHTML = PROFILES.filter(p => p.role === "student").map(p => {
+    const log = loadHistory(p.id);
+    if (!log.length) return '<div class="as-card"><h4>' + p.name + '</h4><p class="none">Has not worked on this device yet.</p></div>';
+    const tr = log.filter(r => r.paper === "train"), te = log.filter(r => r.paper === "test");
+    const row = (l, v) => '<div class="asl"><span>' + l + "</span><b>" + v + "</b></div>";
+    const last = log[0];
+    return '<div class="as-card"><h4>' + p.name + "</h4>" +
+      row("Attempts", log.length) +
+      row("Best training", tr.length ? Math.max(...tr.map(pct)) + "%" : "\u2014") +
+      row("Best test", te.length ? Math.max(...te.map(pct)) + "%" : "\u2014") +
+      row("Test unlocked", tr.some(r => pct(r) >= UNLOCK_PCT) ? "yes" : "not yet") +
+      row("Last worked", stamp(last.at)) + "</div>";
+  }).join("");
+}
 
 /* ---------------- start screen ---------------- */
 function paintGate(){
@@ -1451,14 +1678,25 @@ $("rec-clear").addEventListener("click", () => {
   if (!h.length) return;
   if (!confirm("Erase all " + h.length + " logged attempts? This also relocks the test until you score " +
                UNLOCK_PCT + "% on the training set again. This cannot be undone.")) return;
-  memHistory = [];
-  try { localStorage.removeItem(KEY); } catch(e){}
+  memLogs[who.id] = [];
+  try { localStorage.removeItem(logKey(who.id)); } catch(e){}
   $("rec-out").hidden = true;
   paintStart();
 });
 
-function paintStart(){ paintGate(); paintSyllabus(); paintRecord(); }
-paintStart();
+function paintStart(){
+  if (!who) return;
+  if (who.role !== "assessor"){ paintGate(); paintSyllabus(); }
+  paintAssessor();
+  paintRecord();
+}
+
+paintPicker();
+(function restoreWho(){
+  let saved = null;
+  try { saved = localStorage.getItem(WHO_KEY); } catch(e){}
+  if (saved && PROFILES.some(p => p.id === saved)) setWho(saved);
+})();
 
 /* ---------------- build a session ---------------- */
 function build(indices, label){
@@ -1467,6 +1705,9 @@ function build(indices, label){
   sess.paper = paperKey;
   cur = 0;
   finished = false;
+  away = { count:0, ms:0, since:null };
+  const ab = $("awaybadge");
+  if (ab){ ab.hidden = true; }
   limit = (mode === "exam") ? 90 * 60 : 0;
   t0 = Date.now();
   clearInterval(tick);
@@ -1491,9 +1732,62 @@ function startPaper(k, shuffleQs){
 $("go-train").addEventListener("click", () => startPaper("train", $("opt-shuffle").checked));
 $("go-test").addEventListener("click", () => {
   if (!isUnlocked()) return;
-  if (!confirm("This starts the timed test: 40 questions, 1 hour 30, no feedback until you submit. Ready?")) return;
+  $("con-warn").hidden = true;
+  show("s-consent");
+});
+$("con-back").addEventListener("click", () => show("s-start"));
+$("con-go").addEventListener("click", async () => {
+  const btn = $("con-go");
+  btn.disabled = true;
+  watchFocus = $("con-focus").checked;
+  if ($("con-cam").checked){
+    btn.textContent = "Asking for the camera\u2026";
+    const ok = await startCamera();
+    if (!ok){
+      $("con-warn").hidden = false;
+      $("con-warn").textContent =
+        "The camera could not be switched on \u2014 permission was refused, or this browser blocks it. " +
+        "You can still sit the test; your report will simply note that the camera was off.";
+      $("con-cam").checked = false;
+    }
+  }
+  btn.disabled = false;
+  btn.textContent = "I am ready \u2014 start the clock";
   startPaper("test", true);
 });
+
+/* ---------------- camera and time away ---------------- */
+async function startCamera(){
+  try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return false;
+    camStream = await navigator.mediaDevices.getUserMedia({ video:{ width:320, height:240 }, audio:false });
+    const v = $("cam");
+    v.srcObject = camStream;
+    v.hidden = false;
+    return true;
+  } catch(e){ camStream = null; return false; }
+}
+function stopCamera(){
+  if (camStream){ camStream.getTracks().forEach(t => t.stop()); camStream = null; }
+  const v = $("cam");
+  v.srcObject = null;
+  v.hidden = true;
+}
+function leftScreen(){
+  if (!watchFocus || mode !== "exam" || finished || away.since) return;
+  away.since = Date.now();
+}
+function backOnScreen(){
+  if (!away.since) return;
+  away.ms += Date.now() - away.since;
+  away.count++;
+  away.since = null;
+  const b = $("awaybadge");
+  if (b){ b.hidden = false; b.textContent = "AWAY \u00d7" + away.count; }
+}
+document.addEventListener("visibilitychange", () => { document.hidden ? leftScreen() : backOnScreen(); });
+window.addEventListener("blur", leftScreen);
+window.addEventListener("focus", backOnScreen);
 $("go-stretch").addEventListener("click", () => startPaper("stretch", true));
 
 /* ---------------- clock ---------------- */
@@ -1598,6 +1892,7 @@ $("flag").addEventListener("click", () => { sess[cur].flagged = !sess[cur].flagg
 $("quit").addEventListener("click", () => {
   if (confirm("Abandon this attempt? Your answers will not be marked or saved.")){
     clearInterval(tick);
+    stopCamera();
     show("s-start");
   }
 });
@@ -1624,6 +1919,8 @@ function finish(auto){
   }
   clearInterval(tick);
   finished = true;
+  backOnScreen();
+  stopCamera();
   const secs = elapsed();
   const score = scoreNow();
   const wasOpen = isUnlocked();
@@ -1637,13 +1934,15 @@ function finish(auto){
   saveAttempt({ score, total: sess.length, secs, at: Date.now(),
                 label: sess.label || "Practice", paper: sess.paper || paperKey,
                 blanks: sess.filter(i => i.pick === null).length,
-                expired: !!auto, topics });
+                expired: !!auto, topics,
+                cam: !!camStream, awayCount: away.count,
+                awaySecs: Math.round(away.ms / 1000) });
   paintStart();
   justUnlocked = (sess.paper === "train") && !wasOpen && isUnlocked();
-  results(score, secs, auto);
+  results(score, secs, auto, loadHistory()[0]);
 }
 
-function results(score, secs, auto){
+function results(score, secs, auto, rec){
   const total = sess.length;
   const pct = Math.round(100 * score / total);
 
@@ -1700,11 +1999,14 @@ function results(score, secs, auto){
   $("verdict-p").textContent = note;
 
   const blanks = sess.filter(i => i.pick === null).length;
-  $("verdict-meta").textContent =
-    (auto ? "TIME EXPIRED \u2014 " : "") +
-    "TIME TAKEN " + fmt(secs) +
-    "  \u00b7  " + Math.round(secs / total) + "s PER QUESTION" +
-    (blanks ? "  \u00b7  " + blanks + " LEFT BLANK" : "");
+  const meta = [(auto ? "TIME EXPIRED" : null),
+                "TIME TAKEN " + fmt(secs),
+                Math.round(secs / total) + "s PER QUESTION",
+                (blanks ? blanks + " LEFT BLANK" : null),
+                (sess.paper === "test" ? (rec.cam ? "CAMERA ON" : "CAMERA OFF") : null),
+                (rec.awayCount ? "LEFT SCREEN " + rec.awayCount + "\u00d7 (" + fmt(rec.awaySecs) + ")" : null)
+               ].filter(Boolean);
+  $("verdict-meta").textContent = meta.join("  \u00b7  ");
 
   requestAnimationFrame(() => {
     setTimeout(() => { fg.setAttribute("stroke-dashoffset", (C * (1 - score / total)).toFixed(1)); }, 60);
@@ -1732,6 +2034,7 @@ function results(score, secs, auto){
     }, 120);
   });
 
+  $("mailreport").hidden = !(who && who.role === "student" && rec);
   reviewFilter = (sess.paper !== "train" || score === total) ? "all" : "wrong";
   paintFilters();
   paintReview();
@@ -1780,5 +2083,44 @@ $("drill").addEventListener("click", () => {
   build(shuffled(wrong.length).map(k => wrong[k]), "Drill, " + wrong.length + " from the " + PAPERS[src].short);
   sess.paper = "drill";
 });
-$("home").addEventListener("click", () => { clearInterval(tick); paintStart(); show("s-start"); });
+$("home").addEventListener("click", () => { clearInterval(tick); stopCamera(); paintStart(); show("s-start"); });
+
+function reportBody(r){
+  const lines = [
+    who.name + " \u2014 maths practice report",
+    "",
+    r.label,
+    "Score: " + r.score + "/" + r.total + "  (" + pct(r) + "%)",
+    "Finished: " + stamp(r.at),
+    "Time taken: " + fmt(r.secs || 0) + (r.expired ? "  (ran out of time)" : ""),
+  ];
+  if (r.blanks) lines.push("Left blank: " + r.blanks);
+  if (r.paper === "test"){
+    lines.push("Pass mark for this test: " + PAPERS.test.pass + "%  \u2014  " +
+               (pct(r) >= PAPERS.test.pass ? "PASSED" : "not reached"));
+    lines.push("Camera: " + (r.cam ? "on throughout" : "off"));
+    lines.push("Left the test screen: " + (r.awayCount ? r.awayCount + " time(s), " + fmt(r.awaySecs) + " in total" : "never"));
+  }
+  lines.push("", "By topic:");
+  Object.keys(r.topics || {}).forEach(t => {
+    const x = r.topics[t];
+    lines.push("  " + (TRAIN_TOPICS[t] || STRETCH_TOPICS[t] || t) + ": " + x.c + "/" + x.n);
+  });
+  lines.push("", "Sent from the maths practice app.");
+  return lines.join("\n");
+}
+
+$("mailreport").addEventListener("click", () => {
+  const r = loadHistory()[0];
+  if (!r) return;
+  const to = assessorEmail();
+  if (!to){
+    alert("No assessor email is set on this device yet.\n\nAsk Popaul to open the app, switch to his own name, and enter his address once in the assessor panel. After that this button will be addressed to him automatically.");
+    return;
+  }
+  const subject = who.name + " \u2014 " + r.label + " \u2014 " + r.score + "/" + r.total + " (" + pct(r) + "%)";
+  window.location.href = "mailto:" + encodeURIComponent(to) +
+    "?subject=" + encodeURIComponent(subject) +
+    "&body=" + encodeURIComponent(reportBody(r));
+});
 </script>
