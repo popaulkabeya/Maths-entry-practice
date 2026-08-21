@@ -3232,7 +3232,7 @@ function paintAnalysis(rec){
     const L = LESSONS[r.t];
     if (!L) return "";
     return '<details class="lesson"' + (i === 0 ? " open" : "") + ">" +
-      '<summary><span class="ln">' + (i + 1) + '</span><span class="lt">' + L.title +
+      '<summary><span class="ln">' + (i + 1) + '</span><span class="lt">' + topicName(r.t) +
       '</span><span class="lsc">' + r.c + "/" + r.n + "  \u00b7  " + r.p + "%</span></summary>" +
       '<div class="lbody">' +
         '<p class="why">' + L.why + "</p>" +
@@ -3331,21 +3331,21 @@ function reportBody(r){
     const a = analyse(r);
     if (a.good.length){
       lines.push("", "STRENGTHS");
-      a.good.slice(0, 6).forEach(x => lines.push("  - " + stripTags(x)));
+      a.good.slice(0, 5).forEach(x => lines.push("  - " + stripTags(x)));
     }
     if (a.bad.length){
       lines.push("", "TO WORK ON");
-      a.bad.slice(0, 7).forEach(x => lines.push("  - " + stripTags(x)));
+      a.bad.slice(0, 6).forEach(x => lines.push("  - " + stripTags(x)));
     }
     if (a.weak.length){
       lines.push("", "STUDY PLAN");
       a.weak.forEach((w, i) => {
         const L = LESSONS[w.t];
-        lines.push("  " + (i + 1) + ". " + (L ? L.title : topicName(w.t)) + "  (" + w.c + "/" + w.n + ")");
+        lines.push("  " + (i + 1) + ". " + topicName(w.t) + "  (" + w.c + "/" + w.n + ")");
         if (L) lines.push("     " + stripTags(L.drill));
       });
     }
-    lines.push("", "The full analysis, with the working for every question, is on the results screen.");
+    lines.push("", "Full analysis and workings are on the results screen.");
   }
   lines.push("", "Sent from the practice app.");
   return lines.join("\n");
@@ -3366,7 +3366,7 @@ function reportFull(r){
       lines.push("", "STUDY PLAN");
       a.weak.forEach((w, i) => {
         const L = LESSONS[w.t];
-        lines.push("", "  " + (i + 1) + ". " + (L ? L.title : topicName(w.t)) + "  (" + w.c + "/" + w.n + ")");
+        lines.push("", "  " + (i + 1) + ". " + topicName(w.t) + "  (" + w.c + "/" + w.n + ")");
         if (!L) return;
         lines.push("     Why: " + stripTags(L.why));
         L.steps.forEach((x, j) => lines.push("     " + (j + 1) + ") " + stripTags(x)));
