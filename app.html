@@ -13,15 +13,15 @@
   --rule-soft:#DCE4EC;
   --ink:#111925;
   --ink-soft:#4F6076;
-  --ink-faint:#8494A6;
+  --ink-faint:#5B6C7F;
   --pen:#1D4E89;
   --pen-deep:#153A68;
   --pen-soft:#E3EDF9;
   --mark:#B03A2C;
   --mark-soft:#FBE9E5;
-  --tick:#2C7A50;
+  --tick:#26704A;
   --tick-soft:#E2F1E9;
-  --gold:#8E6410;
+  --gold:#835B0C;
   --gold-soft:#F7EEDC;
   --shadow:0 1px 2px rgba(17,25,37,.05), 0 8px 24px -12px rgba(17,25,37,.18);
   --shadow-lift:0 2px 4px rgba(17,25,37,.06), 0 18px 40px -18px rgba(17,25,37,.28);
@@ -37,7 +37,7 @@
     --rule-soft:#212C38;
     --ink:#DCE4EC;
     --ink-soft:#94A4B6;
-    --ink-faint:#6C7D90;
+    --ink-faint:#8698AD;
     --pen:#7FB0E8;
     --pen-deep:#A5C9F2;
     --pen-soft:#16273C;
@@ -59,7 +59,7 @@
   --rule-soft:#212C38;
   --ink:#DCE4EC;
   --ink-soft:#94A4B6;
-  --ink-faint:#6C7D90;
+  --ink-faint:#8698AD;
   --pen:#7FB0E8;
   --pen-deep:#A5C9F2;
   --pen-soft:#16273C;
@@ -3270,16 +3270,29 @@ function analyse(rec){
     }
   }
 
-  // --- topics ---
-  const st = {};
-  Object.keys(rec.topics || {}).forEach(t => { st[t] = rec.topics[t]; });
+  // --- topics on this paper ---
+  const st = rec.topics || {};
   const ranked = Object.keys(st).filter(t => st[t].n >= 3)
     .map(t => ({ t, p: Math.round(100 * st[t].c / st[t].n), c: st[t].c, n: st[t].n }))
     .sort((a,b) => a.p - b.p);
   ranked.filter(r => r.p >= 80).forEach(r => good.push("<b>" + topicName(r.t) + "</b> \u2014 " + r.c + "/" + r.n));
   ranked.filter(r => r.p < 60).forEach(r => bad.push("<b>" + topicName(r.t) + "</b> \u2014 " + r.c + "/" + r.n));
 
-  return { obs, good, bad, weak: ranked.filter(r => r.p < 75).slice(0, 3), ranked };
+  // --- topics pooled across every attempt, which is what the study plan should rest on ---
+  const pool = {};
+  loadHistory().forEach(a => Object.keys(a.topics || {}).forEach(t => {
+    pool[t] = pool[t] || { c:0, n:0 };
+    pool[t].c += a.topics[t].c;
+    pool[t].n += a.topics[t].n;
+  }));
+  const pooled = Object.keys(pool)
+    .map(t => ({ t, p: Math.round(100 * pool[t].c / pool[t].n), c: pool[t].c, n: pool[t].n }))
+    .filter(r => r.n >= 5)          // below five questions a topic score is mostly noise
+    .sort((a, b) => a.p - b.p);
+  const weak = pooled.filter(r => r.p < 75).slice(0, 3);
+
+  return { obs, good, bad, weak, ranked, pooled, attempts: loadHistory().length,
+           thinEvidence: weak.some(w => w.n < 10) };
 }
 
 function paintAnalysis(rec){
@@ -3308,9 +3321,14 @@ function paintAnalysis(rec){
     return;
   }
   $("plan-wrap").hidden = false;
-  $("plan-lede").innerHTML = "Working through everything again is the slow way. These " +
-    (a.weak.length === 1 ? "is the topic" : "are the " + a.weak.length + " topics") +
-    " that actually cost you marks, weakest first. Fixing one properly is worth more than three more full attempts.";
+  const many = a.attempts > 1;
+  $("plan-lede").innerHTML = "Working through everything again is the slow way. " +
+    (a.weak.length === 1 ? "This is the topic" : "These are the " + a.weak.length + " topics") +
+    " costing you the most marks, weakest first, measured across <b>" +
+    (many ? a.attempts + " attempts" : "this attempt") + "</b> rather than one lucky or unlucky run. " +
+    (a.thinEvidence
+      ? "Treat the order as a steer rather than a verdict: some of these rest on only a handful of questions so far, and another attempt or two will sharpen it."
+      : "Fixing one properly is worth more than three more full attempts.");
   $("plan").innerHTML = a.weak.map((r, i) => {
     const L = LESSONS[r.t];
     if (!L) return "";
