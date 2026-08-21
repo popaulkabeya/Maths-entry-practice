@@ -594,6 +594,25 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 .lesson .drill b{font-family:"JetBrains Mono",monospace;font-size:.62rem;letter-spacing:.14em;
   text-transform:uppercase;color:var(--pen);display:block;margin-bottom:.3rem}
 .lg-hint{margin-top:.9rem;font-size:.82rem;color:var(--ink-faint);line-height:1.5}
+
+/* ============ pause ============ */
+.pausewrap{
+  position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:22px;
+  background:color-mix(in srgb, var(--paper) 92%, transparent);backdrop-filter:blur(14px);
+}
+.pausecard{
+  max-width:460px;width:100%;padding:2rem 2rem 1.7rem;border-radius:var(--r);
+  background:var(--sheet);border:1px solid var(--rule);box-shadow:var(--shadow-lift);text-align:left;
+}
+.pausecard h2{margin:.5rem 0 .8rem;font-size:clamp(1.5rem,4vw,2rem)}
+.pause-d{font-size:.94rem;color:var(--ink-soft);line-height:1.6}
+.pause-d b{color:var(--ink)}
+.pause-clock{
+  margin-top:1.2rem;padding:.7rem .9rem;border-radius:9px;background:var(--sheet-2);
+  border:1px solid var(--rule-soft);font-size:.86rem;font-weight:700;color:var(--ink-soft);
+}
+.pause-clock.warn{background:var(--mark-soft);border-color:var(--mark);color:var(--mark)}
+.pause-acts{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin-top:1.6rem}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
@@ -605,8 +624,7 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
     <div class="whobar" id="whobar" hidden>
       <span class="who-av mono" id="who-av">?</span>
       <span class="who-t">Signed in on this device as <b id="who-name">&mdash;</b><i id="who-role"></i></span>
-      <button class="linkbtn" id="who-lock">Lock</button>
-      <button class="linkbtn" id="who-switch">Switch</button>
+      <button class="linkbtn" id="who-lock">Log off</button>
     </div>
 
     <div class="picker" id="picker">
@@ -758,6 +776,7 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
       <span class="pos mono" id="pos">Q 01 <i>/ 40</i></span>
       <button class="btn-quiet" id="toggle-nav">All questions</button>
       <span class="awaybadge" id="awaybadge" hidden></span>
+      <button class="btn-quiet" id="pause">Pause</button>
       <span class="timer mono" id="timer">00:00</span>
     </div>
     <div class="progress"><b id="prog"></b></div>
@@ -786,10 +805,24 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
       <button class="btn-quiet" id="flag">Flag for review</button>
       <span class="spacer"></span>
       <button class="btn-quiet" id="quit">Abandon</button>
+      <button class="btn-quiet" id="logoff-quiz">Log off</button>
       <button class="btn btn-primary" id="next">Next</button>
     </div>
   </div>
 </section>
+
+<div class="pausewrap" id="pausewrap" hidden>
+  <div class="pausecard">
+    <p class="eyebrow">Paused</p>
+    <h2 id="pause-h">Take your time.</h2>
+    <p class="pause-d" id="pause-d"></p>
+    <p class="pause-clock mono" id="pause-clock"></p>
+    <div class="pause-acts">
+      <button class="btn btn-primary btn-lg" id="resume">Carry on</button>
+      <button class="btn-quiet" id="pause-logoff">Log off</button>
+    </div>
+  </div>
+</div>
 
 <!-- ==================== EXAM CONDITIONS ==================== -->
 <section class="screen" id="s-consent">
@@ -2199,6 +2232,7 @@ let away = { count:0, ms:0, since:null };
 let qMs = {};        // index -> milliseconds spent on that question
 let qVisits = {};    // index -> how many times it was opened
 let qEnter = null;   // when the current question was opened
+let pausedAt = null; // when Pause was pressed
 let changes = 0;     // answers changed after a first choice
 let reviewFilter = "wrong";
 
@@ -2370,15 +2404,14 @@ function setWho(id){
   setSubject(subjectKey);
 }
 
-$("who-lock").addEventListener("click", () => { $("who-switch").click(); });
-$("who-switch").addEventListener("click", () => {
+$("who-lock").addEventListener("click", () => {
   who = null;
   try { localStorage.removeItem(WHO_KEY); } catch(e){}
   $("whobar").hidden = true;
   $("hero").hidden = true;
   $("record").hidden = true;
   $("assess").hidden = true;
-  memLogs = {};                       // nothing of the last person stays in memory
+  memLogs = {};
   clearRecordDom();
   $("as-grid").innerHTML = "";
   $("pwlist").innerHTML = "";
@@ -2390,7 +2423,6 @@ $("who-switch").addEventListener("click", () => {
   paintLogin();
   window.scrollTo({top:0, behavior:"instant"});
 });
-
 function assessorEmail(){
   try { return localStorage.getItem(ASSESSOR_KEY) || ""; } catch(e){ return ""; }
 }
@@ -2398,8 +2430,7 @@ $("who-lock").hidden = false;
 $("as-reset").addEventListener("click", () => {
   if (!confirm("Remove passwords from this device? Anyone using this browser will then be able to open any profile. Records are not affected.")) return;
   try { localStorage.removeItem(AUTH_KEY); } catch(e){}
-  paintLogin();
-  $("who-switch").click();
+  $("who-lock").click();
 });
 $("as-save").addEventListener("click", () => {
   const v = $("as-email").value.trim();
@@ -2682,6 +2713,8 @@ function build(indices, label){
   finished = false;
   away = { count:0, ms:0, since:null };
   qMs = {}; qVisits = {}; qEnter = null; changes = 0;
+  pausedAt = null;
+  $("pausewrap").hidden = true;
   const ab = $("awaybadge");
   if (ab){ ab.hidden = true; }
   limit = (mode === "exam" && PAPERS[paperKey] && PAPERS[paperKey].mins) ? PAPERS[paperKey].mins * 60 : 0;
@@ -2772,6 +2805,7 @@ $("go-stretch").addEventListener("click", () => startPaper("stretch", true));
 
 /* ---------------- clock ---------------- */
 function clock(){
+  if (pausedAt && mode !== "exam") return;   // practice really is stopped
   const el = $("timer");
   const gone = Math.floor((Date.now() - t0) / 1000);
   if (limit){
@@ -2875,6 +2909,60 @@ function pick(pos){
   render();
 }
 
+/* ---------------- pause and log off ---------------- */
+function pauseSession(){
+  if (pausedAt || finished) return;
+  pausedAt = Date.now();
+  stampQuestion();
+  const timed = (mode === "exam");
+  $("pause-h").textContent = timed ? "The clock is still running." : "Take your time.";
+  $("pause-d").innerHTML = timed
+    ? "This is a timed paper, so pausing does not stop the clock \u2014 in the real test there will be no pause button, and a practice run that stops when you do is not practice. The questions are hidden while you are away, and the time will be noted in your report."
+    : "The clock is stopped and the training set is waiting exactly where you left it. Nothing is lost and nothing is being counted against you.";
+  $("pause-clock").className = "pause-clock mono" + (timed ? " warn" : "");
+  $("pause-clock").textContent = timed
+    ? "TIME REMAINING WHEN YOU PAUSED \u2014 " + fmt(Math.max(0, limit - elapsed()))
+    : "TIME ON THIS RUN SO FAR \u2014 " + fmt(elapsed());
+  $("pausewrap").hidden = false;
+  $("resume").focus();
+}
+
+function resumeSession(){
+  if (!pausedAt) return;
+  const gap = Date.now() - pausedAt;
+  pausedAt = null;
+  if (mode === "exam"){
+    away.count++;                 // a pause is time away, and the report says so
+    away.ms += gap;
+    const b = $("awaybadge");
+    if (b){ b.hidden = false; b.textContent = "AWAY \u00d7" + away.count; }
+  } else {
+    t0 += gap;                    // practice genuinely stops the clock
+  }
+  $("pausewrap").hidden = true;
+  qEnter = { i: cur, t: Date.now() };
+  clock();
+}
+
+function logOff(fromSession){
+  const msg = fromSession
+    ? "Log off now? This attempt will not be marked or saved."
+    : "Log off?";
+  if (!confirm(msg)) return;
+  pausedAt = null;
+  $("pausewrap").hidden = true;
+  clearInterval(tick);
+  stopCamera();
+  sess = [];
+  show("s-start");
+  $("who-lock").click();
+}
+
+$("pause").addEventListener("click", pauseSession);
+$("resume").addEventListener("click", resumeSession);
+$("pause-logoff").addEventListener("click", () => logOff(true));
+$("logoff-quiz").addEventListener("click", () => logOff(true));
+
 /* ---------------- controls ---------------- */
 $("next").addEventListener("click", () => {
   if (cur === sess.length - 1){ finish(false); }
@@ -2892,6 +2980,10 @@ $("quit").addEventListener("click", () => {
 
 document.addEventListener("keydown", (e) => {
   if (!$("s-quiz").classList.contains("on")) return;
+  if (pausedAt){
+    if (e.key === "Escape" || e.key === "Enter"){ e.preventDefault(); resumeSession(); }
+    return;                                   // nothing else reaches a paused paper
+  }
   const k = e.key.toLowerCase();
   const li = LETTERS.map(l => l.toLowerCase()).indexOf(k);
   if (li > -1 && li < sess[cur].order.length){ e.preventDefault(); pick(li); return; }
@@ -2903,6 +2995,7 @@ document.addEventListener("keydown", (e) => {
 /* ---------------- finish & mark ---------------- */
 function finish(auto){
   if (finished) return;
+  if (pausedAt) resumeSession();
   const blanks = sess.filter(i => i.pick === null).length;
   if (!auto && blanks > 0){
     const msg = blanks === 1
