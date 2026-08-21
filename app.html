@@ -559,14 +559,14 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
       <h2 class="pick-h">Your work, your record.</h2>
 
       <div class="loginbox" id="loginbox" hidden>
-        <form id="login-form" autocomplete="on">
+        <form id="login-form" autocomplete="off">
           <div class="lf">
             <label for="lg-user">Username</label>
-            <input type="text" id="lg-user" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Your first name">
+            <input type="text" id="lg-user" name="fm-user" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Type your first name">
           </div>
           <div class="lf">
             <label for="lg-pw">Password</label>
-            <input type="password" id="lg-pw" name="password" autocomplete="current-password" placeholder="Your password">
+            <input type="password" id="lg-pw" name="fm-pass" autocomplete="off" placeholder="Type your password">
           </div>
           <p class="ub-err" id="lg-err" hidden></p>
           <button type="submit" class="btn btn-primary btn-lg" id="lg-go">Sign in</button>
@@ -1889,6 +1889,7 @@ const WHO_KEY = "fortymarks.who.v3";
 const AUTH_KEY = "fortymarks.auth.v1";
 const ASSESSOR_KEY = "fortymarks.assessor.v3";
 const MAX_LOG = 500;
+try { localStorage.removeItem("fortymarks.lastuser.v1"); } catch(e){}   // no longer stored
 const logKey = (id, sub) => "fortymarks.log.v4." + id + "." + (sub || subjectKey);
 let who = null;
 
@@ -2025,8 +2026,6 @@ let pendingId = null;   // unused by the login form, kept for the setup flow
 function authOn(){ return !!loadAuth(); }
 
 /* --- signing in --- */
-const LAST_USER = "fortymarks.lastuser.v1";
-
 function findProfile(name){
   const n = String(name || "").trim().toLowerCase();
   if (!n) return null;
@@ -2047,12 +2046,10 @@ function paintLogin(){
   $("pick-note").innerHTML =
     "<b>What this protects, and what it does not.</b> Your password keeps the others out of your record on this device. " +
     "It cannot do more than that: anyone who clears this browser&rsquo;s data gets past it. Real privacy comes from using your own phone or laptop.";
-  let last = "";
-  try { last = localStorage.getItem(LAST_USER) || ""; } catch(e){}
-  $("lg-user").value = last;
+  $("lg-user").value = "";           // both fields are typed in, every time
   $("lg-pw").value = "";
   $("lg-err").hidden = true;
-  setTimeout(() => { (last ? $("lg-pw") : $("lg-user")).focus(); }, 60);
+  setTimeout(() => { $("lg-user").focus(); }, 60);
 }
 
 $("login-form").addEventListener("submit", async (e) => {
@@ -2075,8 +2072,8 @@ $("login-form").addEventListener("submit", async (e) => {
     $("lg-pw").select();
     return;
   }
-  try { localStorage.setItem(LAST_USER, p.name); } catch(err){}
   $("lg-err").hidden = true;
+  $("lg-user").value = "";
   $("lg-pw").value = "";
   setWho(p.id);
 });
