@@ -1,0 +1,1613 @@
+<title>Forty Marks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+/* ============ tokens: light (student ink on printed paper) ============ */
+:root{
+  --paper:#E8ECF1;
+  --sheet:#FBFCFD;
+  --sheet-2:#F1F4F8;
+  --rule:#C6D2DE;
+  --rule-soft:#DCE4EC;
+  --ink:#111925;
+  --ink-soft:#4F6076;
+  --ink-faint:#8494A6;
+  --pen:#1D4E89;
+  --pen-deep:#153A68;
+  --pen-soft:#E3EDF9;
+  --mark:#B03A2C;
+  --mark-soft:#FBE9E5;
+  --tick:#2C7A50;
+  --tick-soft:#E2F1E9;
+  --gold:#8E6410;
+  --gold-soft:#F7EEDC;
+  --shadow:0 1px 2px rgba(17,25,37,.05), 0 8px 24px -12px rgba(17,25,37,.18);
+  --shadow-lift:0 2px 4px rgba(17,25,37,.06), 0 18px 40px -18px rgba(17,25,37,.28);
+  --r:10px;
+  --step:1.5rem;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D131A;
+    --sheet:#151E28;
+    --sheet-2:#1B2733;
+    --rule:#2B3846;
+    --rule-soft:#212C38;
+    --ink:#DCE4EC;
+    --ink-soft:#94A4B6;
+    --ink-faint:#6C7D90;
+    --pen:#7FB0E8;
+    --pen-deep:#A5C9F2;
+    --pen-soft:#16273C;
+    --mark:#EF8B7C;
+    --mark-soft:#331C19;
+    --tick:#5CC48E;
+    --tick-soft:#12291F;
+    --gold:#D6A64A;
+    --gold-soft:#2B2312;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+    --shadow-lift:0 2px 4px rgba(0,0,0,.45), 0 18px 40px -18px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D131A;
+  --sheet:#151E28;
+  --sheet-2:#1B2733;
+  --rule:#2B3846;
+  --rule-soft:#212C38;
+  --ink:#DCE4EC;
+  --ink-soft:#94A4B6;
+  --ink-faint:#6C7D90;
+  --pen:#7FB0E8;
+  --pen-deep:#A5C9F2;
+  --pen-soft:#16273C;
+  --mark:#EF8B7C;
+  --mark-soft:#331C19;
+  --tick:#5CC48E;
+  --tick-soft:#12291F;
+  --gold:#D6A64A;
+  --gold-soft:#2B2312;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow-lift:0 2px 4px rgba(0,0,0,.45), 0 18px 40px -18px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(to right, var(--rule-soft) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule-soft) 1px, transparent 1px);
+  background-size:26px 26px;
+  color:var(--ink);
+  font-family:"Karla","Helvetica Neue",Arial,sans-serif;
+  font-size:17px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+h1,h2,h3{font-family:"Newsreader",Georgia,"Times New Roman",serif;font-weight:500;text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(2.4rem,6vw,3.9rem);letter-spacing:-.015em}
+h2{font-size:clamp(1.5rem,3.2vw,2.1rem)}
+h3{font-size:1.2rem}
+p{margin:0}
+
+.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+.eyebrow{
+  font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);
+}
+
+.wrap{max-width:820px;margin:0 auto;padding:0 20px}
+
+/* ============ buttons ============ */
+button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:none;color:inherit}
+:focus-visible{outline:2.5px solid var(--pen);outline-offset:3px;border-radius:4px}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.55em;
+  padding:.72em 1.4em;border-radius:var(--r);font-weight:600;font-size:.95rem;
+  border:1px solid transparent;transition:transform .12s ease, background .15s ease, border-color .15s ease;
+}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--pen);color:#fff;box-shadow:var(--shadow)}
+:root[data-theme="dark"] .btn-primary{color:#0D131A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn-primary{color:#0D131A}}
+.btn-primary:hover{background:var(--pen-deep)}
+.btn-ghost{border-color:var(--rule);background:var(--sheet);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--pen);color:var(--pen)}
+.btn-quiet{color:var(--ink-soft);padding:.6em .9em;font-weight:500;font-size:.88rem}
+.btn-quiet:hover{color:var(--pen)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn-lg{padding:.9em 1.9em;font-size:1.02rem}
+
+/* ============ screens ============ */
+.screen{display:none}
+.screen.on{display:block;animation:fade .4s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ============ start ============ */
+.hero{padding:clamp(3.5rem,9vw,6.5rem) 0 2.5rem}
+.hero-mark{
+  display:inline-flex;align-items:baseline;gap:.5rem;margin-bottom:1.6rem;
+  padding:.4rem .8rem;border:1px solid var(--rule);border-radius:100px;background:var(--sheet);
+}
+.hero-mark b{font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.06em;color:var(--pen);font-weight:700}
+.hero-mark span{font-size:.78rem;color:var(--ink-soft)}
+.hero h1 em{font-style:italic;color:var(--pen)}
+.lede{margin-top:1.3rem;font-size:1.12rem;color:var(--ink-soft);max-width:56ch}
+
+.facts{display:flex;flex-wrap:wrap;gap:0;margin:2.4rem 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.fact{flex:1 1 130px;padding:1.05rem 1.2rem 1.05rem 0;border-right:1px solid var(--rule-soft)}
+.fact:last-child{border-right:0}
+.fact b{display:block;font-family:"JetBrains Mono",monospace;font-size:1.55rem;font-weight:500;letter-spacing:-.02em}
+.fact span{font-size:.8rem;color:var(--ink-soft)}
+
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:1.8rem 0}
+@media(max-width:600px){.modes{grid-template-columns:1fr}}
+.mode{
+  text-align:left;padding:1.25rem 1.3rem;border-radius:var(--r);border:1.5px solid var(--rule);
+  background:var(--sheet);transition:border-color .15s, box-shadow .15s, transform .12s;
+}
+.mode:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.mode[aria-pressed="true"]{border-color:var(--pen);background:var(--pen-soft);box-shadow:var(--shadow)}
+.mode .mt{display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:1.02rem;margin-bottom:.3rem}
+.mode .mt .dot{width:9px;height:9px;border-radius:50%;background:var(--rule);flex:none}
+.mode[aria-pressed="true"] .mt .dot{background:var(--pen)}
+.mode p{font-size:.88rem;color:var(--ink-soft);line-height:1.5}
+
+.opts-row{display:flex;flex-wrap:wrap;align-items:center;gap:1.2rem;margin:1.6rem 0 2rem}
+.switch{display:inline-flex;align-items:center;gap:.6rem;font-size:.88rem;color:var(--ink-soft);cursor:pointer}
+.switch input{position:absolute;opacity:0;width:0;height:0}
+.track{width:38px;height:22px;border-radius:100px;background:var(--rule);position:relative;transition:background .18s;flex:none}
+.track::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--sheet);transition:transform .18s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.switch input:checked + .track{background:var(--pen)}
+.switch input:checked + .track::after{transform:translateX(16px)}
+.switch input:focus-visible + .track{outline:2.5px solid var(--pen);outline-offset:3px}
+
+.syllabus{margin:3.2rem 0 0;border-top:1px solid var(--rule);padding-top:1.6rem}
+.syl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:2px;margin-top:1.1rem}
+.syl{display:flex;gap:.9rem;align-items:baseline;padding:.7rem 0;border-bottom:1px solid var(--rule-soft)}
+.syl b{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--pen);font-weight:700;flex:none}
+.syl span{font-size:.9rem}
+.syl i{font-style:normal;color:var(--ink-faint);font-size:.82rem;display:block}
+
+.history{margin:2.6rem 0 0;padding:1.1rem 1.3rem;border:1px solid var(--rule);border-radius:var(--r);background:var(--sheet)}
+.history ul{list-style:none;margin:.7rem 0 0;padding:0;display:flex;flex-direction:column;gap:.45rem}
+.history li{display:flex;align-items:center;gap:.8rem;font-size:.88rem;border-bottom:1px dotted var(--rule-soft);padding-bottom:.45rem}
+.history li:last-child{border-bottom:0;padding-bottom:0}
+.history li .sc{font-family:"JetBrains Mono",monospace;font-weight:700;min-width:3.6em}
+.history li .mt{color:var(--ink-faint);font-size:.8rem;margin-left:auto}
+
+.disclaimer{margin:2.6rem 0 4rem;font-size:.82rem;color:var(--ink-faint);line-height:1.6;border-left:2px solid var(--rule);padding-left:1rem;max-width:62ch}
+
+/* ============ exam bar ============ */
+.bar{
+  position:sticky;top:0;z-index:30;background:var(--paper);background:color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);
+}
+.bar-in{max-width:820px;margin:0 auto;padding:.7rem 20px;display:flex;align-items:center;gap:1rem}
+.bar .pos{font-family:"JetBrains Mono",monospace;font-size:.82rem;font-weight:700;letter-spacing:.02em}
+.bar .pos i{font-style:normal;color:var(--ink-faint);font-weight:400}
+.timer{
+  margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:.9rem;font-weight:700;
+  padding:.28em .7em;border-radius:6px;background:var(--sheet);border:1px solid var(--rule);
+}
+.timer.warn{color:var(--mark);border-color:var(--mark);background:var(--mark-soft)}
+.progress{height:3px;background:var(--rule-soft)}
+.progress b{display:block;height:100%;background:var(--pen);width:0;transition:width .3s ease}
+
+/* ============ question ============ */
+.qwrap{padding:2.4rem 0 8rem}
+.chip{
+  display:inline-block;font-family:"JetBrains Mono",monospace;font-size:.66rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--pen);
+  background:var(--pen-soft);padding:.35em .7em;border-radius:5px;
+}
+.qnum{font-family:"JetBrains Mono",monospace;font-size:.8rem;color:var(--ink-faint);letter-spacing:.08em}
+.qhead{display:flex;align-items:center;gap:.9rem;flex-wrap:wrap;margin-bottom:1.1rem}
+.qtext{font-size:1.24rem;line-height:1.55;max-width:62ch;font-weight:500}
+.qtext .mq{font-family:"JetBrains Mono",monospace;font-size:.94em;background:var(--sheet-2);padding:.08em .3em;border-radius:4px}
+
+.answers{display:flex;flex-direction:column;gap:10px;margin:1.9rem 0 0;list-style:none;padding:0}
+.ans{
+  display:flex;align-items:flex-start;gap:.95rem;width:100%;text-align:left;
+  padding:.95rem 1.1rem;border-radius:var(--r);border:1.5px solid var(--rule);
+  background:var(--sheet);transition:border-color .14s, background .14s, transform .1s;
+}
+.ans:hover:not([disabled]){border-color:var(--pen);transform:translateX(3px)}
+.ans .k{
+  font-family:"JetBrains Mono",monospace;font-weight:700;font-size:.85rem;flex:none;
+  width:26px;height:26px;border-radius:6px;display:grid;place-items:center;
+  background:var(--sheet-2);color:var(--ink-soft);border:1px solid var(--rule-soft);margin-top:1px;
+}
+.ans .v{font-family:"JetBrains Mono",monospace;font-size:.97rem;line-height:1.5}
+.ans[aria-pressed="true"]{border-color:var(--pen);background:var(--pen-soft)}
+.ans[aria-pressed="true"] .k{background:var(--pen);color:var(--sheet);border-color:var(--pen)}
+.ans.right{border-color:var(--tick);background:var(--tick-soft)}
+.ans.right .k{background:var(--tick);color:var(--sheet);border-color:var(--tick)}
+.ans.wrong{border-color:var(--mark);background:var(--mark-soft)}
+.ans.wrong .k{background:var(--mark);color:var(--sheet);border-color:var(--mark)}
+.ans .flagmark{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;flex:none;padding-top:.25em}
+.ans.right .flagmark{color:var(--tick)}
+.ans.wrong .flagmark{color:var(--mark)}
+.ans[disabled]{cursor:default}
+
+.explain{
+  margin-top:1.4rem;padding:1.1rem 1.25rem;border-radius:var(--r);
+  background:var(--sheet);border:1px solid var(--rule);border-left:3px solid var(--pen);
+  animation:fade .3s ease both;
+}
+.explain .eyebrow{margin-bottom:.4rem;display:block}
+.explain p{font-size:.95rem;line-height:1.65;color:var(--ink-soft)}
+.explain .mq{font-family:"JetBrains Mono",monospace;color:var(--ink);font-size:.92em}
+
+/* ============ footer controls ============ */
+.dock{
+  position:fixed;bottom:0;left:0;right:0;z-index:30;
+  background:var(--paper);background:color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter:blur(10px);border-top:1px solid var(--rule);
+}
+.dock-in{max-width:820px;margin:0 auto;padding:.8rem 20px;display:flex;align-items:center;gap:.6rem}
+.dock .spacer{flex:1}
+
+.navgrid{display:none;max-width:820px;margin:0 auto;padding:1rem 20px 0}
+.navgrid.on{display:block}
+.cells{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:.6rem}
+@media(max-width:620px){.cells{grid-template-columns:repeat(8,1fr)}}
+.cell{
+  aspect-ratio:1;border-radius:6px;border:1px solid var(--rule);background:var(--sheet);
+  font-family:"JetBrains Mono",monospace;font-size:.74rem;font-weight:500;color:var(--ink-soft);
+  display:grid;place-items:center;transition:transform .1s;
+}
+.cell:hover{transform:scale(1.08)}
+.cell.done{background:var(--pen-soft);border-color:var(--pen);color:var(--pen);font-weight:700}
+.cell.right{background:var(--tick-soft);border-color:var(--tick);color:var(--tick)}
+.cell.wrong{background:var(--mark-soft);border-color:var(--mark);color:var(--mark)}
+.cell.here{outline:2px solid var(--ink);outline-offset:1px}
+.cell{position:relative}
+.cell.flagged::after{content:"";position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--gold)}
+
+/* ============ results ============ */
+.res-hero{padding:3rem 0 2rem;display:flex;gap:2.4rem;align-items:center;flex-wrap:wrap}
+.dial{position:relative;flex:none;width:186px;height:186px}
+.dial svg{transform:rotate(-90deg);width:100%;height:100%}
+.dial .bg{fill:none;stroke:var(--rule-soft);stroke-width:11}
+.dial .fg{fill:none;stroke:var(--pen);stroke-width:11;stroke-linecap:round;transition:stroke-dashoffset 1.1s cubic-bezier(.2,.8,.25,1)}
+.dial .mid{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.dial .mid b{font-family:"JetBrains Mono",monospace;font-size:2.7rem;font-weight:500;line-height:1;letter-spacing:-.03em}
+.dial .mid b i{font-style:normal;font-size:1.2rem;color:var(--ink-faint)}
+.dial .mid span{font-size:.75rem;color:var(--ink-faint);font-family:"JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase}
+.verdict{flex:1 1 300px;min-width:260px}
+.verdict .band{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:.4em .8em;border-radius:5px;margin-bottom:.9rem}
+.band.ready{background:var(--tick-soft);color:var(--tick)}
+.band.close{background:var(--gold-soft);color:var(--gold)}
+.band.work{background:var(--mark-soft);color:var(--mark)}
+.verdict h2{margin-bottom:.6rem}
+.verdict p{color:var(--ink-soft);font-size:1rem;max-width:48ch}
+.verdict .meta{margin-top:1rem;font-family:"JetBrains Mono",monospace;font-size:.8rem;color:var(--ink-faint)}
+
+.topics{margin:2.4rem 0;border-top:1px solid var(--rule);padding-top:1.5rem}
+.trow{display:grid;grid-template-columns:1fr 46px;gap:1rem;align-items:center;padding:.75rem 0;border-bottom:1px solid var(--rule-soft)}
+.trow .tl{font-size:.94rem;font-weight:600}
+.tmeter{height:7px;border-radius:100px;background:var(--rule-soft);margin-top:.45rem;overflow:hidden}
+.tmeter b{display:block;height:100%;border-radius:100px;width:0;transition:width .9s cubic-bezier(.2,.8,.25,1)}
+.tmeter b.hi{background:var(--tick)}
+.tmeter b.mid{background:var(--gold)}
+.tmeter b.lo{background:var(--mark)}
+.tscore{font-family:"JetBrains Mono",monospace;font-size:.88rem;font-weight:700;text-align:right}
+
+.rev-head{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin:3rem 0 1rem;border-top:1px solid var(--rule);padding-top:1.6rem}
+.filters{margin-left:auto;display:flex;gap:4px;background:var(--sheet-2);padding:3px;border-radius:8px;border:1px solid var(--rule-soft)}
+.filters button{font-size:.8rem;font-weight:600;padding:.4em .85em;border-radius:6px;color:var(--ink-soft)}
+.filters button[aria-pressed="true"]{background:var(--sheet);color:var(--pen);box-shadow:var(--shadow)}
+
+.rev{border:1px solid var(--rule);border-radius:var(--r);background:var(--sheet);margin-bottom:10px;overflow:hidden}
+.rev summary{
+  display:flex;gap:.9rem;align-items:flex-start;padding:1rem 1.15rem;cursor:pointer;list-style:none;
+}
+.rev summary::-webkit-details-marker{display:none}
+.rev .glyph{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:1rem;flex:none;width:24px;height:24px;display:grid;place-items:center;border-radius:5px}
+.rev.ok .glyph{background:var(--tick-soft);color:var(--tick)}
+.rev.no .glyph{background:var(--mark-soft);color:var(--mark)}
+.rev .rq{font-size:.96rem;line-height:1.5;font-weight:500}
+.rev .rn{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--ink-faint);display:block;margin-bottom:.2rem;letter-spacing:.08em}
+.rev .body{padding:0 1.15rem 1.15rem 3.05rem;border-top:1px solid var(--rule-soft);margin-top:-1px;padding-top:1rem}
+.rev .line{font-family:"JetBrains Mono",monospace;font-size:.87rem;margin-bottom:.35rem}
+.rev .line span{color:var(--ink-faint)}
+.rev .line.you b{color:var(--mark);font-weight:500}
+.rev .line.cor b{color:var(--tick);font-weight:500}
+.rev .why{margin-top:.8rem;font-size:.92rem;color:var(--ink-soft);line-height:1.62}
+.rev .why .mq{font-family:"JetBrains Mono",monospace;color:var(--ink)}
+
+.endbar{display:flex;gap:.7rem;flex-wrap:wrap;margin:2.5rem 0 5rem;border-top:1px solid var(--rule);padding-top:1.7rem}
+
+
+/* ============ two gated steps ============ */
+.steps{display:flex;flex-direction:column;gap:16px;margin:1.2rem 0 2rem}
+.step{
+  display:flex;gap:1.3rem;padding:1.5rem 1.6rem;border-radius:var(--r);
+  border:1.5px solid var(--rule);background:var(--sheet);box-shadow:var(--shadow);
+}
+@media(max-width:600px){.step{padding:1.2rem;gap:.9rem}}
+.step-n{
+  flex:none;font-size:.78rem;font-weight:700;letter-spacing:.06em;color:var(--pen);
+  width:34px;height:34px;border-radius:8px;display:grid;place-items:center;
+  background:var(--pen-soft);border:1px solid var(--rule-soft);
+}
+.step-b{flex:1;min-width:0;display:flex;flex-direction:column;gap:.85rem;align-items:flex-start}
+.step-b h3{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.step-d{font-size:.94rem;color:var(--ink-soft);line-height:1.6;max-width:60ch}
+.step-d b{color:var(--ink)}
+
+.step.locked{background:var(--sheet-2);border-style:dashed;box-shadow:none}
+.step.locked .step-n{background:var(--rule-soft);color:var(--ink-faint)}
+.step.locked h3,.step.locked .step-d{color:var(--ink-faint)}
+.step.locked .step-d b{color:var(--ink-faint)}
+.step.locked .btn-primary{background:var(--rule);color:var(--ink-faint);box-shadow:none;cursor:not-allowed}
+.step.locked .gate{opacity:.55}
+.locknote{font-size:.83rem;color:var(--ink-faint);font-style:italic}
+.step:not(.locked) .locknote{display:none}
+
+.lockpill{
+  font-family:"JetBrains Mono",monospace;font-size:.62rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;padding:.35em .7em;border-radius:5px;
+  background:var(--rule-soft);color:var(--ink-faint);
+}
+.step:not(.locked) .lockpill{background:var(--tick-soft);color:var(--tick)}
+
+.gate{width:100%;padding:.9rem 1rem;border-radius:8px;background:var(--sheet-2);border:1px solid var(--rule-soft)}
+.step.locked .gate{background:var(--sheet)}
+.gate-row{display:flex;align-items:baseline;gap:1rem}
+.gate-l{font-size:.83rem;color:var(--ink-soft)}
+.gate-v{margin-left:auto;font-size:.9rem;font-weight:700}
+.gate-meter{position:relative;height:8px;border-radius:100px;background:var(--rule-soft);margin:.6rem 0 .5rem;overflow:hidden}
+.gate-meter b{display:block;height:100%;width:0;border-radius:100px;background:var(--pen);transition:width .7s cubic-bezier(.2,.8,.25,1)}
+.gate-meter b.hit{background:var(--tick)}
+.gate-meter i{position:absolute;top:-3px;bottom:-3px;left:80%;width:2px;background:var(--ink-faint);opacity:.7}
+.gate-note{font-size:.8rem;color:var(--ink-faint);line-height:1.5}
+.gate-note b{color:var(--ink-soft)}
+
+
+.indie{
+  display:flex;gap:.7rem;align-items:flex-start;margin:1.6rem 0 0;padding:.8rem 1rem;
+  border-radius:8px;background:var(--sheet-2);border:1px solid var(--rule-soft);max-width:62ch;
+}
+.indie b{font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gold);background:var(--gold-soft);padding:.35em .6em;border-radius:4px;flex:none;margin-top:.1rem}
+.indie span{font-size:.85rem;color:var(--ink-soft);line-height:1.55}
+.extra{font-size:.88rem;color:var(--ink-soft);margin:0 0 .5rem}
+.linkbtn{color:var(--pen);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.linkbtn:hover{color:var(--pen-deep)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+
+<!-- ==================== START ==================== -->
+<section class="screen on" id="s-start">
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-mark"><b>MDX</b><span>maths entry test &middot; online &middot; 1h 30 &middot; official pass 40%</span></div>
+      <h1>Train until it is boring. <em>Then</em> sit the test.</h1>
+      <p class="lede">Preparation in two steps, and the second one stays shut until the first is done. Work the <b>60-question training set</b> as many times as you like, with the answer and the working shown after every question. Reach <b>80%</b> and the <b>timed test</b> opens: forty different questions, an hour and a half on the clock, nothing revealed until you submit.</p>
+
+      <div class="indie"><b>Unofficial</b><span>Independent revision material, written from scratch. Not produced by, endorsed by, or affiliated with any university, and not a copy of any real exam paper.</span></div>
+
+      <div class="facts">
+        <div class="fact"><b>60</b><span>training questions, unlimited runs</span></div>
+        <div class="fact"><b>80%</b><span>unlocks the test</span></div>
+        <div class="fact"><b>40</b><span>questions in the test itself</span></div>
+        <div class="fact"><b>60%</b><span>to pass it here</span></div>
+      </div>
+
+      <p class="eyebrow">Two steps, in order</p>
+      <div class="steps">
+
+        <div class="step" id="step-train">
+          <div class="step-n mono">01</div>
+          <div class="step-b">
+            <h3>Training set &mdash; 60 questions</h3>
+            <p class="step-d">Every question marked the moment you answer it, with the working shown before you move on. No clock, no limit on attempts. Sit it as many times as you like: the questions come back in a new order each run, so you are practising the method rather than remembering the answer.</p>
+            <div class="gate">
+              <div class="gate-row">
+                <span class="gate-l">Best so far</span>
+                <span class="gate-v mono" id="best-train">not attempted</span>
+              </div>
+              <div class="gate-meter"><b id="gate-bar"></b><i id="gate-mark"></i></div>
+              <p class="gate-note" id="gate-note">Reach <b>80%</b> &mdash; 48 of the 60 &mdash; to unlock the test.</p>
+            </div>
+            <div class="opts-row">
+              <label class="switch"><input type="checkbox" id="opt-shuffle" checked><span class="track"></span>Shuffle the order each run</label>
+            </div>
+            <button class="btn btn-primary btn-lg" id="go-train">Start training</button>
+          </div>
+        </div>
+
+        <div class="step locked" id="step-test">
+          <div class="step-n mono">02</div>
+          <div class="step-b">
+            <h3>The test <span class="lockpill" id="lockpill">Locked</span></h3>
+            <p class="step-d">Forty different questions under real conditions: <b>1 hour 30 on the clock</b>, no feedback while you work, flag anything you want to come back to. The clock runs down and the paper submits itself at zero, exactly as it will on the day. Every answer and its full working appear once you finish.</p>
+            <div class="gate">
+              <div class="gate-row">
+                <span class="gate-l">Pass mark set for this test</span>
+                <span class="gate-v mono">60%</span>
+              </div>
+              <p class="gate-note">The university only asks for 40%. This test is set at <b>60%</b> on purpose &mdash; the extra twenty points are the margin that absorbs a bad morning.</p>
+            </div>
+            <button class="btn btn-primary btn-lg" id="go-test">Start the test</button>
+            <p class="locknote" id="locknote">Finish the training set at 80% or better and this unlocks.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="extra" id="extra-wrap" hidden>Cleared the test already? <button class="linkbtn" id="go-stretch">Sit the stretch paper</button> &mdash; 40 harder questions, well beyond what the entry test asks for.</p>
+
+      <div class="history" id="history" hidden>
+        <p class="eyebrow">Previous attempts</p>
+        <ul id="history-list"></ul>
+      </div>
+
+      <div class="syllabus">
+        <p class="eyebrow" id="syl-head">What the paper covers</p>
+        <div class="syl-grid" id="syl-grid"></div>
+      </div>
+
+      <p class="disclaimer">This is independent revision material, not an official or leaked paper &mdash; no university publishes its entry maths test in advance. Four things here are known rather than guessed: the test runs <b>1 hour 30 minutes</b>, it is <b>sat online</b>, the pass mark is <b>40%</b>, and the place is on a foundation-year programme, which is the level these tests are written for. The questions themselves are mine, so the wording will differ from the real paper even where the topics match. One thing still worth confirming with the admissions office: <b>whether a calculator is allowed</b>, and if so whether it is your own or one built into the screen. The 60% pass mark used on the test here is deliberately stricter than the university&rsquo;s 40% &mdash; it is a margin, not the real condition.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== QUIZ ==================== -->
+<section class="screen" id="s-quiz">
+  <div class="bar">
+    <div class="bar-in">
+      <span class="pos mono" id="pos">Q 01 <i>/ 40</i></span>
+      <button class="btn-quiet" id="toggle-nav">All questions</button>
+      <span class="timer mono" id="timer">00:00</span>
+    </div>
+    <div class="progress"><b id="prog"></b></div>
+    <div class="navgrid" id="navgrid">
+      <p class="eyebrow">Jump to a question &mdash; a gold dot means you flagged it</p>
+      <div class="cells" id="cells"></div>
+      <div style="height:14px"></div>
+    </div>
+  </div>
+
+  <div class="wrap qwrap">
+    <div class="qhead">
+      <span class="qnum mono" id="qnum">QUESTION 01</span>
+      <span class="chip" id="qtopic">Number</span>
+    </div>
+    <p class="qtext" id="qtext"></p>
+    <ul class="answers" id="answers"></ul>
+    <div id="explain-slot"></div>
+  </div>
+
+  <div class="dock">
+    <div class="dock-in">
+      <button class="btn btn-ghost" id="prev">Back</button>
+      <button class="btn-quiet" id="flag">Flag for review</button>
+      <span class="spacer"></span>
+      <button class="btn-quiet" id="quit">Abandon</button>
+      <button class="btn btn-primary" id="next">Next</button>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== RESULTS ==================== -->
+<section class="screen" id="s-results">
+  <div class="wrap">
+    <div class="res-hero">
+      <div class="dial">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="bg" cx="50" cy="50" r="42"></circle>
+          <circle class="fg" cx="50" cy="50" r="42" id="dial-fg" stroke-dasharray="263.9" stroke-dashoffset="263.9"></circle>
+        </svg>
+        <div class="mid"><b id="dial-score">0<i>/40</i></b><span id="dial-pct">0%</span></div>
+      </div>
+      <div class="verdict">
+        <span class="band" id="band">&mdash;</span>
+        <h2 id="verdict-h">&mdash;</h2>
+        <p id="verdict-p">&mdash;</p>
+        <p class="meta mono" id="verdict-meta"></p>
+      </div>
+    </div>
+
+    <div class="topics">
+      <p class="eyebrow">Marks by topic &mdash; revise the short bars first</p>
+      <div id="topic-rows"></div>
+    </div>
+
+    <div class="rev-head">
+      <p class="eyebrow" style="margin:0">Your marked script</p>
+      <div class="filters">
+        <button id="f-all" aria-pressed="false">All 40</button>
+        <button id="f-wrong" aria-pressed="true">Dropped marks</button>
+      </div>
+    </div>
+    <div id="review"></div>
+
+    <div class="endbar">
+      <button class="btn btn-primary" id="again">Sit it again</button>
+      <button class="btn btn-ghost" id="drill">Drill only what I got wrong</button>
+      <button class="btn btn-ghost" id="home">Back to the two steps</button>
+    </div>
+  </div>
+</section>
+
+<script>
+const STRETCH_TOPICS = {
+  num:  "Number & percentages",
+  alg:  "Algebra",
+  gra:  "Graphs & functions",
+  geo:  "Geometry & trigonometry",
+  sta:  "Statistics & probability",
+  app:  "Applied & financial"
+};
+
+const STRETCH_BANK = [
+/* ---------- Number & percentages ---------- */
+{t:"num", q:`A laptop is priced at <span class="mq">Rs 32,000</span> including VAT at 15%. What was the price <em>before</em> VAT was added?`,
+ o:["Rs 27,826.09","Rs 27,200.00","Rs 28,000.00","Rs 36,800.00"], a:0,
+ w:`The marked price is 115% of the original, so divide: <span class="mq">32,000 &divide; 1.15 = 27,826.09</span>. Taking 15% off the 32,000 gives 27,200 &mdash; that is the trap, because 15% of the bigger number is not the same as 15% of the smaller one.`},
+
+{t:"num", q:`Work out <span class="mq">3/4 &divide; 9/8</span>, giving your answer in its simplest form.`,
+ o:["27/32","2/3","3/2","1/6"], a:1,
+ w:`Dividing by a fraction means multiplying by its reciprocal: <span class="mq">3/4 &times; 8/9 = 24/36 = 2/3</span>. Multiplying straight across (27/32) is the usual slip.`},
+
+{t:"num", q:`Write <span class="mq">0.000045</span> in standard form.`,
+ o:["4.5 &times; 10<sup>&minus;4</sup>","45 &times; 10<sup>&minus;6</sup>","4.5 &times; 10<sup>&minus;5</sup>","4.5 &times; 10<sup>5</sup>"], a:2,
+ w:`Move the point until one non-zero digit sits in front of it: 4.5. You moved it 5 places to the right, so the power is <span class="mq">&minus;5</span>. In standard form the first number must be between 1 and 10, which rules out 45 &times; 10<sup>&minus;6</sup>.`},
+
+{t:"num", q:`A quantity is increased by 20% and the result is then decreased by 20%. Compared with the original quantity, the final value is:`,
+ o:["unchanged","4% smaller","4% bigger","40% bigger"], a:1,
+ w:`Multiply the factors: <span class="mq">1.20 &times; 0.80 = 0.96</span>, so you end at 96% of where you started &mdash; a 4% fall. Percentages are taken from different amounts each time, so they never simply cancel.`},
+
+{t:"num", q:`<span class="mq">Rs 4,500</span> is shared between three people in the ratio <span class="mq">2 : 3 : 4</span>. How much does the person with the largest share receive?`,
+ o:["Rs 1,500","Rs 2,250","Rs 2,000","Rs 1,800"], a:2,
+ w:`There are <span class="mq">2 + 3 + 4 = 9</span> parts, so one part is <span class="mq">4,500 &divide; 9 = 500</span>. The largest share is 4 parts: <span class="mq">4 &times; 500 = Rs 2,000</span>.`},
+
+{t:"num", q:`Find the highest common factor (HCF) of <span class="mq">84</span> and <span class="mq">126</span>.`,
+ o:["42","21","14","252"], a:0,
+ w:`Prime factorise: <span class="mq">84 = 2&sup2; &times; 3 &times; 7</span> and <span class="mq">126 = 2 &times; 3&sup2; &times; 7</span>. Take the lowest power of each shared prime: <span class="mq">2 &times; 3 &times; 7 = 42</span>. (252 is the LCM &mdash; don't mix the two up.)`},
+
+{t:"num", q:`Evaluate <span class="mq">16<sup>3/4</sup></span>.`,
+ o:["12","64","6","8"], a:3,
+ w:`The denominator is the root, the numerator is the power. <span class="mq">16<sup>1/4</sup> = 2</span>, then <span class="mq">2&sup3; = 8</span>. Multiplying 16 by 3/4 gives 12, which is a different operation entirely.`},
+
+/* ---------- Algebra ---------- */
+{t:"alg", q:`Solve <span class="mq">5(x &minus; 3) = 2x + 9</span>.`,
+ o:["x = 8","x = 2","x = 6","x = 4"], a:0,
+ w:`Expand first: <span class="mq">5x &minus; 15 = 2x + 9</span>. Collect terms: <span class="mq">3x = 24</span>, so <span class="mq">x = 8</span>. Forgetting to multiply the &minus;3 by 5 is the most common error here.`},
+
+{t:"alg", q:`Expand and simplify <span class="mq">(2x &minus; 3)(x + 5)</span>.`,
+ o:["2x&sup2; &minus; 7x &minus; 15","2x&sup2; + 7x &minus; 15","2x&sup2; + 13x &minus; 15","2x&sup2; + 7x + 15"], a:1,
+ w:`Every term multiplies every term: <span class="mq">2x&sup2; + 10x &minus; 3x &minus; 15</span>, which tidies to <span class="mq">2x&sup2; + 7x &minus; 15</span>. Watch the signs on the middle pair &mdash; +10x and &minus;3x, not both positive.`},
+
+{t:"alg", q:`Factorise <span class="mq">x&sup2; &minus; 7x + 12</span>.`,
+ o:["(x + 3)(x + 4)","(x &minus; 2)(x &minus; 6)","(x &minus; 3)(x &minus; 4)","(x &minus; 1)(x &minus; 12)"], a:2,
+ w:`You need two numbers that multiply to <span class="mq">+12</span> and add to <span class="mq">&minus;7</span>: those are &minus;3 and &minus;4. Note that &minus;2 and &minus;6 multiply to +12 but add to &minus;8, so they fail the second test.`},
+
+{t:"alg", q:`Solve the simultaneous equations <span class="mq">3x + 2y = 16</span> and <span class="mq">x &minus; y = 2</span>.`,
+ o:["x = 2, y = 5","x = 4, y = 2","x = 6, y = 4","x = 5, y = 3"], a:1,
+ w:`From the second equation <span class="mq">x = y + 2</span>. Substitute: <span class="mq">3(y + 2) + 2y = 16</span>, so <span class="mq">5y = 10</span> and <span class="mq">y = 2</span>, giving <span class="mq">x = 4</span>. Always check in <em>both</em> equations before committing.`},
+
+{t:"alg", q:`Solve <span class="mq">2x&sup2; &minus; 5x &minus; 3 = 0</span>.`,
+ o:["x = 3 or x = &minus;1/2","x = &minus;3 or x = 1/2","x = 3 or x = 1/2","x = 1 or x = &minus;3/2"], a:0,
+ w:`It factorises as <span class="mq">(2x + 1)(x &minus; 3) = 0</span>. Setting each bracket to zero gives <span class="mq">x = &minus;1/2</span> and <span class="mq">x = 3</span>. If factorising doesn't come quickly, the formula with a=2, b=&minus;5, c=&minus;3 gets you there too.`},
+
+{t:"alg", q:`Make <span class="mq">t</span> the subject of <span class="mq">v = u + at</span>.`,
+ o:["t = (u &minus; v)/a","t = a(v &minus; u)","t = (v &minus; u)/a","t = v &minus; u &minus; a"], a:2,
+ w:`Subtract <span class="mq">u</span> from both sides to get <span class="mq">v &minus; u = at</span>, then divide both sides by <span class="mq">a</span>. Undo the operations in reverse order and you cannot go wrong.`},
+
+{t:"alg", q:`Simplify <span class="mq">x&#8309;y&sup3; &divide; (x&sup2;y&#8311;)</span>.`,
+ o:["x&sup3;y&#8308;","x&sup3;/y&#8308;","1/(x&sup3;y&#8308;)","x&#8311;y&#185;&#8304;"], a:1,
+ w:`Subtract the powers when dividing: <span class="mq">x<sup>5&minus;2</sup> = x&sup3;</span> and <span class="mq">y<sup>3&minus;7</sup> = y<sup>&minus;4</sup></span>. A negative power means the term drops to the denominator, giving <span class="mq">x&sup3;/y&#8308;</span>.`},
+
+{t:"alg", q:`Solve the inequality <span class="mq">3 &minus; 2x &lt; 11</span>.`,
+ o:["x &lt; &minus;4","x &gt; &minus;4","x &gt; 4","x &lt; 7"], a:1,
+ w:`<span class="mq">&minus;2x &lt; 8</span>. Dividing by a negative number <em>reverses</em> the inequality sign, so <span class="mq">x &gt; &minus;4</span>. That sign flip is the single most-dropped mark in this topic.`},
+
+{t:"alg", q:`Given <span class="mq">f(x) = 3x&sup2; &minus; 2x + 1</span>, find <span class="mq">f(&minus;2)</span>.`,
+ o:["&minus;7","9","17","5"], a:2,
+ w:`<span class="mq">3(&minus;2)&sup2; &minus; 2(&minus;2) + 1 = 3(4) + 4 + 1 = 17</span>. A negative number squared is positive, and subtracting a negative adds &mdash; both signs work in your favour here.`},
+
+/* ---------- Graphs & functions ---------- */
+{t:"gra", q:`Find the gradient of the straight line passing through <span class="mq">(&minus;2, 5)</span> and <span class="mq">(4, &minus;7)</span>.`,
+ o:["2","&minus;2","&minus;1/2","&minus;12"], a:1,
+ w:`Gradient is the change in y over the change in x: <span class="mq">(&minus;7 &minus; 5) / (4 &minus; (&minus;2)) = &minus;12 / 6 = &minus;2</span>. Keep the two points in the same order top and bottom.`},
+
+{t:"gra", q:`For the line <span class="mq">y = 4 &minus; 3x</span>, which statement is correct?`,
+ o:["Gradient 4, y-intercept (0, &minus;3)","Gradient 3, y-intercept (0, 4)","Gradient &minus;3, y-intercept (0, 4)","Gradient &minus;3, y-intercept (0, &minus;4)"], a:2,
+ w:`Rewrite it as <span class="mq">y = &minus;3x + 4</span> so it matches <span class="mq">y = mx + c</span>. The gradient is <span class="mq">m = &minus;3</span> and the intercept is <span class="mq">c = 4</span>. Don't read the numbers off in the order they happen to be written.`},
+
+{t:"gra", q:`Find the equation of the line parallel to <span class="mq">y = 2x &minus; 5</span> that passes through the point <span class="mq">(1, 4)</span>.`,
+ o:["y = 2x + 2","y = 2x + 3","y = &minus;x/2 + 4.5","y = 2x &minus; 5"], a:0,
+ w:`Parallel lines share a gradient, so <span class="mq">m = 2</span>. Substitute the point: <span class="mq">4 = 2(1) + c</span>, so <span class="mq">c = 2</span>. The answer with gradient &minus;1/2 would be perpendicular, not parallel.`},
+
+{t:"gra", q:`Where does the curve <span class="mq">y = x&sup2; &minus; 4x + 3</span> cross the x-axis?`,
+ o:["x = &minus;1 and x = &minus;3","x = 2 and x = 3","x = 1 and x = 3","x = 0 and x = 4"], a:2,
+ w:`Set <span class="mq">y = 0</span> and factorise: <span class="mq">(x &minus; 1)(x &minus; 3) = 0</span>. The roots are <span class="mq">x = 1</span> and <span class="mq">x = 3</span>. Signs inside the brackets are the opposite of the signs of the roots.`},
+
+{t:"gra", q:`Find the midpoint of the line segment joining <span class="mq">A(&minus;3, 7)</span> and <span class="mq">B(5, &minus;1)</span>.`,
+ o:["(4, 4)","(1, 3)","(&minus;4, 4)","(2, 6)"], a:1,
+ w:`Average each coordinate: <span class="mq">x = (&minus;3 + 5)/2 = 1</span> and <span class="mq">y = (7 + (&minus;1))/2 = 3</span>. Subtracting instead of adding gives (4, 4), which is a very tempting wrong answer.`},
+
+/* ---------- Geometry & trigonometry ---------- */
+{t:"geo", q:`What is the size of each interior angle of a regular decagon (10 sides)?`,
+ o:["36&deg;","144&deg;","150&deg;","1440&deg;"], a:1,
+ w:`Each exterior angle is <span class="mq">360 &divide; 10 = 36&deg;</span>, and interior + exterior = 180&deg;, so the interior angle is <span class="mq">144&deg;</span>. 1440&deg; is the <em>total</em> of all ten interior angles.`},
+
+{t:"geo", q:`A right-angled triangle has shorter sides of <span class="mq">9 cm</span> and <span class="mq">12 cm</span>. Find the hypotenuse.`,
+ o:["21 cm","15 cm","&radic;21 cm","7.9 cm"], a:1,
+ w:`Pythagoras: <span class="mq">9&sup2; + 12&sup2; = 81 + 144 = 225</span>, and <span class="mq">&radic;225 = 15 cm</span>. Recognising the 3-4-5 triangle scaled by 3 gets you there in two seconds.`},
+
+{t:"geo", q:`In a right-angled triangle, the side adjacent to angle <span class="mq">&theta;</span> is <span class="mq">8 cm</span> and the hypotenuse is <span class="mq">17 cm</span>. Find <span class="mq">&theta;</span> to 1 decimal place.`,
+ o:["28.1&deg;","25.1&deg;","61.9&deg;","64.0&deg;"], a:2,
+ w:`Adjacent and hypotenuse means cosine: <span class="mq">cos &theta; = 8/17 = 0.4706</span>, so <span class="mq">&theta; = cos&#8315;&#185;(0.4706) = 61.9&deg;</span>. Getting 28.1&deg; means you used sine &mdash; that is the <em>other</em> angle in the triangle.`},
+
+{t:"geo", q:`Find the area of a circle of radius <span class="mq">7 cm</span>, taking <span class="mq">&pi; = 22/7</span>.`,
+ o:["44 cm&sup2;","77 cm&sup2;","308 cm&sup2;","154 cm&sup2;"], a:3,
+ w:`<span class="mq">A = &pi;r&sup2; = (22/7) &times; 49 = 154 cm&sup2;</span>. If you got 44, you calculated the circumference <span class="mq">2&pi;r</span> instead; 308 comes from using the diameter as the radius.`},
+
+{t:"geo", q:`A cylinder has radius <span class="mq">5 cm</span> and height <span class="mq">12 cm</span>. Find its volume to the nearest cm&sup3;.`,
+ o:["377 cm&sup3;","942 cm&sup3;","300 cm&sup3;","1885 cm&sup3;"], a:1,
+ w:`<span class="mq">V = &pi;r&sup2;h = &pi; &times; 25 &times; 12 = 300&pi; &asymp; 942 cm&sup3;</span>. The answer 300 is what you get if you forget &pi; altogether; 1885 is the volume with the diameter used as radius.`},
+
+{t:"geo", q:`The three angles of a triangle are <span class="mq">2x</span>, <span class="mq">3x</span> and <span class="mq">x + 30</span> degrees. Find <span class="mq">x</span>.`,
+ o:["25","30","20","36"], a:0,
+ w:`Angles in a triangle sum to 180&deg;: <span class="mq">2x + 3x + x + 30 = 180</span>, so <span class="mq">6x = 150</span> and <span class="mq">x = 25</span>. Check: the angles are 50&deg;, 75&deg; and 55&deg;, which do add to 180&deg;.`},
+
+{t:"geo", q:`Two similar triangles have corresponding sides in the ratio <span class="mq">3 : 5</span>. What is the ratio of their areas?`,
+ o:["3 : 5","6 : 10","9 : 25","27 : 125"], a:2,
+ w:`Areas scale with the <em>square</em> of the length ratio: <span class="mq">3&sup2; : 5&sup2; = 9 : 25</span>. Cubing (27 : 125) would give the ratio of their volumes if these were solids.`},
+
+/* ---------- Statistics & probability ---------- */
+{t:"sta", q:`Find the mean of <span class="mq">12, 15, 9, 20, 14</span>.`,
+ o:["13","14","15","14.5"], a:1,
+ w:`Add them: <span class="mq">12 + 15 + 9 + 20 + 14 = 70</span>, then divide by 5 to get <span class="mq">14</span>. The median here is also 14, which is a coincidence worth noticing but not relying on.`},
+
+{t:"sta", q:`Find the median of <span class="mq">3, 8, 5, 12, 7, 10</span>.`,
+ o:["7.5","6.5","8","7"], a:0,
+ w:`Order them first: 3, 5, 7, 8, 10, 12. With six values the median sits between the 3rd and 4th: <span class="mq">(7 + 8) / 2 = 7.5</span>. Failing to sort the list before picking the middle is the classic dropped mark.`},
+
+{t:"sta", q:`A bag holds 5 red, 3 blue and 4 green counters. One counter is taken at random. Find the probability that it is <em>not</em> blue.`,
+ o:["1/4","2/3","3/4","9/4"], a:2,
+ w:`There are 12 counters in total and 9 that are not blue, so <span class="mq">P = 9/12 = 3/4</span>. Alternatively use <span class="mq">1 &minus; 3/12</span>. A probability can never exceed 1, so 9/4 is impossible on sight.`},
+
+{t:"sta", q:`Two fair six-sided dice are thrown. What is the probability that the two scores total 8?`,
+ o:["1/6","5/36","1/12","7/36"], a:1,
+ w:`There are 36 equally likely outcomes. The ones totalling 8 are (2,6), (3,5), (4,4), (5,3) and (6,2) &mdash; five of them &mdash; so <span class="mq">P = 5/36</span>. Note (2,6) and (6,2) count separately, but (4,4) only once.`},
+
+{t:"sta", q:`The mean of 8 numbers is 15. A ninth number, 24, is added to the set. What is the new mean?`,
+ o:["15.5","19.5","17","16"], a:3,
+ w:`The original eight total <span class="mq">8 &times; 15 = 120</span>. Adding 24 gives 144 across 9 values: <span class="mq">144 &divide; 9 = 16</span>. Averaging 15 and 24 to get 19.5 ignores how much weight the eight existing values carry.`},
+
+{t:"sta", q:`Find the interquartile range of <span class="mq">2, 4, 4, 5, 7, 8, 9, 11</span>.`,
+ o:["4.5","9","4","3.5"], a:0,
+ w:`Split the ordered list in half. Lower half 2, 4, 4, 5 gives <span class="mq">Q&#8321; = 4</span>; upper half 7, 8, 9, 11 gives <span class="mq">Q&#8323; = 8.5</span>. The IQR is <span class="mq">8.5 &minus; 4 = 4.5</span>. The answer 9 is the full range, not the interquartile range.`},
+
+/* ---------- Applied & financial ---------- */
+{t:"app", q:`<span class="mq">Rs 25,000</span> is invested at 6% simple interest per year. How much <em>interest</em> is earned after 3 years?`,
+ o:["Rs 1,500","Rs 29,500","Rs 4,500","Rs 4,774"], a:2,
+ w:`Simple interest is <span class="mq">P &times; r &times; t = 25,000 &times; 0.06 &times; 3 = Rs 4,500</span>. Rs 29,500 is the total amount, not the interest &mdash; read carefully which one the question wants.`},
+
+{t:"app", q:`<span class="mq">Rs 50,000</span> is invested at 5% per year, compounded annually. What is the total amount after 2 years?`,
+ o:["Rs 55,000","Rs 55,125","Rs 52,500","Rs 5,125"], a:1,
+ w:`<span class="mq">50,000 &times; 1.05&sup2; = 50,000 &times; 1.1025 = Rs 55,125</span>. Rs 55,000 is what simple interest would give; the extra Rs 125 is the second year's interest earned on the first year's interest.`},
+
+{t:"app", q:`An item costing <span class="mq">Rs 1,800</span> is sold for <span class="mq">Rs 2,250</span>. Calculate the percentage profit.`,
+ o:["20%","25%","45%","12.5%"], a:1,
+ w:`Profit is <span class="mq">2,250 &minus; 1,800 = Rs 450</span>. Percentage profit is measured against the <em>cost</em>: <span class="mq">450 / 1,800 = 0.25 = 25%</span>. Dividing by the selling price instead gives 20%, which is the profit margin, a different figure.`},
+
+{t:"app", q:`A car travels <span class="mq">210 km</span> in <span class="mq">2 hours 30 minutes</span>. Find its average speed.`,
+ o:["105 km/h","70 km/h","52.5 km/h","84 km/h"], a:3,
+ w:`Convert the time to hours first: 2 h 30 min is <span class="mq">2.5 h</span>, not 2.3 h. Then <span class="mq">210 &divide; 2.5 = 84 km/h</span>. Mishandling the minutes is what makes this question a trap rather than a gift.`},
+
+{t:"app", q:`The exchange rate is <span class="mq">1 EUR = 51.20 MUR</span>. Convert <span class="mq">Rs 3,200</span> into euros.`,
+ o:["&euro;62.50","&euro;16.00","&euro;6.25","&euro;163,840"], a:0,
+ w:`You are going from rupees to euros, so divide by the rate: <span class="mq">3,200 &divide; 51.20 = &euro;62.50</span>. Multiplying gives a wildly large number, which is your signal that you went the wrong way.`},
+
+{t:"app", q:`6 workers build a wall in 12 days. Working at the same rate, how long would 9 workers take?`,
+ o:["18 days","8 days","9 days","6 days"], a:1,
+ w:`The job takes <span class="mq">6 &times; 12 = 72</span> worker-days no matter who does it. With 9 workers: <span class="mq">72 &divide; 9 = 8 days</span>. More workers means less time, so this is inverse proportion &mdash; if your answer went <em>up</em>, you multiplied where you should have divided.`}
+];
+
+const STRETCH_DETAILS = {
+  num:"VAT, reverse %, ratio, HCF, indices",
+  alg:"Linear, simultaneous, quadratics, rearranging",
+  gra:"Gradient, intercepts, roots, midpoints",
+  geo:"Angles, Pythagoras, SOHCAHTOA, area, volume",
+  sta:"Mean, median, IQR, single and combined events",
+  app:"Interest, profit, speed, currency, work rate"
+};
+
+const TRAIN_TOPICS = {
+  num:"Number & arithmetic",
+  alg:"Algebra basics",
+  gra:"Graphs & charts",
+  geo:"Shape & measures",
+  sta:"Statistics & probability",
+  app:"Money & everyday maths"
+};
+const TRAIN_DETAILS = {
+  num:"Fractions, decimals, percentages, negatives",
+  alg:"Substituting, solving, simplifying, sequences",
+  gra:"Coordinates, reading charts, simple lines",
+  geo:"Perimeter, area, angles, units, Pythagoras",
+  sta:"Mean, median, mode, range, probability",
+  app:"Sale prices, unit cost, time, sharing"
+};
+
+const TRAIN_BANK = [
+/* ---------- Number & arithmetic ---------- */
+{t:"num", q:`Work out <span class="mq">7 + 3 &times; 4</span>.`,
+ o:["40","19","28","15"], a:1,
+ w:`Multiplication comes before addition, so do <span class="mq">3 &times; 4 = 12</span> first, then add 7 to get <span class="mq">19</span>. Working strictly left to right gives 40, which is the answer a calculator without order-of-operations would produce.`},
+
+{t:"num", q:`What is <span class="mq">15%</span> of <span class="mq">240</span>?`,
+ o:["24","3.6","36","16"], a:2,
+ w:`10% of 240 is 24, and 5% is half of that, 12. Add them: <span class="mq">24 + 12 = 36</span>. Splitting a percentage into 10% and 5% chunks is faster and safer than reaching for the calculator.`},
+
+{t:"num", q:`Write <span class="mq">0.35</span> as a fraction in its simplest form.`,
+ o:["7/20","35/100","1/3","3/5"], a:0,
+ w:`0.35 is 35 hundredths, so <span class="mq">35/100</span>. Both numbers divide by 5, giving <span class="mq">7/20</span>. The question asks for the simplest form, so 35/100 is correct but unfinished &mdash; it would not earn the mark.`},
+
+{t:"num", q:`Work out <span class="mq">&minus;7 + 12</span>.`,
+ o:["&minus;5","19","5","&minus;19"], a:2,
+ w:`Start at &minus;7 and count 12 to the right on the number line: you pass zero and land on <span class="mq">5</span>. When the signs differ, subtract the smaller number from the larger and keep the sign of the larger one.`},
+
+{t:"num", q:`Work out <span class="mq">3/5 + 1/4</span>.`,
+ o:["4/9","17/20","4/20","3/20"], a:1,
+ w:`You cannot add fractions until the bottoms match. Twenty works for both: <span class="mq">3/5 = 12/20</span> and <span class="mq">1/4 = 5/20</span>, so the total is <span class="mq">17/20</span>. Adding tops and bottoms separately gives 4/9, which is the classic error.`},
+
+{t:"num", q:`Round <span class="mq">4,682</span> to the nearest hundred.`,
+ o:["4,600","4,700","4,680","5,000"], a:1,
+ w:`The hundreds digit is 6, and the digit after it is 8. Eight is 5 or more, so round up: <span class="mq">4,700</span>. The digits to the right all become zero.`},
+
+{t:"num", q:`Work out <span class="mq">2/3</span> of <span class="mq">45</span>.`,
+ o:["15","22.5","30","67.5"], a:2,
+ w:`Divide by the bottom, multiply by the top: <span class="mq">45 &divide; 3 = 15</span>, then <span class="mq">15 &times; 2 = 30</span>. Stopping at 15 gives you only one third, which is the most common slip here.`},
+
+{t:"num", q:`Which of these is the largest?`,
+ o:["0.6","5/8","2/3","0.56"], a:2,
+ w:`Turn them all into decimals before comparing: <span class="mq">5/8 = 0.625</span> and <span class="mq">2/3 = 0.667</span>. So the order is 0.56, 0.6, 0.625, 0.667, and <span class="mq">2/3</span> is the largest. Never compare a fraction and a decimal by eye.`},
+
+{t:"num", q:`Work out <span class="mq">4.2 &times; 0.3</span>.`,
+ o:["1.26","12.6","0.126","1.6"], a:0,
+ w:`Ignore the points first: <span class="mq">42 &times; 3 = 126</span>. Now count the decimal places in the question &mdash; one in 4.2 and one in 0.3, so two altogether &mdash; and put two back in: <span class="mq">1.26</span>.`},
+
+/* ---------- Algebra basics ---------- */
+{t:"alg", q:`If <span class="mq">x = 4</span>, find the value of <span class="mq">3x + 5</span>.`,
+ o:["12","17","32","9"], a:1,
+ w:`<span class="mq">3x</span> means 3 times x, so <span class="mq">3 &times; 4 = 12</span>, then add 5 to get <span class="mq">17</span>. Reading 3x as "3 next to 4" and writing 34, or adding before multiplying to get 32, are both easy traps.`},
+
+{t:"alg", q:`Solve <span class="mq">x + 7 = 19</span>.`,
+ o:["26","12","5","13"], a:1,
+ w:`Do the opposite of what has been done to x. Seven has been added, so subtract 7 from both sides: <span class="mq">x = 19 &minus; 7 = 12</span>. Check by putting it back: <span class="mq">12 + 7 = 19</span>.`},
+
+{t:"alg", q:`Solve <span class="mq">4x = 36</span>.`,
+ o:["32","40","9","144"], a:2,
+ w:`x has been multiplied by 4, so divide both sides by 4: <span class="mq">x = 36 &divide; 4 = 9</span>. Subtracting 4 to get 32 is the reflex to resist &mdash; undo multiplication with division, not subtraction.`},
+
+{t:"alg", q:`Simplify <span class="mq">5a + 3a &minus; 2a</span>.`,
+ o:["10a","6a","4a","6a&sup2;"], a:1,
+ w:`They are all lots of the same thing, so just count them: <span class="mq">5 + 3 &minus; 2 = 6</span>, giving <span class="mq">6a</span>. The letter does not change when you add and subtract like terms &mdash; it would only become a&sup2; if you multiplied.`},
+
+{t:"alg", q:`Solve <span class="mq">2x &minus; 5 = 11</span>.`,
+ o:["3","8","16","6"], a:1,
+ w:`Undo in reverse order. First add 5 to both sides: <span class="mq">2x = 16</span>. Then divide by 2: <span class="mq">x = 8</span>. Dividing before you add is what produces 3.`},
+
+{t:"alg", q:`What is the next term in the sequence <span class="mq">3, 7, 11, 15, &hellip;</span>?`,
+ o:["18","19","20","17"], a:1,
+ w:`Find the gap between terms: 7 &minus; 3 = 4, 11 &minus; 7 = 4. The sequence goes up in fours, so the next term is <span class="mq">15 + 4 = 19</span>.`},
+
+{t:"alg", q:`A taxi charges <span class="mq">Rs 50</span> to start plus <span class="mq">Rs 30</span> for each kilometre. What is the cost of a 6 km trip?`,
+ o:["180","230","480","80"], a:1,
+ w:`The kilometres cost <span class="mq">6 &times; 30 = Rs 180</span>, and the fixed charge is added once, not once per kilometre: <span class="mq">180 + 50 = Rs 230</span>. Adding the 50 before multiplying gives 480.`},
+
+/* ---------- Graphs & charts ---------- */
+{t:"gra", q:`A point sits <span class="mq">4</span> units to the right of the origin and <span class="mq">3</span> units down. What are its coordinates?`,
+ o:["(&minus;3, 4)","(3, &minus;4)","(4, &minus;3)","(&minus;4, 3)"], a:2,
+ w:`Coordinates are always written across first, then up or down. Right is positive x, down is negative y, so the point is <span class="mq">(4, &minus;3)</span>. "Along the corridor, then up the stairs" is the phrase worth remembering.`},
+
+{t:"gra", q:`A bar chart shows items sold: Monday 12, Tuesday 18, Wednesday 9, Thursday 21, Friday 15. How many more were sold on Thursday than on Wednesday?`,
+ o:["30","12","9","21"], a:1,
+ w:`"How many more" means subtract: <span class="mq">21 &minus; 9 = 12</span>. Adding the two bars gives 30, which answers a different question &mdash; read the wording before touching the numbers.`},
+
+{t:"gra", q:`A line has the equation <span class="mq">y = x + 3</span>. What is the value of <span class="mq">y</span> when <span class="mq">x = 5</span>?`,
+ o:["15","8","2","53"], a:1,
+ w:`Replace x with 5: <span class="mq">y = 5 + 3 = 8</span>. Every point on this line follows the same rule, so the point <span class="mq">(5, 8)</span> lies on it.`},
+
+{t:"gra", q:`A pie chart shows the subjects taken by <span class="mq">200</span> students. Psychology accounts for <span class="mq">25%</span>. How many students take Psychology?`,
+ o:["25","50","75","100"], a:1,
+ w:`25% is a quarter, so <span class="mq">200 &divide; 4 = 50</span> students. A percentage on a pie chart is always a share of the whole group, never a count in itself &mdash; 25 would be the answer only if there were 100 students.`},
+
+{t:"gra", q:`A straight line passes through <span class="mq">(0, 2)</span> and <span class="mq">(1, 5)</span>. What is its gradient?`,
+ o:["2","3","1/3","5"], a:1,
+ w:`Gradient is how far up you go for each step across. From x = 0 to x = 1 is one step across, and y climbs from 2 to 5, which is 3 up. So the gradient is <span class="mq">3</span>. The 2 is where the line crosses the y-axis, not its steepness.`},
+
+/* ---------- Shape & measures ---------- */
+{t:"geo", q:`Find the perimeter of a rectangle measuring <span class="mq">8 cm</span> by <span class="mq">5 cm</span>.`,
+ o:["40 cm","26 cm","13 cm","80 cm"], a:1,
+ w:`Perimeter is the distance all the way round, so add every side: <span class="mq">8 + 5 + 8 + 5 = 26 cm</span>. The answer 40 is the area, which is what you get by multiplying instead of adding.`},
+
+{t:"geo", q:`Find the area of a triangle with base <span class="mq">10 cm</span> and height <span class="mq">6 cm</span>.`,
+ o:["60 cm&sup2;","16 cm&sup2;","30 cm&sup2;","15 cm&sup2;"], a:2,
+ w:`Area of a triangle is <span class="mq">&frac12; &times; base &times; height</span>, so <span class="mq">&frac12; &times; 10 &times; 6 = 30 cm&sup2;</span>. Forgetting the half gives 60 &mdash; a triangle is exactly half the rectangle that would fit around it.`},
+
+{t:"geo", q:`Two angles sit on a straight line. One of them is <span class="mq">115&deg;</span>. What is the other?`,
+ o:["75&deg;","65&deg;","45&deg;","245&deg;"], a:1,
+ w:`Angles on a straight line add up to 180&deg;, so the other is <span class="mq">180 &minus; 115 = 65&deg;</span>. Using 360&deg; by mistake gives 245&deg;, which is bigger than a straight line and should look wrong immediately.`},
+
+{t:"geo", q:`How many millilitres are there in <span class="mq">2.5 litres</span>?`,
+ o:["250 ml","2,500 ml","25 ml","25,000 ml"], a:1,
+ w:`There are 1,000 ml in a litre, so <span class="mq">2.5 &times; 1,000 = 2,500 ml</span>. When you convert to a smaller unit the number always gets bigger &mdash; that is a quick sanity check on any conversion.`},
+
+{t:"geo", q:`Two angles of a triangle are <span class="mq">55&deg;</span> and <span class="mq">70&deg;</span>. Find the third angle.`,
+ o:["65&deg;","55&deg;","75&deg;","125&deg;"], a:1,
+ w:`The three angles of any triangle add to 180&deg;. The two given add to <span class="mq">125&deg;</span>, so the third is <span class="mq">180 &minus; 125 = 55&deg;</span>. The answer 125 is what you get by stopping one step early.`},
+
+{t:"geo", q:`A square has an area of <span class="mq">49 cm&sup2;</span>. How long is one side?`,
+ o:["24.5 cm","7 cm","14 cm","12.25 cm"], a:1,
+ w:`A square's area is side &times; side, so you need the number that multiplies by itself to make 49: <span class="mq">&radic;49 = 7 cm</span>. Halving the area gives 24.5, which would only work if area meant something else.`},
+
+{t:"geo", q:`A right-angled triangle has shorter sides of <span class="mq">3 cm</span> and <span class="mq">4 cm</span>. Find the hypotenuse.`,
+ o:["7 cm","5 cm","12 cm","25 cm"], a:1,
+ w:`Square the two short sides and add: <span class="mq">9 + 16 = 25</span>, then take the square root: <span class="mq">5 cm</span>. Forgetting the final square root leaves you at 25. The 3-4-5 triangle is worth memorising &mdash; it comes up constantly.`},
+
+/* ---------- Statistics & probability ---------- */
+{t:"sta", q:`Find the mean of <span class="mq">4, 8, 6, 10, 2</span>.`,
+ o:["5","6","8","30"], a:1,
+ w:`Add them all: <span class="mq">4 + 8 + 6 + 10 + 2 = 30</span>, then divide by how many there are: <span class="mq">30 &divide; 5 = 6</span>. The mean must always land somewhere between the smallest and largest value, so 30 cannot be right.`},
+
+{t:"sta", q:`Find the mode of <span class="mq">3, 5, 5, 7, 8, 5, 9</span>.`,
+ o:["5","7","6","3"], a:0,
+ w:`The mode is simply the value that appears most often. Five turns up three times, everything else once, so the mode is <span class="mq">5</span>. Mode for most, median for middle &mdash; that pairing keeps the two apart.`},
+
+{t:"sta", q:`Find the median of <span class="mq">2, 9, 4, 7, 5</span>.`,
+ o:["4","5","7","5.4"], a:1,
+ w:`Put them in order first: 2, 4, 5, 7, 9. With five values the middle one is the third, which is <span class="mq">5</span>. Picking the middle of the unsorted list gives 4 and is the single most common mistake in this topic.`},
+
+{t:"sta", q:`Find the range of <span class="mq">12, 5, 19, 8, 14</span>.`,
+ o:["19","14","11.6","7"], a:1,
+ w:`Range is the largest minus the smallest: <span class="mq">19 &minus; 5 = 14</span>. It measures how spread out the data is, not how big it is, so the answer is a gap rather than a value from the list.`},
+
+{t:"sta", q:`A bag contains <span class="mq">4</span> red and <span class="mq">6</span> blue counters. One is taken at random. What is the probability that it is red?`,
+ o:["4/6","2/5","3/5","1/4"], a:1,
+ w:`There are 10 counters altogether, 4 of them red, so <span class="mq">4/10</span>, which simplifies to <span class="mq">2/5</span>. The bottom of the fraction is always the total, never the other colour &mdash; that is what makes 4/6 wrong.`},
+
+{t:"sta", q:`A spinner has <span class="mq">8</span> equal sections numbered 1 to 8. What is the probability of landing on an even number?`,
+ o:["1/8","1/2","1/4","3/8"], a:1,
+ w:`The even numbers are 2, 4, 6 and 8 &mdash; four of the eight sections &mdash; so <span class="mq">4/8 = 1/2</span>. Half the numbers from 1 to 8 are even, which is the quick way to see it.`},
+
+{t:"sta", q:`In a survey of <span class="mq">60</span> people, <span class="mq">25%</span> preferred tea. How many people preferred tea?`,
+ o:["25","15","20","35"], a:1,
+ w:`25% is a quarter, so <span class="mq">60 &divide; 4 = 15</span> people. Writing 25 copies the percentage straight into the answer without ever using the 60, which is worth catching.`},
+
+{t:"sta", q:`The mean of <span class="mq">5</span> numbers is <span class="mq">12</span>. What do the five numbers add up to?`,
+ o:["17","60","2.4","12"], a:1,
+ w:`The mean is the total divided by how many there are, so run it backwards: <span class="mq">12 &times; 5 = 60</span>. This reversal comes up constantly in questions that add or remove a value from a set.`},
+
+/* ---------- Money & everyday maths ---------- */
+{t:"app", q:`A jacket costs <span class="mq">Rs 1,200</span> and is reduced by <span class="mq">25%</span> in a sale. What is the sale price?`,
+ o:["Rs 300","Rs 900","Rs 1,175","Rs 960"], a:1,
+ w:`25% of 1,200 is <span class="mq">300</span>, and that is the discount, not the price. Take it off: <span class="mq">1,200 &minus; 300 = Rs 900</span>. You can also go straight there by finding 75% of 1,200.`},
+
+{t:"app", q:`Three notebooks cost <span class="mq">Rs 135</span>. At the same price each, what would five notebooks cost?`,
+ o:["Rs 405","Rs 225","Rs 180","Rs 270"], a:1,
+ w:`Find one first: <span class="mq">135 &divide; 3 = Rs 45</span> each. Then five cost <span class="mq">5 &times; 45 = Rs 225</span>. Going via the price of one item is the safest route through every question of this shape.`},
+
+{t:"app", q:`A train leaves at <span class="mq">14:35</span> and arrives at <span class="mq">17:10</span>. How long is the journey?`,
+ o:["3 h 25 min","2 h 35 min","2 h 75 min","3 h 35 min"], a:1,
+ w:`Count up in stages: 14:35 to 17:35 would be 3 hours, but you arrive 25 minutes earlier, so it is <span class="mq">2 h 35 min</span>. Subtracting the digits as if they were ordinary numbers gives 2 h 75 min, which is not a real time.`},
+
+{t:"app", q:`<span class="mq">Rs 2,000</span> is shared equally between <span class="mq">8</span> people. How much does each person receive?`,
+ o:["Rs 160","Rs 250","Rs 200","Rs 400"], a:1,
+ w:`Equal shares means divide: <span class="mq">2,000 &divide; 8 = Rs 250</span>. Halving three times is the quickest way &mdash; 2,000 to 1,000 to 500 to 250.`},
+
+/* ---------- extra practice: number ---------- */
+{t:"num", q:`Work out <span class="mq">20%</span> of <span class="mq">350</span>.`,
+ o:["35","70","7","175"], a:1,
+ w:`10% of 350 is 35, so 20% is double that: <span class="mq">70</span>. Finding 10% first and scaling up beats reaching for a calculator almost every time.`},
+
+{t:"num", q:`Write <span class="mq">3/8</span> as a decimal.`,
+ o:["0.375","0.38","3.8","0.625"], a:0,
+ w:`A fraction is a division, so work out <span class="mq">3 &divide; 8 = 0.375</span>. The answer 0.625 is 5/8 &mdash; close enough to catch you out if you rush.`},
+
+{t:"num", q:`Work out <span class="mq">&minus;5 &times; 4</span>.`,
+ o:["20","&minus;9","&minus;20","&minus;1"], a:2,
+ w:`A negative multiplied by a positive gives a negative: <span class="mq">&minus;20</span>. Watch the operation &mdash; if this had been &minus;5 + 4 the answer would be &minus;1, which is a completely different question.`},
+
+{t:"num", q:`Write <span class="mq">18/24</span> in its simplest form.`,
+ o:["6/8","3/4","9/12","2/3"], a:1,
+ w:`Both numbers divide by 6: <span class="mq">18 &divide; 6 = 3</span> and <span class="mq">24 &divide; 6 = 4</span>, giving <span class="mq">3/4</span>. The options 9/12 and 6/8 are the same value but not yet simplified, so they would not earn the mark.`},
+
+/* ---------- extra practice: algebra ---------- */
+{t:"alg", q:`If <span class="mq">y = 6</span>, find the value of <span class="mq">2y &minus; 3</span>.`,
+ o:["15","9","63","12"], a:1,
+ w:`<span class="mq">2 &times; 6 = 12</span>, then subtract 3 to get <span class="mq">9</span>. Doing the subtraction before the multiplication gives 15, so keep the order straight.`},
+
+{t:"alg", q:`Solve <span class="mq">x/3 = 7</span>.`,
+ o:["10","4","21","2.33"], a:2,
+ w:`x has been divided by 3, so undo it by multiplying both sides by 3: <span class="mq">x = 21</span>. Check it: <span class="mq">21 &divide; 3 = 7</span>. Dividing again gives 2.33 and is the reflex to resist.`},
+
+{t:"alg", q:`Simplify <span class="mq">4b + 2c + 3b &minus; c</span>.`,
+ o:["9bc","7b + c","7b + 3c","8bc"], a:1,
+ w:`Only like terms combine. The b terms give <span class="mq">4b + 3b = 7b</span>, and the c terms give <span class="mq">2c &minus; c = c</span>, so the answer is <span class="mq">7b + c</span>. You cannot merge b and c into one term &mdash; they are different things.`},
+
+{t:"alg", q:`Write "five more than three times a number <span class="mq">n</span>" as an expression.`,
+ o:["5n + 3","3n + 5","3(n + 5)","n + 8"], a:1,
+ w:`Three times the number is <span class="mq">3n</span>, and five more means add 5: <span class="mq">3n + 5</span>. The bracketed version 3(n + 5) means something different &mdash; it triples the result after adding, not before.`},
+
+/* ---------- extra practice: graphs ---------- */
+{t:"gra", q:`A point Q has coordinates <span class="mq">(&minus;2, 5)</span>. Where is it?`,
+ o:["2 up and 5 to the left of the origin","2 to the left of the origin and 5 up","2 to the right and 5 down","5 to the left and 2 up"], a:1,
+ w:`The first number is always the across value and the second is always the up value. So &minus;2 means two to the left, and 5 means five up. Swapping them lands you somewhere else entirely.`},
+
+{t:"gra", q:`A line graph shows the temperature at 08:00 as <span class="mq">14&deg;C</span> and at 12:00 as <span class="mq">22&deg;C</span>. By how much did it rise?`,
+ o:["8&deg;C","36&deg;C","22&deg;C","4&deg;C"], a:0,
+ w:`A rise means the difference between the two readings: <span class="mq">22 &minus; 14 = 8&deg;C</span>. Adding them gives 36, which is not a temperature that happened at any point.`},
+
+{t:"gra", q:`On the line <span class="mq">y = 2x</span>, what is the value of <span class="mq">y</span> when <span class="mq">x = 7</span>?`,
+ o:["9","14","3.5","27"], a:1,
+ w:`<span class="mq">y = 2 &times; 7 = 14</span>. The expression 2x always means two lots of x, never 2 added to x &mdash; that would be written 2 + x.`},
+
+/* ---------- extra practice: shape ---------- */
+{t:"geo", q:`Find the area of a rectangle measuring <span class="mq">9 m</span> by <span class="mq">4 m</span>.`,
+ o:["26 m&sup2;","13 m&sup2;","36 m&sup2;","18 m&sup2;"], a:2,
+ w:`Area of a rectangle is length times width: <span class="mq">9 &times; 4 = 36 m&sup2;</span>. The answer 26 is the perimeter &mdash; area multiplies, perimeter adds.`},
+
+{t:"geo", q:`Three angles meet at a point. Two of them are <span class="mq">130&deg;</span> and <span class="mq">90&deg;</span>. Find the third.`,
+ o:["40&deg;","140&deg;","220&deg;","180&deg;"], a:1,
+ w:`Angles around a point add up to 360&deg;. The two given make <span class="mq">220&deg;</span>, so the third is <span class="mq">360 &minus; 220 = 140&deg;</span>. Using 180&deg; here is the mistake &mdash; that rule is for a straight line, not a full turn.`},
+
+{t:"geo", q:`Convert <span class="mq">250 cm</span> into metres.`,
+ o:["25 m","2.5 m","0.25 m","2,500 m"], a:1,
+ w:`There are 100 cm in a metre, so divide: <span class="mq">250 &divide; 100 = 2.5 m</span>. Converting to a bigger unit always makes the number smaller, which rules out 2,500 immediately.`},
+
+{t:"geo", q:`A circle has radius <span class="mq">5 cm</span>. Find its circumference, taking <span class="mq">&pi; = 3.14</span>.`,
+ o:["15.7 cm","78.5 cm","31.4 cm","62.8 cm"], a:2,
+ w:`Circumference is <span class="mq">2&pi;r = 2 &times; 3.14 &times; 5 = 31.4 cm</span>. The answer 78.5 is the area &mdash; circumference uses the radius once, area squares it.`},
+
+/* ---------- extra practice: statistics ---------- */
+{t:"sta", q:`Find the mean of <span class="mq">6, 6, 7, 9, 12</span>.`,
+ o:["7","8","6","9"], a:1,
+ w:`The total is <span class="mq">40</span> and there are 5 values, so the mean is <span class="mq">40 &divide; 5 = 8</span>. Note the mode here is 6 and the median is 7 &mdash; three different averages, three different answers.`},
+
+{t:"sta", q:`An ordinary dice is rolled once. What is the probability of scoring more than <span class="mq">4</span>?`,
+ o:["1/3","1/6","2/3","1/2"], a:0,
+ w:`More than 4 means 5 or 6 &mdash; two outcomes out of six &mdash; so <span class="mq">2/6 = 1/3</span>. "More than 4" does not include 4 itself; if it said "4 or more" the answer would be 1/2.`},
+
+{t:"sta", q:`In a class of <span class="mq">30</span> students, 12 walk to school, 10 come by bus and 8 cycle. What fraction walk?`,
+ o:["12/18","2/5","1/3","2/3"], a:1,
+ w:`Twelve out of the whole class of 30, so <span class="mq">12/30</span>, which simplifies to <span class="mq">2/5</span>. The bottom is always the total group, not the students who travel some other way.`},
+
+/* ---------- extra practice: money ---------- */
+{t:"app", q:`A phone costs <span class="mq">Rs 8,000</span> and a deposit of <span class="mq">15%</span> is paid up front. How much is the deposit?`,
+ o:["Rs 800","Rs 1,200","Rs 6,800","Rs 1,500"], a:1,
+ w:`10% of 8,000 is 800 and 5% is 400, so 15% is <span class="mq">Rs 1,200</span>. The figure 6,800 is what is left to pay, which answers a different question.`},
+
+{t:"app", q:`A recipe for <span class="mq">4</span> people uses <span class="mq">300 g</span> of rice. How much rice is needed for <span class="mq">6</span> people?`,
+ o:["200 g","450 g","500 g","600 g"], a:1,
+ w:`Find the amount for one person first: <span class="mq">300 &divide; 4 = 75 g</span>. Then six people need <span class="mq">6 &times; 75 = 450 g</span>. Going via one unit works for every recipe and price question of this shape.`}
+];
+
+
+const EXAM_BANK = [
+/* ---------- Number & arithmetic ---------- */
+{t:"num", q:`Work out <span class="mq">12 &minus; 4 &times; 2</span>.`,
+ o:["16","4","20","8"], a:1,
+ w:`Multiplication is done before subtraction: <span class="mq">4 &times; 2 = 8</span>, then <span class="mq">12 &minus; 8 = 4</span>. Working left to right gives 16, which is what a plain left-to-right reading produces.`},
+
+{t:"num", q:`What is <span class="mq">30%</span> of <span class="mq">150</span>?`,
+ o:["50","4.5","45","120"], a:2,
+ w:`10% of 150 is 15, so 30% is <span class="mq">3 &times; 15 = 45</span>. The figure 120 is the other 80%, which answers a question that was not asked.`},
+
+{t:"num", q:`Write <span class="mq">0.8</span> as a fraction in its simplest form.`,
+ o:["8/10","4/5","1/8","3/4"], a:1,
+ w:`0.8 is eight tenths, so <span class="mq">8/10</span>. Both numbers divide by 2, giving <span class="mq">4/5</span>. The question asks for the simplest form, so 8/10 is unfinished.`},
+
+{t:"num", q:`Work out <span class="mq">9 &minus; 15</span>.`,
+ o:["6","&minus;6","24","&minus;24"], a:1,
+ w:`Taking away more than you started with drops you below zero. From 9, count back 15 and you land on <span class="mq">&minus;6</span>. The size of the answer is <span class="mq">15 &minus; 9 = 6</span>, and the sign is negative because the larger number was the one subtracted.`},
+
+{t:"num", q:`Work out <span class="mq">1/2 + 2/5</span>.`,
+ o:["3/7","9/10","3/10","2/10"], a:1,
+ w:`Rewrite both over 10: <span class="mq">1/2 = 5/10</span> and <span class="mq">2/5 = 4/10</span>, so the total is <span class="mq">9/10</span>. Adding tops and bottoms straight across gives 3/7, which is the classic error.`},
+
+{t:"num", q:`Round <span class="mq">27.468</span> to <span class="mq">1</span> decimal place.`,
+ o:["27.4","27.5","27.47","28"], a:1,
+ w:`One decimal place means keeping one digit after the point. The next digit is 6, which is 5 or more, so round the 4 up: <span class="mq">27.5</span>. The answer 27.47 is two decimal places.`},
+
+{t:"num", q:`Work out <span class="mq">3/4</span> of <span class="mq">60</span>.`,
+ o:["20","45","15","80"], a:1,
+ w:`Divide by the bottom, multiply by the top: <span class="mq">60 &divide; 4 = 15</span>, then <span class="mq">15 &times; 3 = 45</span>. Stopping at 15 gives only a quarter.`},
+
+{t:"num", q:`Which of these is the smallest?`,
+ o:["0.4","3/8","0.45","1/2"], a:1,
+ w:`Turn the fractions into decimals: <span class="mq">3/8 = 0.375</span> and <span class="mq">1/2 = 0.5</span>. The order is then 0.375, 0.4, 0.45, 0.5, so <span class="mq">3/8</span> is the smallest. Never compare a fraction with a decimal by eye.`},
+
+{t:"num", q:`Work out <span class="mq">6.5 &times; 0.4</span>.`,
+ o:["26","2.6","0.26","2.0"], a:1,
+ w:`Ignore the points: <span class="mq">65 &times; 4 = 260</span>. There is one decimal place in each number, so two altogether: put them back to get <span class="mq">2.6</span>.`},
+
+/* ---------- Algebra basics ---------- */
+{t:"alg", q:`If <span class="mq">x = 5</span>, find the value of <span class="mq">4x &minus; 7</span>.`,
+ o:["27","13","20","8"], a:1,
+ w:`<span class="mq">4 &times; 5 = 20</span>, then subtract 7 to get <span class="mq">13</span>. Subtracting before multiplying gives 27, so keep multiplication first.`},
+
+{t:"alg", q:`Solve <span class="mq">x &minus; 9 = 14</span>.`,
+ o:["5","23","&minus;5","126"], a:1,
+ w:`Nine has been taken away from x, so add it back to both sides: <span class="mq">x = 14 + 9 = 23</span>. Check it: <span class="mq">23 &minus; 9 = 14</span>. Subtracting again gives 5 and is the reflex to resist.`},
+
+{t:"alg", q:`Solve <span class="mq">6x = 42</span>.`,
+ o:["36","7","48","252"], a:1,
+ w:`x has been multiplied by 6, so divide both sides by 6: <span class="mq">x = 42 &divide; 6 = 7</span>. Undo multiplication with division, never with subtraction.`},
+
+{t:"alg", q:`Simplify <span class="mq">7m &minus; 2m + 4m</span>.`,
+ o:["13m","9m","5m","9m&sup3;"], a:1,
+ w:`They are all lots of m, so just count: <span class="mq">7 &minus; 2 + 4 = 9</span>, giving <span class="mq">9m</span>. Work left to right through the signs &mdash; doing the addition first gives 13m.`},
+
+{t:"alg", q:`Solve <span class="mq">3x + 4 = 22</span>.`,
+ o:["9","6","18","7"], a:1,
+ w:`Undo in reverse order. Subtract 4 from both sides: <span class="mq">3x = 18</span>. Then divide by 3: <span class="mq">x = 6</span>. Stopping at 18 is forgetting the second step.`},
+
+{t:"alg", q:`What is the next term in the sequence <span class="mq">20, 17, 14, 11, &hellip;</span>?`,
+ o:["9","8","7","10"], a:1,
+ w:`The sequence falls by 3 each time, so the next term is <span class="mq">11 &minus; 3 = 8</span>. Check the gap between two or three pairs before you commit, not just the first pair.`},
+
+{t:"alg", q:`A gym charges <span class="mq">Rs 400</span> to join plus <span class="mq">Rs 250</span> a month. What does 5 months cost in total?`,
+ o:["Rs 1,250","Rs 1,650","Rs 3,250","Rs 650"], a:1,
+ w:`The months cost <span class="mq">5 &times; 250 = Rs 1,250</span>, and the joining fee is paid once, not monthly: <span class="mq">1,250 + 400 = Rs 1,650</span>. Adding the 400 before multiplying gives 3,250.`},
+
+/* ---------- Graphs & charts ---------- */
+{t:"gra", q:`A point sits <span class="mq">2</span> units to the left of the origin and <span class="mq">6</span> units up. What are its coordinates?`,
+ o:["(6, &minus;2)","(&minus;2, 6)","(2, &minus;6)","(&minus;6, 2)"], a:1,
+ w:`Across first, then up. Left is negative x and up is positive y, so the point is <span class="mq">(&minus;2, 6)</span>. Writing the up value first is the most common slip.`},
+
+{t:"gra", q:`A bar chart shows sales of <span class="mq">30</span> in January, <span class="mq">45</span> in February, <span class="mq">25</span> in March and <span class="mq">40</span> in April. What is the total for the four months?`,
+ o:["140","45","110","120"], a:0,
+ w:`Add all four bars: <span class="mq">30 + 45 + 25 + 40 = 140</span>. The value 45 is only the tallest bar, and 110 comes from missing one of the four out &mdash; count the bars before you add.`},
+
+{t:"gra", q:`A line has the equation <span class="mq">y = 2x &minus; 1</span>. What is <span class="mq">y</span> when <span class="mq">x = 4</span>?`,
+ o:["9","7","8","3"], a:1,
+ w:`Replace x with 4: <span class="mq">y = 2 &times; 4 &minus; 1 = 8 &minus; 1 = 7</span>. Doing the subtraction before the multiplication gives 6, and forgetting it altogether gives 8.`},
+
+{t:"gra", q:`A pie chart represents <span class="mq">400</span> people. One sector accounts for <span class="mq">40%</span>. How many people is that?`,
+ o:["40","160","100","240"], a:1,
+ w:`10% of 400 is 40, so 40% is <span class="mq">4 &times; 40 = 160</span> people. Writing 40 copies the percentage into the answer without ever using the 400.`},
+
+{t:"gra", q:`A straight line passes through <span class="mq">(0, 1)</span> and <span class="mq">(2, 7)</span>. What is its gradient?`,
+ o:["6","3","1/3","4"], a:1,
+ w:`Gradient is the rise divided by the run. The line climbs <span class="mq">7 &minus; 1 = 6</span> over a run of <span class="mq">2 &minus; 0 = 2</span>, so the gradient is <span class="mq">6 &divide; 2 = 3</span>. Forgetting to divide by the run leaves you at 6.`},
+
+/* ---------- Shape & measures ---------- */
+{t:"geo", q:`Find the perimeter of a square with sides of <span class="mq">12 cm</span>.`,
+ o:["144 cm","48 cm","24 cm","36 cm"], a:1,
+ w:`A square has four equal sides, so the perimeter is <span class="mq">4 &times; 12 = 48 cm</span>. The answer 144 is the area, which comes from multiplying two sides rather than adding four.`},
+
+{t:"geo", q:`Find the area of a triangle with base <span class="mq">8 cm</span> and height <span class="mq">9 cm</span>.`,
+ o:["72 cm&sup2;","36 cm&sup2;","17 cm&sup2;","24 cm&sup2;"], a:1,
+ w:`Area of a triangle is <span class="mq">&frac12; &times; base &times; height = &frac12; &times; 8 &times; 9 = 36 cm&sup2;</span>. Forgetting the half gives 72 &mdash; a triangle is exactly half its surrounding rectangle.`},
+
+{t:"geo", q:`Two angles sit on a straight line. One of them is <span class="mq">47&deg;</span>. What is the other?`,
+ o:["43&deg;","133&deg;","313&deg;","53&deg;"], a:1,
+ w:`Angles on a straight line add to 180&deg;, so the other is <span class="mq">180 &minus; 47 = 133&deg;</span>. Using 90&deg; gives 43 and using 360&deg; gives 313 &mdash; both should look wrong next to a straight line.`},
+
+{t:"geo", q:`How many grams are there in <span class="mq">1.4 kg</span>?`,
+ o:["140 g","1,400 g","14 g","14,000 g"], a:1,
+ w:`There are 1,000 g in a kilogram, so <span class="mq">1.4 &times; 1,000 = 1,400 g</span>. Moving to a smaller unit always makes the number bigger, which is your check.`},
+
+{t:"geo", q:`A triangle has angles of <span class="mq">90&deg;</span> and <span class="mq">35&deg;</span>. Find the third angle.`,
+ o:["45&deg;","55&deg;","65&deg;","125&deg;"], a:1,
+ w:`The three angles add to 180&deg;. The two given make <span class="mq">125&deg;</span>, so the third is <span class="mq">180 &minus; 125 = 55&deg;</span>. The answer 125 is the running total, one step short of the answer.`},
+
+{t:"geo", q:`A square has a perimeter of <span class="mq">36 cm</span>. What is its area?`,
+ o:["324 cm&sup2;","81 cm&sup2;","9 cm&sup2;","144 cm&sup2;"], a:1,
+ w:`Work back to one side first: <span class="mq">36 &divide; 4 = 9 cm</span>. Then the area is <span class="mq">9 &times; 9 = 81 cm&sup2;</span>. Squaring the perimeter instead gives 324, which skips the first step entirely.`},
+
+{t:"geo", q:`A right-angled triangle has shorter sides of <span class="mq">6 cm</span> and <span class="mq">8 cm</span>. Find the hypotenuse.`,
+ o:["14 cm","10 cm","48 cm","100 cm"], a:1,
+ w:`Square and add: <span class="mq">36 + 64 = 100</span>, then take the square root: <span class="mq">10 cm</span>. Leaving it at 100 is forgetting the root. This is the 3-4-5 triangle doubled.`},
+
+/* ---------- Statistics & probability ---------- */
+{t:"sta", q:`Find the mean of <span class="mq">5, 9, 11, 3, 12</span>.`,
+ o:["9","8","10","40"], a:1,
+ w:`The total is <span class="mq">40</span> and there are 5 values, so the mean is <span class="mq">40 &divide; 5 = 8</span>. The mean must sit between the smallest and largest value, so 40 cannot be right.`},
+
+{t:"sta", q:`Find the mode of <span class="mq">2, 4, 4, 6, 4, 8, 9</span>.`,
+ o:["6","4","5.28","2"], a:1,
+ w:`The mode is the value appearing most often, and 4 turns up three times. Mode for most &mdash; that pairing keeps it apart from the median, which here would be 4 as well only by coincidence.`},
+
+{t:"sta", q:`Find the median of <span class="mq">10, 3, 8, 1, 6, 12</span>.`,
+ o:["6","7","8","6.67"], a:1,
+ w:`Order them first: 1, 3, 6, 8, 10, 12. With six values the median sits between the 3rd and 4th: <span class="mq">(6 + 8) &divide; 2 = 7</span>. Skipping the sort is the single most common mistake here.`},
+
+{t:"sta", q:`Find the range of <span class="mq">23, 9, 31, 14, 18</span>.`,
+ o:["31","22","19","17"], a:1,
+ w:`Range is largest minus smallest: <span class="mq">31 &minus; 9 = 22</span>. It measures spread, so the answer is a gap rather than a value taken from the list.`},
+
+{t:"sta", q:`A bag contains <span class="mq">3</span> green, <span class="mq">5</span> yellow and <span class="mq">2</span> black counters. One is taken at random. What is the probability that it is yellow?`,
+ o:["5/6","1/2","1/5","2/5"], a:1,
+ w:`There are 10 counters in total and 5 are yellow, so <span class="mq">5/10 = 1/2</span>. The bottom of the fraction is always the total, which is what makes 5/6 wrong.`},
+
+{t:"sta", q:`A spinner has <span class="mq">10</span> equal sections numbered 1 to 10. What is the probability of landing on a multiple of <span class="mq">3</span>?`,
+ o:["1/3","3/10","1/10","4/10"], a:1,
+ w:`The multiples of 3 up to 10 are 3, 6 and 9 &mdash; three sections out of ten &mdash; so <span class="mq">3/10</span>. Answering 1/3 assumes a third of the numbers qualify, which only sounds right.`},
+
+{t:"sta", q:`In a class of <span class="mq">80</span> students, <span class="mq">35%</span> wear glasses. How many students is that?`,
+ o:["35","28","45","30"], a:1,
+ w:`10% of 80 is 8, so 30% is 24, and 5% is 4. Add them: <span class="mq">24 + 4 = 28</span> students. Writing 35 copies the percentage without using the 80.`},
+
+{t:"sta", q:`The mean of <span class="mq">6</span> numbers is <span class="mq">9</span>. What do the six numbers add up to?`,
+ o:["15","54","1.5","9"], a:1,
+ w:`The mean is the total divided by how many there are, so reverse it: <span class="mq">9 &times; 6 = 54</span>. This reversal is what makes questions about adding or removing a value solvable.`},
+
+/* ---------- Money & everyday maths ---------- */
+{t:"app", q:`A bag costs <span class="mq">Rs 2,400</span> and is reduced by <span class="mq">30%</span> in a sale. What is the sale price?`,
+ o:["Rs 720","Rs 1,680","Rs 2,370","Rs 1,800"], a:1,
+ w:`30% of 2,400 is <span class="mq">720</span>, and that is the discount, not the price. Take it off: <span class="mq">2,400 &minus; 720 = Rs 1,680</span>. Going straight to 70% of 2,400 gets there in one step.`},
+
+{t:"app", q:`Four pens cost <span class="mq">Rs 96</span>. At the same price each, what would seven pens cost?`,
+ o:["Rs 672","Rs 168","Rs 144","Rs 240"], a:1,
+ w:`One pen costs <span class="mq">96 &divide; 4 = Rs 24</span>, so seven cost <span class="mq">7 &times; 24 = Rs 168</span>. Multiplying the 96 by 7 without dividing first gives 672.`},
+
+{t:"app", q:`A bus leaves at <span class="mq">09:50</span> and arrives at <span class="mq">12:15</span>. How long is the journey?`,
+ o:["3 h 35 min","2 h 25 min","2 h 65 min","3 h 25 min"], a:1,
+ w:`Count on in stages: 09:50 to 11:50 is 2 hours, and 11:50 to 12:15 is 25 minutes, so <span class="mq">2 h 25 min</span>. Subtracting the digits as ordinary numbers gives 2 h 65 min, which is not a real time.`},
+
+{t:"app", q:`<span class="mq">Rs 4,500</span> is shared equally between <span class="mq">6</span> people. How much does each person receive?`,
+ o:["Rs 700","Rs 750","Rs 900","Rs 675"], a:1,
+ w:`Equal shares means divide: <span class="mq">4,500 &divide; 6 = Rs 750</span>. Check by multiplying back: <span class="mq">750 &times; 6 = 4,500</span>.`}
+];
+
+</script>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const LETTERS = ["A","B","C","D"];
+const KEY = "fortymarks.history.v1";
+
+const PAPERS = {
+  train: {
+    label:"Training set", short:"training", mode:"practice", pass:80,
+    topics:TRAIN_TOPICS, details:TRAIN_DETAILS, bank:TRAIN_BANK
+  },
+  test: {
+    label:"The test", short:"test", mode:"exam", pass:60,
+    topics:TRAIN_TOPICS, details:TRAIN_DETAILS, bank:EXAM_BANK
+  },
+  stretch: {
+    label:"Stretch paper", short:"stretch paper", mode:"exam", pass:60,
+    topics:STRETCH_TOPICS, details:STRETCH_DETAILS, bank:STRETCH_BANK
+  }
+};
+const UNLOCK_PCT = 80;
+
+let paperKey = "train";
+let BANK = PAPERS.train.bank;
+let TOPICS = PAPERS.train.topics;
+
+let mode = "practice";
+let sess = [];
+let cur = 0;
+let t0 = 0, tick = null, limit = 0;
+let finished = false;
+let justUnlocked = false;
+let reviewFilter = "wrong";
+
+/* ---------------- helpers ---------------- */
+function shuffled(n){
+  const a = Array.from({length:n}, (_,i) => i);
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function fmt(s){
+  const m = Math.floor(s / 60), r = s % 60;
+  return String(m).padStart(2,"0") + ":" + String(r).padStart(2,"0");
+}
+function show(id){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("on"));
+  $(id).classList.add("on");
+  window.scrollTo({top:0, behavior:"instant"});
+}
+function correctPos(item){ return item.order.indexOf(BANK[item.qi].a); }
+function isRight(item){ return item.pick !== null && item.pick === correctPos(item); }
+function scoreNow(){ return sess.filter(isRight).length; }
+
+/* ---------------- stored progress ---------------- */
+let memHistory = null;   // survives a browser that blocks storage (opening the file directly, private mode)
+function loadHistory(){
+  if (memHistory) return memHistory;
+  try { memHistory = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch(e){ memHistory = []; }
+  if (!Array.isArray(memHistory)) memHistory = [];
+  return memHistory;
+}
+function saveAttempt(rec){
+  const h = loadHistory();
+  h.unshift(rec);
+  memHistory = h.slice(0,8);
+  try { localStorage.setItem(KEY, JSON.stringify(memHistory)); } catch(e){}
+}
+function bestTrainPct(){
+  return loadHistory().filter(r => r.paper === "train")
+    .reduce((m,r) => Math.max(m, Math.round(100 * r.score / r.total)), -1);
+}
+function isUnlocked(){ return bestTrainPct() >= UNLOCK_PCT; }
+
+/* ---------------- start screen ---------------- */
+function paintGate(){
+  const best = bestTrainPct();
+  const open = isUnlocked();
+  const need = Math.ceil(PAPERS.train.bank.length * UNLOCK_PCT / 100);
+
+  $("best-train").textContent = best < 0 ? "not attempted" : best + "%";
+  $("best-train").style.color = best < 0 ? "var(--ink-faint)"
+    : open ? "var(--tick)" : best >= 60 ? "var(--gold)" : "var(--mark)";
+
+  const bar = $("gate-bar");
+  bar.style.width = Math.max(0, best) + "%";
+  bar.classList.toggle("hit", open);
+
+  $("gate-note").innerHTML = open
+    ? "Cleared. The test below is open \u2014 and the training set stays here for as long as you want it."
+    : "Reach <b>" + UNLOCK_PCT + "%</b> \u2014 " + need + " of the " + PAPERS.train.bank.length + " \u2014 to unlock the test.";
+
+  $("step-test").classList.toggle("locked", !open);
+  $("lockpill").textContent = open ? "Unlocked" : "Locked";
+  $("go-test").disabled = !open;
+  $("extra-wrap").hidden = !open;
+}
+
+function paintSyllabus(){
+  const det = PAPERS.train.details, tp = PAPERS.train.topics, n = {};
+  PAPERS.train.bank.forEach(b => { n[b.t] = (n[b.t] || 0) + 1; });
+  $("syl-head").textContent = "What the training set covers";
+  $("syl-grid").innerHTML = Object.keys(tp).filter(t => n[t]).map(t =>
+    '<div class="syl"><b>' + String(n[t]).padStart(2,"0") + "</b><span>" + tp[t] +
+    "<i>" + det[t] + "</i></span></div>").join("");
+}
+
+function paintHistory(){
+  const h = loadHistory();
+  if (!h.length){ $("history").hidden = true; return; }
+  $("history").hidden = false;
+  $("history-list").innerHTML = h.map(r => {
+    const pct = Math.round(100 * r.score / r.total);
+    const bar = PAPERS[r.paper] ? PAPERS[r.paper].pass : 60;
+    const col = pct >= bar ? "var(--tick)" : pct >= bar - 20 ? "var(--gold)" : "var(--mark)";
+    const when = new Date(r.at).toLocaleDateString(undefined,{day:"numeric",month:"short"});
+    return '<li><span class="sc" style="color:' + col + '">' + r.score + "/" + r.total + '</span>' +
+           '<span>' + r.label + '</span>' +
+           '<span class="mt">' + fmt(r.secs) + " &middot; " + when + '</span></li>';
+  }).join("");
+}
+
+function paintStart(){ paintGate(); paintSyllabus(); paintHistory(); }
+paintStart();
+
+/* ---------------- build a session ---------------- */
+function build(indices, label){
+  sess = indices.map(qi => ({ qi, order: shuffled(BANK[qi].o.length), pick:null, flagged:false, locked:false }));
+  sess.label = label;
+  sess.paper = paperKey;
+  cur = 0;
+  finished = false;
+  limit = (mode === "exam") ? 90 * 60 : 0;
+  t0 = Date.now();
+  clearInterval(tick);
+  tick = setInterval(clock, 250);
+  clock();
+  $("navgrid").classList.remove("on");
+  buildCells();
+  render();
+  show("s-quiz");
+}
+
+function startPaper(k, shuffleQs){
+  paperKey = k;
+  BANK = PAPERS[k].bank;
+  TOPICS = PAPERS[k].topics;
+  mode = PAPERS[k].mode;
+  const n = BANK.length;
+  const order = shuffleQs ? shuffled(n) : Array.from({length:n},(_,i)=>i);
+  build(order, PAPERS[k].label);
+}
+
+$("go-train").addEventListener("click", () => startPaper("train", $("opt-shuffle").checked));
+$("go-test").addEventListener("click", () => {
+  if (!isUnlocked()) return;
+  if (!confirm("This starts the timed test: 40 questions, 1 hour 30, no feedback until you submit. Ready?")) return;
+  startPaper("test", true);
+});
+$("go-stretch").addEventListener("click", () => startPaper("stretch", true));
+
+/* ---------------- clock ---------------- */
+function clock(){
+  const el = $("timer");
+  const gone = Math.floor((Date.now() - t0) / 1000);
+  if (limit){
+    const left = Math.max(0, limit - gone);
+    el.textContent = fmt(left);
+    el.classList.toggle("warn", left <= 600);
+    if (left === 0){ finish(true); }
+  } else {
+    el.textContent = fmt(gone);
+  }
+}
+function elapsed(){
+  return Math.floor((Date.now() - t0) / 1000);
+}
+
+/* ---------------- navigator ---------------- */
+$("toggle-nav").addEventListener("click", () => {
+  const g = $("navgrid");
+  g.classList.toggle("on");
+  $("toggle-nav").textContent = g.classList.contains("on") ? "Hide list" : "All questions";
+});
+function buildCells(){
+  $("cells").innerHTML = sess.map((_,i) => '<button class="cell" data-i="' + i + '">' + (i+1) + "</button>").join("");
+  $("cells").querySelectorAll(".cell").forEach(b => {
+    b.addEventListener("click", () => { cur = +b.dataset.i; render(); });
+  });
+}
+function paintCells(){
+  $("cells").querySelectorAll(".cell").forEach((b,i) => {
+    const it = sess[i];
+    b.className = "cell";
+    if (it.pick !== null){
+      if (mode === "practice" && it.locked) b.classList.add(isRight(it) ? "right" : "wrong");
+      else b.classList.add("done");
+    }
+    if (it.flagged) b.classList.add("flagged");
+    if (i === cur) b.classList.add("here");
+  });
+}
+
+/* ---------------- render a question ---------------- */
+function render(){
+  const it = sess[cur];
+  const q = BANK[it.qi];
+  const n = String(cur + 1).padStart(2,"0");
+
+  $("pos").innerHTML = "Q " + n + " <i>/ " + String(sess.length).padStart(2,"0") + "</i>";
+  $("prog").style.width = (100 * (cur + 1) / sess.length) + "%";
+  $("qnum").textContent = "QUESTION " + n;
+  $("qtopic").textContent = TOPICS[q.t];
+  $("qtext").innerHTML = q.q;
+
+  const showMarks = mode === "practice" && it.locked;
+  $("answers").innerHTML = it.order.map((oi, pos) => {
+    let cls = "ans";
+    let tag = "";
+    if (showMarks){
+      if (pos === correctPos(it)){ cls += " right"; tag = '<span class="flagmark">correct</span>'; }
+      else if (pos === it.pick){ cls += " wrong"; tag = '<span class="flagmark">your answer</span>'; }
+    }
+    const pressed = (!showMarks && it.pick === pos) ? "true" : "false";
+    return '<li><button class="' + cls + '" aria-pressed="' + pressed + '" data-pos="' + pos + '"' +
+           (showMarks ? " disabled" : "") + '>' +
+           '<span class="k">' + LETTERS[pos] + '</span><span class="v">' + q.o[oi] + '</span>' + tag +
+           '</button></li>';
+  }).join("");
+
+  $("answers").querySelectorAll(".ans").forEach(b => {
+    b.addEventListener("click", () => pick(+b.dataset.pos));
+  });
+
+  $("explain-slot").innerHTML = showMarks
+    ? '<div class="explain"><span class="eyebrow">' + (isRight(it) ? "Why that works" : "Where it went wrong") + '</span><p>' + q.w + "</p></div>"
+    : "";
+
+  $("flag").textContent = it.flagged ? "Flagged \u2022 unflag" : "Flag for review";
+  $("flag").style.color = it.flagged ? "var(--gold)" : "";
+  $("prev").disabled = cur === 0;
+  $("next").textContent = (cur === sess.length - 1) ? "Finish & mark" : "Next";
+  paintCells();
+}
+
+function pick(pos){
+  const it = sess[cur];
+  if (mode === "practice" && it.locked) return;
+  it.pick = pos;
+  if (mode === "practice"){ it.locked = true; }
+  render();
+}
+
+/* ---------------- controls ---------------- */
+$("next").addEventListener("click", () => {
+  if (cur === sess.length - 1){ finish(false); }
+  else { cur++; render(); }
+});
+$("prev").addEventListener("click", () => { if (cur > 0){ cur--; render(); } });
+$("flag").addEventListener("click", () => { sess[cur].flagged = !sess[cur].flagged; render(); });
+$("quit").addEventListener("click", () => {
+  if (confirm("Abandon this attempt? Your answers will not be marked or saved.")){
+    clearInterval(tick);
+    show("s-start");
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (!$("s-quiz").classList.contains("on")) return;
+  const k = e.key.toLowerCase();
+  const li = LETTERS.map(l => l.toLowerCase()).indexOf(k);
+  if (li > -1 && li < sess[cur].order.length){ e.preventDefault(); pick(li); return; }
+  if (k >= "1" && k <= "4"){ e.preventDefault(); pick(+k - 1); return; }
+  if (e.key === "ArrowRight"){ e.preventDefault(); if (cur < sess.length - 1){ cur++; render(); } }
+  if (e.key === "ArrowLeft"){ e.preventDefault(); if (cur > 0){ cur--; render(); } }
+});
+
+/* ---------------- finish & mark ---------------- */
+function finish(auto){
+  if (finished) return;
+  const blanks = sess.filter(i => i.pick === null).length;
+  if (!auto && blanks > 0){
+    const msg = blanks === 1
+      ? "1 question is still blank. Mark the paper anyway?"
+      : blanks + " questions are still blank. Mark the paper anyway?";
+    if (!confirm(msg)) return;
+  }
+  clearInterval(tick);
+  finished = true;
+  const secs = elapsed();
+  const score = scoreNow();
+  const wasOpen = isUnlocked();
+  saveAttempt({ score, total: sess.length, secs, at: Date.now(),
+                label: sess.label || "Practice", paper: sess.paper || paperKey });
+  paintStart();
+  justUnlocked = (sess.paper === "train") && !wasOpen && isUnlocked();
+  results(score, secs, auto);
+}
+
+function results(score, secs, auto){
+  const total = sess.length;
+  const pct = Math.round(100 * score / total);
+
+  $("dial-score").innerHTML = score + "<i>/" + total + "</i>";
+  $("dial-pct").textContent = pct + "%";
+  const C = 2 * Math.PI * 42;
+  const fg = $("dial-fg");
+  fg.setAttribute("stroke-dasharray", C.toFixed(1));
+  fg.setAttribute("stroke-dashoffset", C.toFixed(1));
+
+  const pass = PAPERS[sess.paper] ? PAPERS[sess.paper].pass : 60;
+  let band, head, note;
+
+  if (sess.paper === "train"){
+    if (pct >= UNLOCK_PCT){
+      band = ["ready", justUnlocked ? "Test unlocked" : "Above the gate"];
+      head = justUnlocked ? "That unlocks the test." : "Still above the gate.";
+      note = justUnlocked
+        ? "Eighty percent of the training set is the standard we set to open the timed paper, and you are past it. Step 2 on the front page is now live: forty different questions, an hour and a half, no feedback until you submit."
+        : "You are holding the standard that opened the test. Running the training set again is never wasted \u2014 the order changes every time, and speed on the easy questions is what buys thinking time on the hard ones.";
+      fg.style.stroke = "var(--tick)";
+    } else if (pct >= 60){
+      band = ["close","Close to the gate"];
+      head = "Close. The gate is at 80%.";
+      note = "You are in the right region but not through it yet. The short bars below are where the missing marks are sitting \u2014 work one topic until the method is automatic, then run the set again rather than grinding through all sixty in the same shape.";
+      fg.style.stroke = "var(--gold)";
+    } else {
+      band = ["work","Below the gate"];
+      head = "Not through the gate yet.";
+      note = "Take the weakest topic below on its own and read every explanation in it, including the ones you got right. Understanding why a wrong option is tempting is worth more than another full run \u2014 and every question here reappears in a new order next time.";
+      fg.style.stroke = "var(--mark)";
+    }
+  } else {
+    if (pct >= pass){
+      band = ["ready","Passed"];
+      head = "Passed, with the margin we set.";
+      note = "This test is marked at 60%, twenty points above what the university actually asks for. Clearing it under the clock, with no feedback while you worked, is the closest signal you can get that the real thing is under control. Sit it once more a day or two before the date and leave it there.";
+      fg.style.stroke = "var(--tick)";
+    } else if (pct >= 40){
+      band = ["close","Short of the target"];
+      head = "You cleared the university's bar, not ours.";
+      note = "The official condition is 40% and you are above it, so on today's showing you would pass. But this test is set at 60% precisely because a bare pass leaves nothing in reserve. Read every worked answer below, then go back to the training set before re-sitting.";
+      fg.style.stroke = "var(--gold)";
+    } else {
+      band = ["work","Below the pass mark"];
+      head = "Below the line, including the official one.";
+      note = "This is under the 40% the university requires. Do not re-sit the test straight away \u2014 go back to the training set, where every question is marked as you go and the working is right there. Every answer and explanation from this paper is below; read all forty.";
+      fg.style.stroke = "var(--mark)";
+    }
+  }
+  $("band").className = "band " + band[0];
+  $("band").textContent = band[1];
+  $("verdict-h").textContent = head;
+  $("verdict-p").textContent = note;
+
+  const blanks = sess.filter(i => i.pick === null).length;
+  $("verdict-meta").textContent =
+    (auto ? "TIME EXPIRED \u2014 " : "") +
+    "TIME TAKEN " + fmt(secs) +
+    "  \u00b7  " + Math.round(secs / total) + "s PER QUESTION" +
+    (blanks ? "  \u00b7  " + blanks + " LEFT BLANK" : "");
+
+  requestAnimationFrame(() => {
+    setTimeout(() => { fg.setAttribute("stroke-dashoffset", (C * (1 - score / total)).toFixed(1)); }, 60);
+  });
+
+  // topic breakdown
+  const stat = {};
+  sess.forEach(it => {
+    const t = BANK[it.qi].t;
+    stat[t] = stat[t] || {c:0, n:0};
+    stat[t].n++;
+    if (isRight(it)) stat[t].c++;
+  });
+  const rows = Object.keys(TOPICS).filter(t => stat[t]).map(t => {
+    const s = stat[t], p = Math.round(100 * s.c / s.n);
+    const cls = p >= 60 ? "hi" : p >= 40 ? "mid" : "lo";
+    return '<div class="trow"><div><div class="tl">' + TOPICS[t] + '</div>' +
+           '<div class="tmeter"><b class="' + cls + '" data-w="' + p + '"></b></div></div>' +
+           '<div class="tscore">' + s.c + "/" + s.n + "</div></div>";
+  }).join("");
+  $("topic-rows").innerHTML = rows;
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      $("topic-rows").querySelectorAll(".tmeter b").forEach(b => { b.style.width = b.dataset.w + "%"; });
+    }, 120);
+  });
+
+  reviewFilter = (sess.paper !== "train" || score === total) ? "all" : "wrong";
+  paintFilters();
+  paintReview();
+  show("s-results");
+}
+
+/* ---------------- marked script ---------------- */
+function paintFilters(){
+  $("f-all").setAttribute("aria-pressed", reviewFilter === "all");
+  $("f-wrong").setAttribute("aria-pressed", reviewFilter === "wrong");
+}
+$("f-all").addEventListener("click", () => { reviewFilter = "all"; paintFilters(); paintReview(); });
+$("f-wrong").addEventListener("click", () => { reviewFilter = "wrong"; paintFilters(); paintReview(); });
+
+function paintReview(){
+  const list = sess.map((it,i) => ({it,i})).filter(({it}) => reviewFilter === "all" || !isRight(it));
+  if (!list.length){
+    $("review").innerHTML = '<p style="color:var(--ink-soft);font-size:.95rem;padding:1rem 0">Nothing dropped \u2014 a clean sheet. Switch to &ldquo;All 40&rdquo; if you want to re-read the working anyway.</p>';
+    return;
+  }
+  $("review").innerHTML = list.map(({it,i}) => {
+    const q = BANK[it.qi];
+    const ok = isRight(it);
+    const cp = correctPos(it);
+    const yourText = it.pick === null ? "left blank" : q.o[it.order[it.pick]];
+    return '<details class="rev ' + (ok ? "ok" : "no") + '"' + (ok ? "" : " open") + '>' +
+      '<summary><span class="glyph">' + (ok ? "\u2713" : "\u2717") + '</span>' +
+      '<span class="rq"><span class="rn">QUESTION ' + String(i+1).padStart(2,"0") + " \u00b7 " + TOPICS[q.t].toUpperCase() + '</span>' + q.q + '</span></summary>' +
+      '<div class="body">' +
+        (ok ? "" : '<div class="line you"><span>You put &nbsp;</span><b>' + yourText + '</b></div>') +
+        '<div class="line cor"><span>Answer &nbsp;</span><b>' + q.o[q.a] + '</b></div>' +
+        '<div class="why">' + q.w + '</div>' +
+      '</div></details>';
+  }).join("");
+}
+
+/* ---------------- after the paper ---------------- */
+$("again").addEventListener("click", () => {
+  startPaper(sess.paper === "train" ? "train" : sess.paper, true);
+});
+$("drill").addEventListener("click", () => {
+  const wrong = sess.filter(it => !isRight(it)).map(it => it.qi);
+  if (!wrong.length){ alert("You did not drop a single mark \u2014 there is nothing to drill."); return; }
+  mode = "practice";
+  const src = sess.paper;
+  build(shuffled(wrong.length).map(k => wrong[k]), "Drill, " + wrong.length + " from the " + PAPERS[src].short);
+  sess.paper = "drill";
+});
+$("home").addEventListener("click", () => { clearInterval(tick); paintStart(); show("s-start"); });
+</script>
