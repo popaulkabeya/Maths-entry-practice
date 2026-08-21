@@ -523,6 +523,25 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 .rev .passage{font-size:.88rem;margin-bottom:.4rem}
 .as-card .assub{font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--pen);margin:.7rem 0 .3rem;padding-top:.5rem;border-top:1px solid var(--rule-soft)}
 .as-card .assub:first-of-type{margin-top:.2rem;border-top:0;padding-top:0}
+
+.unlockbox{margin:1.3rem 0 0;padding:1.1rem 1.2rem;border-radius:var(--r);border:1.5px solid var(--pen);background:var(--sheet);box-shadow:var(--shadow)}
+.ub-t{font-size:.88rem;color:var(--ink-soft);margin-bottom:.7rem}
+.ub-t b{color:var(--ink)}
+.ub-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.ub-row input,.su-f input{
+  flex:1;min-width:180px;padding:.68em .9em;border-radius:9px;border:1.5px solid var(--rule);
+  background:var(--sheet-2);color:var(--ink);font-family:inherit;font-size:.95rem;
+}
+.ub-row input:focus,.su-f input:focus{outline:none;border-color:var(--pen)}
+.ub-err{margin-top:.7rem;font-size:.85rem;color:var(--mark);font-weight:600}
+
+.setupbox{margin:1.6rem 0 0;padding:1.4rem 1.5rem;border-radius:var(--r);border:1.5px solid var(--gold);background:var(--sheet);box-shadow:var(--shadow)}
+.su-h{margin:.5rem 0 .5rem;font-size:1.3rem}
+.su-d{font-size:.88rem;color:var(--ink-soft);line-height:1.6;max-width:58ch}
+.su-fields{display:flex;flex-direction:column;gap:.7rem;margin:1.2rem 0}
+.su-f{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.su-f label{min-width:88px;font-size:.9rem;font-weight:600}
+.su-f .rl{font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
@@ -534,6 +553,7 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
     <div class="whobar" id="whobar" hidden>
       <span class="who-av mono" id="who-av">?</span>
       <span class="who-t">Signed in on this device as <b id="who-name">&mdash;</b><i id="who-role"></i></span>
+      <button class="linkbtn" id="who-lock">Lock</button>
       <button class="linkbtn" id="who-switch">Switch</button>
     </div>
 
@@ -541,7 +561,29 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
       <p class="eyebrow">Who is working?</p>
       <h2 class="pick-h">Pick your name to keep your record separate.</h2>
       <div class="pick-grid" id="pick-grid"></div>
-      <p class="pick-note"><b>This is not a password.</b> It keeps each person&rsquo;s attempts in their own log on this device, nothing more. Anyone using this browser can switch between them. If you want your work genuinely private, use your own phone or laptop.</p>
+
+      <div class="unlockbox" id="unlockbox" hidden>
+        <p class="ub-t">Password for <b id="ub-name">&mdash;</b></p>
+        <form class="ub-row" id="ub-form">
+          <input type="password" id="ub-pw" autocomplete="current-password" placeholder="Enter password" aria-label="Password">
+          <button type="submit" class="btn btn-primary">Unlock</button>
+          <button type="button" class="btn-quiet" id="ub-cancel">Cancel</button>
+        </form>
+        <p class="ub-err" id="ub-err" hidden></p>
+      </div>
+
+      <p class="pick-note" id="pick-note"></p>
+
+      <div class="setupbox" id="setupbox" hidden>
+        <p class="eyebrow">First time on this device</p>
+        <h3 class="su-h">Set a password for each person.</h3>
+        <p class="su-d">Do this once per device. The passwords are stored on this device only &mdash; scrambled, never written into the page and never sent anywhere. Whoever sets them up should be the assessor.</p>
+        <form id="su-form">
+          <div class="su-fields" id="su-fields"></div>
+          <p class="ub-err" id="su-err" hidden></p>
+          <button type="submit" class="btn btn-primary btn-lg">Save and lock this device</button>
+        </form>
+      </div>
     </div>
 
     <div class="hero" id="hero" hidden>
@@ -613,6 +655,14 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
             <button class="btn btn-ghost" id="as-save">Save</button>
           </div>
           <p class="as-note">Stored only in this browser, never published with the site. Set it once on each device a student uses, and their report button will be addressed to you.</p>
+        </div>
+        <div class="as-mail" style="margin-top:1.2rem">
+          <label>Passwords on this device</label>
+          <div class="as-mail-row">
+            <button class="btn btn-ghost" id="as-pw">Change passwords</button>
+            <button class="btn btn-ghost" id="as-reset">Remove passwords</button>
+          </div>
+          <p class="as-note">Removing passwords leaves every record intact but lets anyone on this device open any profile.</p>
         </div>
       </section>
 
@@ -1836,6 +1886,7 @@ const PROFILES = [
   { id:"meldie", name:"Meldie", role:"student"  }
 ];
 const WHO_KEY = "fortymarks.who.v3";
+const AUTH_KEY = "fortymarks.auth.v1";
 const ASSESSOR_KEY = "fortymarks.assessor.v3";
 const MAX_LOG = 500;
 const logKey = (id, sub) => "fortymarks.log.v4." + id + "." + (sub || subjectKey);
@@ -1938,8 +1989,103 @@ function bestTrainPct(){
 }
 function isUnlocked(){ return bestTrainPct() >= UNLOCK_PCT; }
 
-/* ---------------- who is working ---------------- */
+/* ---------------- passwords on this device ----------------
+   A static page cannot hold a real secret: everything it knows, the
+   browser knows, and the browser belongs to whoever is sitting there.
+   What follows keeps people out of each other's records by accident
+   and by casual curiosity. It is a lock on a drawer, not on a safe. */
 const initials = (n) => n.slice(0,2).toUpperCase();
+
+function loadAuth(){
+  try { const a = JSON.parse(localStorage.getItem(AUTH_KEY) || "null"); return (a && a.salt && a.pw) ? a : null; }
+  catch(e){ return null; }
+}
+function randomSalt(){
+  const b = new Uint8Array(16);
+  (window.crypto || window.msCrypto).getRandomValues(b);
+  return Array.from(b).map(x => x.toString(16).padStart(2,"0")).join("");
+}
+async function hashPw(salt, id, pw){
+  const text = salt + ":" + id + ":" + pw;
+  const c = window.crypto && window.crypto.subtle;
+  if (c && window.isSecureContext){
+    const buf = await c.digest("SHA-256", new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(x => x.toString(16).padStart(2,"0")).join("");
+  }
+  // opened straight from a file, where the crypto API is unavailable: weaker, still not plaintext
+  let h1 = 0x811c9dc5, h2 = 0x01000193;
+  for (let i = 0; i < text.length; i++){
+    h1 = Math.imul(h1 ^ text.charCodeAt(i), 16777619) >>> 0;
+    h2 = Math.imul(h2 + text.charCodeAt(i) * (i + 7), 2246822519) >>> 0;
+  }
+  return "fb" + h1.toString(16).padStart(8,"0") + h2.toString(16).padStart(8,"0");
+}
+let unlocked = {};           // profiles opened in this browsing session
+let pendingId = null;        // profile waiting on a password
+
+function authOn(){ return !!loadAuth(); }
+function needsPassword(id){ return authOn() && !unlocked[id]; }
+
+/* --- setting them up --- */
+function paintSetup(){
+  const on = authOn();
+  $("setupbox").hidden = on;
+  $("pick-note").innerHTML = on
+    ? "<b>Passwords protect these profiles on this device.</b> They are stored scrambled in this browser and never written into the page. Be clear-eyed about the limit: anyone who clears this browser&rsquo;s data, or opens the developer tools, gets past them. Real privacy comes from each of you using your own device."
+    : "<b>No passwords are set yet.</b> Until they are, anyone using this browser can open any profile.";
+  if (!on){
+    $("su-fields").innerHTML = PROFILES.map(p =>
+      '<div class="su-f"><label for="su-' + p.id + '">' + p.name + '</label>' +
+      '<input type="password" id="su-' + p.id + '" autocomplete="new-password" placeholder="Choose a password" aria-label="Password for ' + p.name + '">' +
+      '<span class="rl">' + p.role + "</span></div>").join("");
+  }
+}
+$("su-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const vals = PROFILES.map(p => ({ p, v: $("su-" + p.id).value }));
+  const empty = vals.find(x => x.v.length < 4);
+  if (empty){
+    $("su-err").hidden = false;
+    $("su-err").textContent = "Every profile needs a password of at least four characters. Missing or too short: " + empty.p.name + ".";
+    return;
+  }
+  const salt = randomSalt(), pw = {};
+  for (const x of vals) pw[x.p.id] = await hashPw(salt, x.p.id, x.v);
+  try { localStorage.setItem(AUTH_KEY, JSON.stringify({ salt, pw })); }
+  catch(err){ $("su-err").hidden = false; $("su-err").textContent = "This browser refused to store the passwords, so they cannot be set here."; return; }
+  unlocked = {};
+  $("su-err").hidden = true;
+  paintSetup();
+  paintPicker();
+});
+
+/* --- asking for one --- */
+function askPassword(id){
+  pendingId = id;
+  const p = PROFILES.find(x => x.id === id);
+  $("ub-name").textContent = p.name;
+  $("ub-err").hidden = true;
+  $("ub-pw").value = "";
+  $("unlockbox").hidden = false;
+  $("ub-pw").focus();
+}
+$("ub-cancel").addEventListener("click", () => { pendingId = null; $("unlockbox").hidden = true; });
+$("ub-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const a = loadAuth();
+  if (!a || !pendingId) return;
+  const h = await hashPw(a.salt, pendingId, $("ub-pw").value);
+  if (h !== a.pw[pendingId]){
+    $("ub-err").hidden = false;
+    $("ub-err").textContent = "That password does not match. Try again, or ask whoever set this device up.";
+    $("ub-pw").select();
+    return;
+  }
+  unlocked[pendingId] = true;
+  $("unlockbox").hidden = true;
+  const id = pendingId; pendingId = null;
+  setWho(id);
+});
 
 function paintPicker(){
   $("pick-grid").innerHTML = PROFILES.map(p => {
@@ -1951,7 +2097,11 @@ function paintPicker(){
            '<span><span class="pn">' + p.name + '</span><span class="pr">' + sub + "</span></span></button>";
   }).join("");
   $("pick-grid").querySelectorAll(".pick").forEach(b =>
-    b.addEventListener("click", () => setWho(b.dataset.id)));
+    b.addEventListener("click", () => {
+      if (needsPassword(b.dataset.id)) askPassword(b.dataset.id);
+      else setWho(b.dataset.id);
+    }));
+  paintSetup();
 }
 
 function setWho(id){
@@ -1971,6 +2121,10 @@ function setWho(id){
   setSubject(subjectKey);
 }
 
+$("who-lock").addEventListener("click", () => {
+  unlocked = {};
+  $("who-switch").click();
+});
 $("who-switch").addEventListener("click", () => {
   who = null;
   try { localStorage.removeItem(WHO_KEY); } catch(e){}
@@ -1979,6 +2133,8 @@ $("who-switch").addEventListener("click", () => {
   $("record").hidden = true;
   $("assess").hidden = true;
   $("picker").hidden = false;
+  $("unlockbox").hidden = true;
+  pendingId = null;
   paintPicker();
   window.scrollTo({top:0, behavior:"instant"});
 });
@@ -1986,6 +2142,20 @@ $("who-switch").addEventListener("click", () => {
 function assessorEmail(){
   try { return localStorage.getItem(ASSESSOR_KEY) || ""; } catch(e){ return ""; }
 }
+$("who-lock").hidden = false;
+$("as-pw").addEventListener("click", () => {
+  if (!confirm("Set new passwords for all three profiles? The current ones stop working immediately. Records are not affected.")) return;
+  try { localStorage.removeItem(AUTH_KEY); } catch(e){}
+  unlocked = {};
+  $("who-switch").click();
+});
+$("as-reset").addEventListener("click", () => {
+  if (!confirm("Remove passwords from this device? Anyone using this browser will then be able to open any profile. Records are not affected.")) return;
+  try { localStorage.removeItem(AUTH_KEY); } catch(e){}
+  unlocked = {};
+  paintSetup();
+  alert("Passwords removed. The setup panel is back on the profile screen whenever you want to set them again.");
+});
 $("as-save").addEventListener("click", () => {
   const v = $("as-email").value.trim();
   if (v && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ alert("That does not look like an email address."); return; }
@@ -2218,7 +2388,9 @@ paintPicker();
 (function restoreWho(){
   let saved = null;
   try { saved = localStorage.getItem(WHO_KEY); } catch(e){}
-  if (saved && PROFILES.some(p => p.id === saved)) setWho(saved);
+  if (!saved || !PROFILES.some(p => p.id === saved)) return;
+  if (needsPassword(saved)) askPassword(saved);   // reopening the page asks again
+  else setWho(saved);
 })();
 
 /* ---------------- build a session ---------------- */
