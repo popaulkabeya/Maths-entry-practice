@@ -513,20 +513,8 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 .as-card .assub{font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--pen);margin:.7rem 0 .3rem;padding-top:.5rem;border-top:1px solid var(--rule-soft)}
 .as-card .assub:first-of-type{margin-top:.2rem;border-top:0;padding-top:0}
 
-.su-f input{
-  flex:1;min-width:180px;padding:.68em .9em;border-radius:9px;border:1.5px solid var(--rule);
-  background:var(--sheet-2);color:var(--ink);font-family:inherit;font-size:.95rem;
-}
-.su-f input:focus{outline:none;border-color:var(--pen)}
 .ub-err{margin-top:.7rem;font-size:.85rem;color:var(--mark);font-weight:600}
 
-.setupbox{margin:1.6rem 0 0;padding:1.4rem 1.5rem;border-radius:var(--r);border:1.5px solid var(--gold);background:var(--sheet);box-shadow:var(--shadow)}
-.su-h{margin:.5rem 0 .5rem;font-size:1.3rem}
-.su-d{font-size:.88rem;color:var(--ink-soft);line-height:1.6;max-width:58ch}
-.su-fields{display:flex;flex-direction:column;gap:.7rem;margin:1.2rem 0}
-.su-f{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
-.su-f label{min-width:88px;font-size:.9rem;font-weight:600}
-.su-f .rl{font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
 
 .loginbox{max-width:420px;margin-top:1.4rem;padding:1.6rem 1.7rem;border-radius:var(--r);
   border:1.5px solid var(--rule);background:var(--sheet);box-shadow:var(--shadow-lift)}
@@ -605,6 +593,7 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
   color:var(--ink);line-height:1.55}
 .lesson .drill b{font-family:"JetBrains Mono",monospace;font-size:.62rem;letter-spacing:.14em;
   text-transform:uppercase;color:var(--pen);display:block;margin-bottom:.3rem}
+.lg-hint{margin-top:.9rem;font-size:.82rem;color:var(--ink-faint);line-height:1.5}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
@@ -637,19 +626,10 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
           <p class="ub-err" id="lg-err" hidden></p>
           <button type="submit" class="btn btn-primary btn-lg" id="lg-go">Sign in</button>
         </form>
+        <p class="lg-hint" id="lg-hint">First time on this device? The password you type is the one that will be kept.</p>
         <p class="pick-note" id="pick-note"></p>
       </div>
 
-      <div class="setupbox" id="setupbox" hidden>
-        <p class="eyebrow">First time on this device</p>
-        <h3 class="su-h">Set a password for each person.</h3>
-        <p class="su-d">Whoever sets this up should be the assessor. <b>Only your own password is required now</b> &mdash; leave a student blank and set it later, from your assessor panel, when they first sit down at this device. Anyone without a password simply cannot sign in here. Passwords are stored on this device only: scrambled, never written into the page, never sent anywhere.</p>
-        <form id="su-form">
-          <div class="su-fields" id="su-fields"></div>
-          <p class="ub-err" id="su-err" hidden></p>
-          <button type="submit" class="btn btn-primary btn-lg">Save and lock this device</button>
-        </form>
-      </div>
     </div>
 
     <div class="hero" id="hero" hidden>
@@ -731,7 +711,7 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
             <button type="submit" class="btn btn-ghost">Set</button>
           </form>
           <p class="ub-err" id="pw-err" hidden></p>
-          <p class="as-note">Anyone without a password cannot sign in on this device at all. Setting or changing one never touches the records.</p>
+          <p class="as-note">A name with no password yet takes whatever is typed at its first sign-in on this device. Set one here to claim it in advance, or to overwrite one that has been forgotten. Records are never affected.</p>
           <div class="as-mail-row" style="margin-top:.9rem">
             <button class="btn btn-ghost" id="as-reset">Remove all passwords</button>
           </div>
@@ -2315,76 +2295,64 @@ function findProfile(name){
 }
 
 function paintLogin(){
-  const on = authOn();
-  $("setupbox").hidden = on;
-  $("loginbox").hidden = !on;
-  if (!on){
-    $("su-fields").innerHTML = PROFILES.map(p =>
-      '<div class="su-f"><label for="su-' + p.id + '">' + p.name + '</label>' +
-      '<input type="password" id="su-' + p.id + '" autocomplete="new-password" placeholder="' +
-      (p.role === "assessor" ? "Choose your password" : "Optional \u2014 can be set later") +
-      '" aria-label="Password for ' + p.name + '">' +
-      '<span class="rl">' + (p.role === "assessor" ? "required" : "optional") + "</span></div>").join("");
-    return;
-  }
+  $("loginbox").hidden = false;
+  const a = loadAuth();
+  const anySet = a && Object.keys(a.pw).length;
+  $("lg-hint").textContent = anySet
+    ? "First time on this device? The password you type is the one that will be kept."
+    : "Nobody has signed in on this device yet. The password you type now is the one that will be kept.";
   $("pick-note").innerHTML =
     "<b>What this protects, and what it does not.</b> Your password keeps the others out of your record on this device. " +
     "It cannot do more than that: anyone who clears this browser&rsquo;s data gets past it. Real privacy comes from using your own phone or laptop.";
-  $("lg-user").value = "";           // both fields are typed in, every time
+  $("lg-user").value = "";
   $("lg-pw").value = "";
   $("lg-err").hidden = true;
   setTimeout(() => { $("lg-user").focus(); }, 60);
 }
 
+function fail(msg){
+  $("lg-err").hidden = false;
+  $("lg-err").textContent = msg;
+  $("lg-pw").select();
+}
+
 $("login-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const btn = $("lg-go");
-  const auth = loadAuth();
-  if (!auth) return;
   btn.disabled = true;
   const p = findProfile($("lg-user").value);
-  let ok = false;
-  if (p && auth.pw[p.id]){
-    const h = await hashPw(auth.salt, p.id, $("lg-pw").value);
-    ok = (h === auth.pw[p.id]);
+  const pass = $("lg-pw").value;
+  let auth = loadAuth();
+
+  if (!p || !pass){
+    btn.disabled = false;
+    return fail("Username or password not recognised.");
   }
+
+  // first sign-in for this name on this device: the password typed becomes the password
+  if (!auth || !auth.pw[p.id]){
+    if (pass.length < 4){
+      btn.disabled = false;
+      return fail("Choose a password of at least four characters. This is the first sign-in for that name on this device, so it will be kept.");
+    }
+    if (!auth) auth = { salt: randomSalt(), pw: {} };
+    auth.pw[p.id] = await hashPw(auth.salt, p.id, pass);
+    try { localStorage.setItem(AUTH_KEY, JSON.stringify(auth)); }
+    catch(err){ btn.disabled = false; return fail("This browser refused to store the password, so it cannot be set here."); }
+    btn.disabled = false;
+    $("lg-err").hidden = true;
+    $("lg-user").value = ""; $("lg-pw").value = "";
+    return setWho(p.id);
+  }
+
+  const h = await hashPw(auth.salt, p.id, pass);
   btn.disabled = false;
-  if (!ok){
-    // the same message either way, so the form never confirms who exists
-    $("lg-err").hidden = false;
-    $("lg-err").textContent = "Username or password not recognised.";
-    $("lg-pw").select();
-    return;
-  }
+  if (h !== auth.pw[p.id]) return fail("Username or password not recognised.");
   $("lg-err").hidden = true;
-  $("lg-user").value = "";
-  $("lg-pw").value = "";
+  $("lg-user").value = ""; $("lg-pw").value = "";
   setWho(p.id);
 });
 
-/* --- setting them up --- */
-$("su-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const vals = PROFILES.map(p => ({ p, v: $("su-" + p.id).value }));
-  const boss = vals.find(x => x.p.role === "assessor");
-  if (!boss || boss.v.length < 4){
-    $("su-err").hidden = false;
-    $("su-err").textContent = "Set your own password first \u2014 at least four characters. The students' can wait.";
-    return;
-  }
-  const tooShort = vals.find(x => x.v.length > 0 && x.v.length < 4);
-  if (tooShort){
-    $("su-err").hidden = false;
-    $("su-err").textContent = tooShort.p.name + "'s password is too short. Use at least four characters, or leave it blank for now.";
-    return;
-  }
-  const salt = randomSalt(), pw = {};
-  for (const x of vals){ if (x.v) pw[x.p.id] = await hashPw(salt, x.p.id, x.v); }
-  try { localStorage.setItem(AUTH_KEY, JSON.stringify({ salt, pw })); }
-  catch(err){ $("su-err").hidden = false; $("su-err").textContent = "This browser refused to store the passwords, so they cannot be set here."; return; }
-  $("su-err").hidden = true;
-  paintLogin();
-});
 function setWho(id){
   who = PROFILES.find(p => p.id === id) || null;
   if (!who){ $("picker").hidden = false; $("whobar").hidden = true; return; }
@@ -2446,7 +2414,7 @@ function paintPasswordList(){
   $("pwlist").innerHTML = PROFILES.map(p => {
     const set = !!a.pw[p.id];
     return '<li><span>' + p.name + '</span><b class="' + (set ? "yes" : "no") + '">' +
-           (set ? "password set" : "no password \u2014 cannot sign in") + "</b></li>";
+           (set ? "password set" : "not set \u2014 their first sign-in will set it") + "</b></li>";
   }).join("");
   $("pw-who").innerHTML = PROFILES.map(p =>
     '<option value="' + p.id + '">' + p.name + "</option>").join("");
@@ -2468,7 +2436,7 @@ $("pw-form").addEventListener("submit", async (e) => {
   $("pw-err").hidden = true;
   $("pw-new").value = "";
   paintPasswordList();
-  alert(PROFILES.find(p => p.id === id).name + " can now sign in on this device with that password.");
+  alert(PROFILES.find(p => p.id === id).name + " now signs in on this device with that password.");
 });
 
 function paintAssessor(){
