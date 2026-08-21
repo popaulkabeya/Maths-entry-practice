@@ -539,6 +539,19 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 .lf input:focus{outline:none;border-color:var(--pen);background:var(--sheet)}
 .loginbox .btn{width:100%;margin-top:.3rem}
 .loginbox .pick-note{margin-top:1.2rem;border-left-width:2px;font-size:.79rem}
+
+.pwlist{list-style:none;margin:.6rem 0 0;padding:0;display:flex;flex-direction:column;gap:.3rem}
+.pwlist li{display:flex;align-items:baseline;gap:.8rem;font-size:.85rem;padding:.35rem 0;border-bottom:1px dotted var(--rule-soft)}
+.pwlist li:last-child{border-bottom:0}
+.pwlist li span{min-width:80px;font-weight:600}
+.pwlist li b{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.04em;font-weight:700}
+.pwlist li b.yes{color:var(--tick)}
+.pwlist li b.no{color:var(--mark)}
+#pw-who{padding:.65em .8em;border-radius:8px;border:1.5px solid var(--rule);background:var(--sheet-2);
+  color:var(--ink);font-family:inherit;font-size:.9rem}
+#pw-new{flex:1;min-width:150px;padding:.65em .85em;border-radius:8px;border:1.5px solid var(--rule);
+  background:var(--sheet-2);color:var(--ink);font-family:inherit;font-size:.92rem}
+#pw-new:focus,#pw-who:focus{outline:none;border-color:var(--pen)}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
@@ -577,7 +590,7 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
       <div class="setupbox" id="setupbox" hidden>
         <p class="eyebrow">First time on this device</p>
         <h3 class="su-h">Set a password for each person.</h3>
-        <p class="su-d">Do this once per device. The passwords are stored on this device only &mdash; scrambled, never written into the page and never sent anywhere. Whoever sets them up should be the assessor.</p>
+        <p class="su-d">Whoever sets this up should be the assessor. <b>Only your own password is required now</b> &mdash; leave a student blank and set it later, from your assessor panel, when they first sit down at this device. Anyone without a password simply cannot sign in here. Passwords are stored on this device only: scrambled, never written into the page, never sent anywhere.</p>
         <form id="su-form">
           <div class="su-fields" id="su-fields"></div>
           <p class="ub-err" id="su-err" hidden></p>
@@ -658,11 +671,18 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
         </div>
         <div class="as-mail" style="margin-top:1.2rem">
           <label>Passwords on this device</label>
-          <div class="as-mail-row">
-            <button class="btn btn-ghost" id="as-pw">Change passwords</button>
-            <button class="btn btn-ghost" id="as-reset">Remove passwords</button>
+          <ul class="pwlist" id="pwlist"></ul>
+          <form class="as-mail-row" id="pw-form" style="margin-top:.8rem">
+            <select id="pw-who" aria-label="Whose password"></select>
+            <input type="password" id="pw-new" autocomplete="new-password" placeholder="New password" aria-label="New password">
+            <button type="submit" class="btn btn-ghost">Set</button>
+          </form>
+          <p class="ub-err" id="pw-err" hidden></p>
+          <p class="as-note">Anyone without a password cannot sign in on this device at all. Setting or changing one never touches the records.</p>
+          <div class="as-mail-row" style="margin-top:.9rem">
+            <button class="btn btn-ghost" id="as-reset">Remove all passwords</button>
           </div>
-          <p class="as-note">Removing passwords leaves every record intact but lets anyone on this device open any profile.</p>
+          <p class="as-note">Removing them all sends this device back to the first-time setup screen.</p>
         </div>
       </section>
 
@@ -1874,6 +1894,188 @@ const ENG_EXAM_BANK = [
  w:`After "the" the sentence needs the noun, which is <span class="mq">effect</span>. Remember the pairing from the training set: affect is the verb, effect is the noun.`}
 ];
 
+
+/* ---------------- what to do about a weak topic ---------------- */
+const LESSONS = {
+  num: {
+    title:"Number & arithmetic",
+    why:"Every other topic sits on this one. A percentage slip inside a money question costs the mark just as surely as not knowing the method at all.",
+    steps:[
+      "Learn to split percentages: 10% first, then halve it for 5%, quarter it for 2.5%. 35% of 80 is 8 + 8 + 8 + 4.",
+      "For reverse percentages, ask what the given figure is 100% <em>of</em>. A price including 15% VAT is 115%, so divide by 1.15 &mdash; never subtract 15%.",
+      "Fractions only add once the denominators match. Find the common bottom, convert both, then add the tops and leave the bottom alone.",
+      "Order of operations: brackets, then powers, then multiply and divide left to right, then add and subtract left to right."
+    ],
+    traps:[
+      "Adding numerators and denominators straight across.",
+      "Subtracting a percentage instead of dividing by its multiplier.",
+      "Stopping at the unit value: two thirds of 45 is 30, not 15."
+    ],
+    drill:"Run the training set and stop at every number question. Say the method out loud before you touch the options."
+  },
+  alg: {
+    title:"Algebra",
+    why:"Algebra is only ever doing the same thing to both sides, in the reverse order it was done to x. Once that clicks, most questions become mechanical.",
+    steps:[
+      "Undo in reverse. In 3x + 4 = 22, the +4 was applied last, so remove it first: 3x = 18, then x = 6.",
+      "3x always means 3 &times; x. Substitute before you simplify, and put brackets round negatives: 3(&minus;2)&sup2; = 12, not &minus;12.",
+      "Like terms combine, unlike terms do not. 4b + 3b = 7b, but 4b + 2c stays as it is.",
+      "Always check by substituting your answer back into the original equation. It takes five seconds and catches nearly every slip."
+    ],
+    traps:[
+      "Undoing multiplication by subtracting instead of dividing.",
+      "Forgetting to multiply every term inside a bracket.",
+      "Flipping the inequality sign when dividing by a negative &mdash; or forgetting to."
+    ],
+    drill:"Write out every line of working, even the obvious ones. Skipped lines are where the marks go."
+  },
+  gra: {
+    title:"Graphs & charts",
+    why:"These questions are usually reading comprehension with numbers. The maths is easy; the mark is lost by answering a question that was not asked.",
+    steps:[
+      "Coordinates go across first, then up or down. Along the corridor, then up the stairs.",
+      "In y = mx + c, m is the steepness and c is where the line crosses the y-axis. Rewrite y = 4 &minus; 3x as y = &minus;3x + 4 before reading it.",
+      "Gradient is the rise divided by the run &mdash; and the division is the step people forget.",
+      "On a chart, read the question twice: 'how many more' means subtract, 'in total' means add, a percentage means a share of the whole."
+    ],
+    traps:[
+      "Writing coordinates the wrong way round.",
+      "Reading the numbers of y = 4 &minus; 3x in the order they appear.",
+      "Adding two bars when the question asked for the difference."
+    ],
+    drill:"Before calculating anything, underline the operation word in the question: more, total, fewer, each."
+  },
+  geo: {
+    title:"Shape & measures",
+    why:"A small set of formulas covers almost everything here. The marks are lost on which formula, not on the arithmetic.",
+    steps:[
+      "Perimeter adds, area multiplies. If your answer to an area question has one unit rather than squared units, something is wrong.",
+      "Triangle area is half base times height. The half is the single most forgotten thing in this topic.",
+      "Angles: on a straight line they total 180&deg;, in a triangle 180&deg;, around a point 360&deg;. Decide which rule applies before you calculate.",
+      "Pythagoras: square the two short sides, add, then take the square root. The root is the step people leave out."
+    ],
+    traps:[
+      "Giving the perimeter when the area was asked for, or the reverse.",
+      "Using the diameter where the radius belongs &mdash; it quadruples the area.",
+      "Converting units the wrong way: to a smaller unit the number gets bigger."
+    ],
+    drill:"Sketch the shape and write the formula down before substituting a single number."
+  },
+  sta: {
+    title:"Statistics & probability",
+    why:"Four averages, four different answers from the same list. Most lost marks here are the right calculation applied to the wrong definition.",
+    steps:[
+      "Mean is the total divided by how many. Median is the middle <em>after sorting</em>. Mode is the most frequent. Range is largest minus smallest.",
+      "Sort the list first, always, even when it looks nearly sorted.",
+      "Probability is favourable outcomes over <em>total</em> outcomes. The bottom is never the other colour.",
+      "Run the mean backwards when a value is added or removed: mean &times; count = total."
+    ],
+    traps:[
+      "Taking the middle of an unsorted list.",
+      "Putting the wrong number on the bottom of a probability.",
+      "Averaging two means as if the groups were the same size."
+    ],
+    drill:"For any list you are given, work out all four measures before reading the question. It takes a minute and makes the definitions automatic."
+  },
+  app: {
+    title:"Money & everyday maths",
+    why:"These are the questions where the maths is easy and the reading is the test. They reward slowing down more than any other topic.",
+    steps:[
+      "Find the value of one thing first. Three notebooks for 135 means 45 each, then multiply for any quantity.",
+      "A discount is not a price. 25% of 1,200 is 300 &mdash; the answer is 1,200 &minus; 300, or straight to 75% of 1,200.",
+      "Convert times to hours before dividing: 2 h 30 min is 2.5, not 2.3.",
+      "Simple interest is a flat percentage each year; compound interest earns on what interest already earned. Read which one is asked."
+    ],
+    traps:[
+      "Answering with the interest when the total was asked for, or the reverse.",
+      "Treating 2 h 30 min as 2.3 hours.",
+      "Multiplying an exchange rate when you should divide &mdash; a wildly large answer is the signal."
+    ],
+    drill:"Underline what the question actually asks for before calculating. Half the marks here are lost to answering the wrong question correctly."
+  },
+
+  gram: {
+    title:"Grammar",
+    why:"Grammar marks are the most recoverable ones in the paper: a fixed number of patterns come round again and again, and each is learnable in an evening.",
+    steps:[
+      "Find the real subject before choosing the verb. In 'each of the students', the subject is <em>each</em>, which is singular.",
+      "Present perfect for something that started in the past and is still true: 'I have lived here for five years'. Past simple for something finished.",
+      "Articles follow sound, not spelling: a university, an hour.",
+      "In a first conditional, the <em>if</em> half stays present even though it is about the future: if it rains, we will cancel."
+    ],
+    traps:[
+      "Letting a plural noun between subject and verb pull the verb into the plural.",
+      "Putting 'will' in both halves of a conditional.",
+      "Uncountable nouns given a plural: informations, advices, researches."
+    ],
+    drill:"Keep a single page of the patterns you get wrong, with one example each. Re-read it before every attempt &mdash; it will be shorter than you expect."
+  },
+  vocab: {
+    title:"Vocabulary & word choice",
+    why:"Collocations cannot be reasoned out, only met. You make a decision but take a risk; rain is heavy but wind is strong. This is memory work, and it pays quickly.",
+    steps:[
+      "Learn words in pairs, never alone: 'meet a deadline', 'take a risk', 'strong interest', 'heavy rain'.",
+      "Learn each word family together: analyse, analysis, analytical, analytically. Tests ask you to move between them.",
+      "Master the confusable pairs one at a time: affect/effect, advice/advise, their/there/they're, its/it's, fewer/less.",
+      "Use the sentence around an unknown word. A contrast word nearby tells you which direction its meaning points."
+    ],
+    traps:[
+      "Choosing a word that means roughly the right thing but does not go with the noun.",
+      "Putting a verb where the sentence needs a noun &mdash; after 'the' or 'a', you need a noun.",
+      "Guessing prefixes: it is unclear, incorrect, impossible, illegal &mdash; and they are not interchangeable."
+    ],
+    drill:"Every time you meet a new word, write the whole phrase it appeared in, not the word on its own."
+  },
+  read: {
+    title:"Reading comprehension",
+    why:"Marks here are lost by answering from what you already believe rather than from the text. The discipline is narrow and entirely learnable.",
+    steps:[
+      "Read the question before the passage, then hunt for the part that answers it.",
+      "For True / False / Not Given: <b>False</b> means the text contradicts it. <b>Not Given</b> means the text simply never says. If you are reasoning from general knowledge, it is Not Given.",
+      "The main idea is what every sentence supports, not the most interesting detail.",
+      "Watch hedging words &mdash; mixed, however, although. They carry the writer's real position, and absolute words like 'entirely' usually go further than the text does."
+    ],
+    traps:[
+      "Choosing False when the passage is silent.",
+      "Picking an option because it is true in the world rather than true in the passage.",
+      "Matching a keyword without checking that the claim itself matches."
+    ],
+    drill:"After each answer, point to the exact words in the passage that prove it. If you cannot, the answer is a guess."
+  },
+  link: {
+    title:"Structure & linking",
+    why:"Connectors are what turn correct sentences into a readable argument &mdash; and they are marked in writing as well as tested directly.",
+    steps:[
+      "Decide the relationship first: contrast, result, or addition. Then choose the word that carries it.",
+      "Some connectors take a noun phrase and some take a clause. Despite the rain / although it rained. Because of the cost / because it cost too much.",
+      "Two complete sentences cannot be joined by a comma. Use a full stop, a semicolon, or a joining word.",
+      "Keep lists parallel: reading, writing, and swimming &mdash; not reading, writing, and to swim."
+    ],
+    traps:[
+      "'Despite of', which does not exist &mdash; it is despite, or in spite of.",
+      "Using 'therefore' where the two halves actually contrast.",
+      "The comma splice: 'The results were clear, we published them.'"
+    ],
+    drill:"Take any paragraph you have written and circle every connector. Check each one names the right relationship."
+  },
+  use: {
+    title:"Common errors",
+    why:"These are the mistakes that mark a text as non-native fastest, and each one is a single habit to unlearn. This is the cheapest topic to improve.",
+    steps:[
+      "'Agree' is already a verb: I agree, not I am agree.",
+      "Explain, describe and suggest cannot take a person as the object: explain it <em>to</em> me.",
+      "'For' takes a length of time, 'since' takes a starting point: for three years, since 2023.",
+      "After 'to' in look forward to and be used to, the verb takes -ing: looking forward to hearing from you."
+    ],
+    traps:[
+      "'Discuss about' &mdash; discuss takes the object directly.",
+      "'People was' &mdash; people is already plural.",
+      "'Didn't saw' &mdash; after did, the verb returns to its base form."
+    ],
+    drill:"Pick the three you actually make. Write one correct sentence for each, every day, for a week. They will stop appearing."
+  }
+};
+
 </script>
 
 <script>
@@ -1938,6 +2140,10 @@ let justUnlocked = false;
 let camStream = null;
 let watchFocus = false;
 let away = { count:0, ms:0, since:null };
+let qMs = {};        // index -> milliseconds spent on that question
+let qVisits = {};    // index -> how many times it was opened
+let qEnter = null;   // when the current question was opened
+let changes = 0;     // answers changed after a first choice
 let reviewFilter = "wrong";
 
 /* ---------------- helpers ---------------- */
@@ -2039,8 +2245,10 @@ function paintLogin(){
   if (!on){
     $("su-fields").innerHTML = PROFILES.map(p =>
       '<div class="su-f"><label for="su-' + p.id + '">' + p.name + '</label>' +
-      '<input type="password" id="su-' + p.id + '" autocomplete="new-password" placeholder="Choose a password" aria-label="Password for ' + p.name + '">' +
-      '<span class="rl">' + p.role + "</span></div>").join("");
+      '<input type="password" id="su-' + p.id + '" autocomplete="new-password" placeholder="' +
+      (p.role === "assessor" ? "Choose your password" : "Optional \u2014 can be set later") +
+      '" aria-label="Password for ' + p.name + '">' +
+      '<span class="rl">' + (p.role === "assessor" ? "required" : "optional") + "</span></div>").join("");
     return;
   }
   $("pick-note").innerHTML =
@@ -2060,7 +2268,7 @@ $("login-form").addEventListener("submit", async (e) => {
   btn.disabled = true;
   const p = findProfile($("lg-user").value);
   let ok = false;
-  if (p){
+  if (p && auth.pw[p.id]){
     const h = await hashPw(auth.salt, p.id, $("lg-pw").value);
     ok = (h === auth.pw[p.id]);
   }
@@ -2082,14 +2290,20 @@ $("login-form").addEventListener("submit", async (e) => {
 $("su-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const vals = PROFILES.map(p => ({ p, v: $("su-" + p.id).value }));
-  const empty = vals.find(x => x.v.length < 4);
-  if (empty){
+  const boss = vals.find(x => x.p.role === "assessor");
+  if (!boss || boss.v.length < 4){
     $("su-err").hidden = false;
-    $("su-err").textContent = "Every profile needs a password of at least four characters. Missing or too short: " + empty.p.name + ".";
+    $("su-err").textContent = "Set your own password first \u2014 at least four characters. The students' can wait.";
+    return;
+  }
+  const tooShort = vals.find(x => x.v.length > 0 && x.v.length < 4);
+  if (tooShort){
+    $("su-err").hidden = false;
+    $("su-err").textContent = tooShort.p.name + "'s password is too short. Use at least four characters, or leave it blank for now.";
     return;
   }
   const salt = randomSalt(), pw = {};
-  for (const x of vals) pw[x.p.id] = await hashPw(salt, x.p.id, x.v);
+  for (const x of vals){ if (x.v) pw[x.p.id] = await hashPw(salt, x.p.id, x.v); }
   try { localStorage.setItem(AUTH_KEY, JSON.stringify({ salt, pw })); }
   catch(err){ $("su-err").hidden = false; $("su-err").textContent = "This browser refused to store the passwords, so they cannot be set here."; return; }
   $("su-err").hidden = true;
@@ -2129,12 +2343,6 @@ function assessorEmail(){
   try { return localStorage.getItem(ASSESSOR_KEY) || ""; } catch(e){ return ""; }
 }
 $("who-lock").hidden = false;
-$("as-pw").addEventListener("click", () => {
-  if (!confirm("Set new passwords for all three profiles? The current ones stop working immediately. Records are not affected.")) return;
-  try { localStorage.removeItem(AUTH_KEY); } catch(e){}
-  paintLogin();
-  $("who-switch").click();
-});
 $("as-reset").addEventListener("click", () => {
   if (!confirm("Remove passwords from this device? Anyone using this browser will then be able to open any profile. Records are not affected.")) return;
   try { localStorage.removeItem(AUTH_KEY); } catch(e){}
@@ -2149,10 +2357,41 @@ $("as-save").addEventListener("click", () => {
   setTimeout(() => { $("as-save").textContent = "Save"; }, 1800);
 });
 
+function paintPasswordList(){
+  const a = loadAuth() || { pw:{} };
+  $("pwlist").innerHTML = PROFILES.map(p => {
+    const set = !!a.pw[p.id];
+    return '<li><span>' + p.name + '</span><b class="' + (set ? "yes" : "no") + '">' +
+           (set ? "password set" : "no password \u2014 cannot sign in") + "</b></li>";
+  }).join("");
+  $("pw-who").innerHTML = PROFILES.map(p =>
+    '<option value="' + p.id + '">' + p.name + "</option>").join("");
+}
+
+$("pw-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const id = $("pw-who").value, v = $("pw-new").value;
+  if (v.length < 4){
+    $("pw-err").hidden = false;
+    $("pw-err").textContent = "Use at least four characters.";
+    return;
+  }
+  const a = loadAuth();
+  if (!a) return;
+  a.pw[id] = await hashPw(a.salt, id, v);
+  try { localStorage.setItem(AUTH_KEY, JSON.stringify(a)); }
+  catch(err){ $("pw-err").hidden = false; $("pw-err").textContent = "This browser refused to store it."; return; }
+  $("pw-err").hidden = true;
+  $("pw-new").value = "";
+  paintPasswordList();
+  alert(PROFILES.find(p => p.id === id).name + " can now sign in on this device with that password.");
+});
+
 function paintAssessor(){
   if (!who || who.role !== "assessor"){ $("assess").hidden = true; return; }
   $("assess").hidden = false;
   $("as-email").value = assessorEmail();
+  paintPasswordList();
   const row = (l, v, col) => '<div class="asl"><span>' + l + '</span><b' +
                              (col ? ' style="color:' + col + '"' : "") + ">" + v + "</b></div>";
   $("as-grid").innerHTML = PROFILES.filter(p => p.role === "student").map(p => {
@@ -2380,6 +2619,7 @@ function build(indices, label){
   cur = 0;
   finished = false;
   away = { count:0, ms:0, since:null };
+  qMs = {}; qVisits = {}; qEnter = null; changes = 0;
   const ab = $("awaybadge");
   if (ab){ ab.hidden = true; }
   limit = (PAPERS[paperKey] && PAPERS[paperKey].mins ? PAPERS[paperKey].mins : 0) * 60;
@@ -2507,8 +2747,20 @@ function paintCells(){
 }
 
 /* ---------------- render a question ---------------- */
+function stampQuestion(){
+  if (qEnter === null) return;
+  const prev = qEnter.i;
+  qMs[prev] = (qMs[prev] || 0) + (Date.now() - qEnter.t);
+  qEnter = null;
+}
+
 function render(){
   const it = sess[cur];
+  if (!qEnter || qEnter.i !== cur){
+    stampQuestion();
+    qEnter = { i: cur, t: Date.now() };
+    qVisits[cur] = (qVisits[cur] || 0) + 1;
+  }
   const q = BANK[it.qi];
   const n = String(cur + 1).padStart(2,"0");
 
@@ -2551,6 +2803,7 @@ function render(){
 function pick(pos){
   const it = sess[cur];
   if (mode === "practice" && it.locked) return;
+  if (it.pick !== null && it.pick !== pos) changes++;
   it.pick = pos;
   if (mode === "practice"){ it.locked = true; }
   render();
@@ -2593,6 +2846,7 @@ function finish(auto){
   }
   clearInterval(tick);
   finished = true;
+  stampQuestion();
   backOnScreen();
   stopCamera();
   const secs = elapsed();
@@ -2610,7 +2864,17 @@ function finish(auto){
                 blanks: sess.filter(i => i.pick === null).length,
                 expired: !!auto, topics,
                 cam: !!camStream, awayCount: away.count,
-                awaySecs: Math.round(away.ms / 1000) });
+                awaySecs: Math.round(away.ms / 1000),
+                changes,
+                flagged: sess.filter(i => i.flagged).length,
+                q: sess.map((it, i) => ({
+                     t: BANK[it.qi].t,
+                     ok: isRight(it),
+                     blank: it.pick === null,
+                     secs: Math.round((qMs[i] || 0) / 1000),
+                     visits: qVisits[i] || 0,
+                     flag: !!it.flagged
+                   })) });
   paintStart();
   justUnlocked = (sess.paper === "train") && !wasOpen && isUnlocked();
   results(score, secs, auto, loadHistory()[0]);
