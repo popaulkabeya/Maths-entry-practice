@@ -613,6 +613,14 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 }
 .pause-clock.warn{background:var(--mark-soft);border-color:var(--mark);color:var(--mark)}
 .pause-acts{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin-top:1.6rem}
+
+.as-warn{display:flex;gap:1rem;align-items:flex-start;margin:.9rem 0 .2rem;padding:.95rem 1.1rem;
+  border-radius:9px;background:var(--gold-soft);border:1px solid var(--gold)}
+.as-warn b:first-child{font-family:"JetBrains Mono",monospace;font-size:.62rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gold);flex:none;margin-top:.15rem;white-space:nowrap}
+.as-warn span{font-size:.85rem;color:var(--ink-soft);line-height:1.55}
+.as-warn span b{color:var(--ink)}
+@media(max-width:560px){.as-warn{flex-direction:column;gap:.5rem}}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
@@ -710,7 +718,11 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
       <p class="extra" id="extra-wrap" hidden>Cleared the test already? <button class="linkbtn" id="go-stretch">Sit the stretch paper</button> &mdash; 40 harder questions, well beyond what the entry test asks for.</p>
 
       <section class="assess" id="assess" hidden>
-        <p class="eyebrow">Assessor view &mdash; everyone who has worked on this device</p>
+        <p class="eyebrow">Assessor view</p>
+        <div class="as-warn">
+          <b>Reads this browser only</b>
+          <span>This panel can see the work done <b>in this browser, on this machine</b> &mdash; nothing more. When Ryan or Meldie works on their own phone or laptop, their attempts are stored there and this page has no way to reach them. A site without a server cannot share a record between devices.<br><br>To see their work from here, ask them to press <b>Email this report</b> at the end of each attempt. It arrives with the score, the conditions, the topic breakdown and the study plan.</span>
+        </div>
         <div class="as-grid" id="as-grid"></div>
         <div class="as-mail">
           <label for="as-email">Where students send their reports</label>
@@ -2486,7 +2498,7 @@ function paintAssessor(){
   $("as-grid").innerHTML = PROFILES.filter(p => p.role === "student").map(p => {
     const all = Object.keys(SUBJECTS).map(k => ({ k, log: loadHistory(p.id, k) }));
     const total = all.reduce((a,x) => a + x.log.length, 0);
-    if (!total) return '<div class="as-card"><h4>' + p.name + '</h4><p class="none">Has not worked on this device yet.</p></div>';
+    if (!total) return '<div class="as-card"><h4>' + p.name + '</h4><p class="none">No attempts <em>in this browser</em>. If they work on their own device, their record lives there and cannot be read from here.</p></div>';
     let body = "";
     all.forEach(({k, log}) => {
       const tr = log.filter(r => r.paper === "train"), te = log.filter(r => r.paper === "test");
