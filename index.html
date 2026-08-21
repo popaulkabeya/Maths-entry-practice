@@ -383,6 +383,49 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 .linkbtn{color:var(--pen);font-weight:600;text-decoration:underline;text-underline-offset:3px}
 .linkbtn:hover{color:var(--pen-deep)}
 
+
+/* ============ the record ============ */
+.record{margin:2.6rem 0 0;padding:1.3rem 1.4rem;border:1px solid var(--rule);border-radius:var(--r);background:var(--sheet)}
+.rec-head{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.1rem}
+.rec-acts{margin-left:auto;display:flex;gap:1rem}
+.linkbtn.danger{color:var(--mark)}
+
+.rec-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft);border-radius:8px;overflow:hidden}
+.rec-stat{background:var(--sheet);padding:.8rem .9rem}
+.rec-stat b{display:block;font-family:"JetBrains Mono",monospace;font-size:1.25rem;font-weight:500;letter-spacing:-.02em}
+.rec-stat span{font-size:.75rem;color:var(--ink-faint)}
+
+.chart{position:relative;height:132px;margin:.2rem 0 .3rem;border-bottom:1px solid var(--rule);padding-bottom:0}
+.chart .gl{position:absolute;left:0;right:0;border-top:1px dashed var(--rule);font-style:normal}
+.chart .gl span{
+  position:absolute;right:0;top:-.55rem;font-family:"JetBrains Mono",monospace;font-size:.62rem;
+  color:var(--ink-faint);background:var(--sheet);padding:0 .3em;
+}
+.chart .gl-hi{border-top-color:var(--ink-faint)}
+.chart .bars{position:absolute;inset:0;display:flex;align-items:flex-end;gap:3px}
+.chart .bars b{flex:1;min-width:4px;max-width:22px;border-radius:2px 2px 0 0;background:var(--pen);opacity:.85;transition:opacity .12s}
+.chart .bars b:hover{opacity:1}
+.chart .bars b.train{background:var(--pen)}
+.chart .bars b.test{background:var(--tick)}
+.chart .bars b.testfail{background:var(--mark)}
+.chart .bars b.other{background:var(--ink-faint)}
+.chart-key{display:flex;gap:1.1rem;flex-wrap:wrap;font-size:.74rem;color:var(--ink-faint);margin-bottom:.4rem}
+.chart-key i{font-style:normal;display:inline-flex;align-items:center;gap:.35rem}
+.chart-key i::before{content:"";width:9px;height:9px;border-radius:2px;background:currentColor}
+
+.rec-weak{margin-top:1.3rem;padding:.85rem 1rem;border-radius:8px;background:var(--sheet-2);border:1px solid var(--rule-soft);font-size:.86rem;color:var(--ink-soft);line-height:1.6}
+.rec-weak b{color:var(--ink)}
+.rec-weak .none{color:var(--ink-faint)}
+
+.rec-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;max-height:320px;overflow-y:auto}
+.rec-list li{display:flex;align-items:baseline;gap:.8rem;font-size:.85rem;padding:.5rem 0;border-bottom:1px dotted var(--rule-soft)}
+.rec-list li:last-child{border-bottom:0}
+.rec-list .rn{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--ink-faint);min-width:2.4em}
+.rec-list .rs{font-family:"JetBrains Mono",monospace;font-weight:700;min-width:4.4em}
+.rec-list .rp{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec-list .rt{font-family:"JetBrains Mono",monospace;font-size:.75rem;color:var(--ink-faint);white-space:nowrap}
+.rec-out{width:100%;margin-top:1rem;min-height:150px;font-family:"JetBrains Mono",monospace;font-size:.78rem;
+  padding:.8rem;border-radius:8px;border:1px solid var(--rule);background:var(--sheet-2);color:var(--ink);resize:vertical}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
@@ -449,10 +492,27 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 
       <p class="extra" id="extra-wrap" hidden>Cleared the test already? <button class="linkbtn" id="go-stretch">Sit the stretch paper</button> &mdash; 40 harder questions, well beyond what the entry test asks for.</p>
 
-      <div class="history" id="history" hidden>
-        <p class="eyebrow">Previous attempts</p>
-        <ul id="history-list"></ul>
-      </div>
+      <section class="record" id="record" hidden>
+        <div class="rec-head">
+          <p class="eyebrow" style="margin:0">Your record &mdash; every attempt, kept</p>
+          <div class="rec-acts">
+            <button class="linkbtn" id="rec-copy">Copy as text</button>
+            <button class="linkbtn danger" id="rec-clear">Erase record</button>
+          </div>
+        </div>
+        <div class="rec-stats" id="rec-stats"></div>
+        <div class="chart-key" style="margin-top:1.4rem">
+          <i style="color:var(--pen)">Training run</i>
+          <i style="color:var(--tick)">Test passed</i>
+          <i style="color:var(--mark)">Test failed</i>
+          <i style="color:var(--ink-faint)">Drill or stretch</i>
+        </div>
+        <div class="chart" id="rec-chart"></div>
+        <div class="rec-weak" id="rec-weak"></div>
+        <p class="eyebrow" style="margin:1.4rem 0 .5rem">Every attempt, newest first</p>
+        <ul class="rec-list" id="rec-list"></ul>
+        <textarea class="rec-out" id="rec-out" readonly hidden aria-label="Your record as text"></textarea>
+      </section>
 
       <div class="syllabus">
         <p class="eyebrow" id="syl-head">What the paper covers</p>
@@ -1175,7 +1235,8 @@ const EXAM_BANK = [
 "use strict";
 const $ = (id) => document.getElementById(id);
 const LETTERS = ["A","B","C","D"];
-const KEY = "fortymarks.history.v1";
+const KEY = "fortymarks.log.v2";
+const MAX_LOG = 500;
 
 const PAPERS = {
   train: {
@@ -1237,9 +1298,11 @@ function loadHistory(){
 }
 function saveAttempt(rec){
   const h = loadHistory();
+  rec.n = (h.length ? h[0].n : 0) + 1;          // attempts are numbered and never renumbered
   h.unshift(rec);
-  memHistory = h.slice(0,8);
-  try { localStorage.setItem(KEY, JSON.stringify(memHistory)); } catch(e){}
+  memHistory = h.slice(0, MAX_LOG);
+  try { localStorage.setItem(KEY, JSON.stringify(memHistory)); }
+  catch(e){ /* storage full or blocked: the in-memory log still holds this session */ }
 }
 function bestTrainPct(){
   return loadHistory().filter(r => r.paper === "train")
@@ -1280,22 +1343,121 @@ function paintSyllabus(){
     "<i>" + det[t] + "</i></span></div>").join("");
 }
 
-function paintHistory(){
+function pct(r){ return Math.round(100 * r.score / r.total); }
+function stamp(t){
+  const d = new Date(t);
+  return d.toLocaleDateString(undefined,{day:"2-digit",month:"short"}) + " " +
+         d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
+}
+function barOf(r){
+  if (r.paper === "train") return "train";
+  if (r.paper === "test")  return pct(r) >= PAPERS.test.pass ? "test" : "testfail";
+  return "other";
+}
+
+function paintRecord(){
   const h = loadHistory();
-  if (!h.length){ $("history").hidden = true; return; }
-  $("history").hidden = false;
-  $("history-list").innerHTML = h.map(r => {
-    const pct = Math.round(100 * r.score / r.total);
+  if (!h.length){ $("record").hidden = true; return; }
+  $("record").hidden = false;
+
+  // --- headline numbers ---
+  const tr = h.filter(r => r.paper === "train");
+  const te = h.filter(r => r.paper === "test");
+  const secs = h.reduce((a,r) => a + (r.secs || 0), 0);
+  const hrs = Math.floor(secs / 3600), mins = Math.round((secs % 3600) / 60);
+  const cell = (v, l, col) => '<div class="rec-stat"><b' + (col ? ' style="color:' + col + '"' : '') +
+                              '>' + v + "</b><span>" + l + "</span></div>";
+  $("rec-stats").innerHTML =
+    cell(h.length, h.length === 1 ? "attempt logged" : "attempts logged") +
+    cell(tr.length ? Math.max(...tr.map(pct)) + "%" : "\u2014", "best training",
+         tr.length && Math.max(...tr.map(pct)) >= UNLOCK_PCT ? "var(--tick)" : "") +
+    cell(te.length ? Math.max(...te.map(pct)) + "%" : "\u2014", "best test",
+         te.length && Math.max(...te.map(pct)) >= PAPERS.test.pass ? "var(--tick)" : "") +
+    cell((hrs ? hrs + "h " : "") + mins + "m", "time on task");
+
+  // --- score over time, oldest to newest ---
+  const series = h.slice().reverse().slice(-40);
+  $("rec-chart").innerHTML =
+    '<i class="gl" style="bottom:60%"><span>60</span></i>' +
+    '<i class="gl gl-hi" style="bottom:80%"><span>80</span></i>' +
+    '<div class="bars">' + series.map(r =>
+      '<b class="' + barOf(r) + '" style="height:' + Math.max(2, pct(r)) + '%" title="#' + r.n + " " +
+      r.label + " \u2014 " + r.score + "/" + r.total + " (" + pct(r) + "%)" + '"></b>').join("") +
+    "</div>";
+
+  // --- where the marks keep going, across every attempt ---
+  const agg = {};
+  h.forEach(r => Object.keys(r.topics || {}).forEach(t => {
+    agg[t] = agg[t] || {c:0, n:0};
+    agg[t].c += r.topics[t].c;
+    agg[t].n += r.topics[t].n;
+  }));
+  const ranked = Object.keys(agg).filter(t => agg[t].n >= 5)
+    .map(t => ({ t, p: Math.round(100 * agg[t].c / agg[t].n), n: agg[t].n }))
+    .sort((x,y) => x.p - y.p);
+  const name = t => (TRAIN_TOPICS[t] || STRETCH_TOPICS[t] || t);
+  $("rec-weak").innerHTML = ranked.length
+    ? "Across all " + h.length + " attempt" + (h.length === 1 ? "" : "s") + ", your weakest areas are " +
+      ranked.slice(0,3).map(r => "<b>" + name(r.t) + "</b> (" + r.p + "%)").join(", ") +
+      ". Strongest: <b>" + name(ranked[ranked.length-1].t) + "</b> (" + ranked[ranked.length-1].p + "%)."
+    : '<span class="none">Sit a full paper and this will show which topics keep costing you marks.</span>';
+
+  // --- the log itself ---
+  $("rec-list").innerHTML = h.map(r => {
+    const p = pct(r);
     const bar = PAPERS[r.paper] ? PAPERS[r.paper].pass : 60;
-    const col = pct >= bar ? "var(--tick)" : pct >= bar - 20 ? "var(--gold)" : "var(--mark)";
-    const when = new Date(r.at).toLocaleDateString(undefined,{day:"numeric",month:"short"});
-    return '<li><span class="sc" style="color:' + col + '">' + r.score + "/" + r.total + '</span>' +
-           '<span>' + r.label + '</span>' +
-           '<span class="mt">' + fmt(r.secs) + " &middot; " + when + '</span></li>';
+    const col = p >= bar ? "var(--tick)" : p >= bar - 20 ? "var(--gold)" : "var(--mark)";
+    const tail = [fmt(r.secs || 0)];
+    if (r.blanks) tail.push(r.blanks + " blank");
+    if (r.expired) tail.push("time up");
+    return '<li><span class="rn">#' + r.n + '</span>' +
+           '<span class="rs" style="color:' + col + '">' + r.score + "/" + r.total + '</span>' +
+           '<span class="rp">' + r.label + '</span>' +
+           '<span class="rt">' + tail.join(" \u00b7 ") + " \u00b7 " + stamp(r.at) + '</span></li>';
   }).join("");
 }
 
-function paintStart(){ paintGate(); paintSyllabus(); paintHistory(); }
+function recordAsText(){
+  const h = loadHistory();
+  const lines = ["MATHS PRACTICE RECORD", "Generated " + stamp(Date.now()),
+                 h.length + " attempt" + (h.length === 1 ? "" : "s") + " logged", ""];
+  h.slice().reverse().forEach(r => {
+    const extra = [fmt(r.secs || 0)];
+    if (r.blanks) extra.push(r.blanks + " left blank");
+    if (r.expired) extra.push("ran out of time");
+    lines.push("#" + r.n + "  " + stamp(r.at) + "  " + r.label);
+    lines.push("     " + r.score + "/" + r.total + "  (" + pct(r) + "%)  " + extra.join(", "));
+    const tp = r.topics || {};
+    const bits = Object.keys(tp).map(t => (TRAIN_TOPICS[t] || STRETCH_TOPICS[t] || t) + " " + tp[t].c + "/" + tp[t].n);
+    if (bits.length) lines.push("     " + bits.join("  |  "));
+    lines.push("");
+  });
+  return lines.join("\n");
+}
+
+$("rec-copy").addEventListener("click", () => {
+  const txt = recordAsText();
+  const box = $("rec-out");
+  const done = () => { $("rec-copy").textContent = "Copied"; setTimeout(() => { $("rec-copy").textContent = "Copy as text"; }, 2000); };
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done).catch(() => { box.value = txt; box.hidden = false; box.select(); });
+  } else {
+    box.value = txt; box.hidden = false; box.select();
+  }
+});
+
+$("rec-clear").addEventListener("click", () => {
+  const h = loadHistory();
+  if (!h.length) return;
+  if (!confirm("Erase all " + h.length + " logged attempts? This also relocks the test until you score " +
+               UNLOCK_PCT + "% on the training set again. This cannot be undone.")) return;
+  memHistory = [];
+  try { localStorage.removeItem(KEY); } catch(e){}
+  $("rec-out").hidden = true;
+  paintStart();
+});
+
+function paintStart(){ paintGate(); paintSyllabus(); paintRecord(); }
 paintStart();
 
 /* ---------------- build a session ---------------- */
@@ -1465,8 +1627,17 @@ function finish(auto){
   const secs = elapsed();
   const score = scoreNow();
   const wasOpen = isUnlocked();
+  const topics = {};
+  sess.forEach(it => {
+    const t = BANK[it.qi].t;
+    topics[t] = topics[t] || {c:0, n:0};
+    topics[t].n++;
+    if (isRight(it)) topics[t].c++;
+  });
   saveAttempt({ score, total: sess.length, secs, at: Date.now(),
-                label: sess.label || "Practice", paper: sess.paper || paperKey });
+                label: sess.label || "Practice", paper: sess.paper || paperKey,
+                blanks: sess.filter(i => i.pick === null).length,
+                expired: !!auto, topics });
   paintStart();
   justUnlocked = (sess.paper === "train") && !wasOpen && isUnlocked();
   results(score, secs, auto);
