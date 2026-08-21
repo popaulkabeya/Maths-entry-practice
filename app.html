@@ -2410,6 +2410,14 @@ $("who-switch").addEventListener("click", () => {
   $("hero").hidden = true;
   $("record").hidden = true;
   $("assess").hidden = true;
+  memLogs = {};                       // nothing of the last person stays in memory
+  clearRecordDom();
+  $("as-grid").innerHTML = "";
+  $("pwlist").innerHTML = "";
+  $("as-email").value = "";
+  ["obs","sw-good","sw-bad","plan","review","topic-rows"].forEach(id => { if ($(id)) $(id).innerHTML = ""; });
+  $("analysis").hidden = true;
+  $("report-out").value = ""; $("report-out").hidden = true;
   $("picker").hidden = false;
   paintLogin();
   window.scrollTo({top:0, behavior:"instant"});
@@ -2464,7 +2472,13 @@ $("pw-form").addEventListener("submit", async (e) => {
 });
 
 function paintAssessor(){
-  if (!who || who.role !== "assessor"){ $("assess").hidden = true; return; }
+  if (!who || who.role !== "assessor"){
+    $("assess").hidden = true;
+    if ($("as-grid")) $("as-grid").innerHTML = "";
+    if ($("pwlist")) $("pwlist").innerHTML = "";
+    if ($("as-email")) $("as-email").value = "";
+    return;
+  }
   $("assess").hidden = false;
   $("as-email").value = assessorEmail();
   paintPasswordList();
@@ -2574,9 +2588,13 @@ function barOf(r){
   return "other";
 }
 
+function clearRecordDom(){
+  ["rec-stats","rec-chart","rec-weak","rec-list"].forEach(id => { if ($(id)) $(id).innerHTML = ""; });
+  if ($("rec-out")){ $("rec-out").value = ""; $("rec-out").hidden = true; }
+}
 function paintRecord(){
   const h = loadHistory();
-  if (!h.length){ $("record").hidden = true; return; }
+  if (!h.length){ $("record").hidden = true; clearRecordDom(); return; }
   $("record").hidden = false;
 
   // --- headline numbers ---
@@ -3204,7 +3222,11 @@ function analyse(rec){
 }
 
 function paintAnalysis(rec){
-  if (!rec || !rec.q || !rec.q.length){ $("analysis").hidden = true; return; }
+  if (!rec || !rec.q || !rec.q.length){
+    $("analysis").hidden = true;
+    ["obs","sw-good","sw-bad","plan"].forEach(id => { if ($(id)) $(id).innerHTML = ""; });
+    return;
+  }
   $("analysis").hidden = false;
   const a = analyse(rec);
 
