@@ -442,17 +442,6 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 
 .picker{padding-top:clamp(2rem,5vw,3.2rem);padding-bottom:2.2rem}
 .pick-h{margin:.5rem 0 1.2rem;max-width:22ch}
-.pick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-.pick{
-  display:flex;align-items:center;gap:.9rem;padding:1.1rem 1.2rem;border-radius:var(--r);
-  border:1.5px solid var(--rule);background:var(--sheet);text-align:left;transition:transform .12s,border-color .15s,box-shadow .15s;
-}
-.pick:hover{transform:translateY(-2px);border-color:var(--pen);box-shadow:var(--shadow)}
-.pick .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none;
-  background:var(--pen-soft);color:var(--pen);font-family:"JetBrains Mono",monospace;font-weight:700}
-.pick.assessor .av{background:var(--gold-soft);color:var(--gold)}
-.pick .pn{font-weight:700;font-size:1rem;display:block}
-.pick .pr{font-size:.78rem;color:var(--ink-faint)}
 .pick-note{margin-top:1.1rem;font-size:.83rem;color:var(--ink-faint);line-height:1.6;max-width:60ch;
   border-left:2px solid var(--gold);padding-left:1rem}
 .pick-note b{color:var(--ink-soft)}
@@ -524,15 +513,11 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 .as-card .assub{font-family:"JetBrains Mono",monospace;font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--pen);margin:.7rem 0 .3rem;padding-top:.5rem;border-top:1px solid var(--rule-soft)}
 .as-card .assub:first-of-type{margin-top:.2rem;border-top:0;padding-top:0}
 
-.unlockbox{margin:1.3rem 0 0;padding:1.1rem 1.2rem;border-radius:var(--r);border:1.5px solid var(--pen);background:var(--sheet);box-shadow:var(--shadow)}
-.ub-t{font-size:.88rem;color:var(--ink-soft);margin-bottom:.7rem}
-.ub-t b{color:var(--ink)}
-.ub-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
-.ub-row input,.su-f input{
+.su-f input{
   flex:1;min-width:180px;padding:.68em .9em;border-radius:9px;border:1.5px solid var(--rule);
   background:var(--sheet-2);color:var(--ink);font-family:inherit;font-size:.95rem;
 }
-.ub-row input:focus,.su-f input:focus{outline:none;border-color:var(--pen)}
+.su-f input:focus{outline:none;border-color:var(--pen)}
 .ub-err{margin-top:.7rem;font-size:.85rem;color:var(--mark);font-weight:600}
 
 .setupbox{margin:1.6rem 0 0;padding:1.4rem 1.5rem;border-radius:var(--r);border:1.5px solid var(--gold);background:var(--sheet);box-shadow:var(--shadow)}
@@ -542,6 +527,18 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
 .su-f{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
 .su-f label{min-width:88px;font-size:.9rem;font-weight:600}
 .su-f .rl{font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+
+.loginbox{max-width:420px;margin-top:1.4rem;padding:1.6rem 1.7rem;border-radius:var(--r);
+  border:1.5px solid var(--rule);background:var(--sheet);box-shadow:var(--shadow-lift)}
+.lf{display:flex;flex-direction:column;gap:.42rem;margin-bottom:1rem}
+.lf label{font-size:.8rem;font-weight:700;color:var(--ink-soft);letter-spacing:.01em}
+.lf input{
+  padding:.75em .95em;border-radius:9px;border:1.5px solid var(--rule);
+  background:var(--sheet-2);color:var(--ink);font-family:inherit;font-size:1rem;width:100%;
+}
+.lf input:focus{outline:none;border-color:var(--pen);background:var(--sheet)}
+.loginbox .btn{width:100%;margin-top:.3rem}
+.loginbox .pick-note{margin-top:1.2rem;border-left-width:2px;font-size:.79rem}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
@@ -558,21 +555,24 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:
     </div>
 
     <div class="picker" id="picker">
-      <p class="eyebrow">Who is working?</p>
-      <h2 class="pick-h">Pick your name to keep your record separate.</h2>
-      <div class="pick-grid" id="pick-grid"></div>
+      <p class="eyebrow">Sign in</p>
+      <h2 class="pick-h">Your work, your record.</h2>
 
-      <div class="unlockbox" id="unlockbox" hidden>
-        <p class="ub-t">Password for <b id="ub-name">&mdash;</b></p>
-        <form class="ub-row" id="ub-form">
-          <input type="password" id="ub-pw" autocomplete="current-password" placeholder="Enter password" aria-label="Password">
-          <button type="submit" class="btn btn-primary">Unlock</button>
-          <button type="button" class="btn-quiet" id="ub-cancel">Cancel</button>
+      <div class="loginbox" id="loginbox" hidden>
+        <form id="login-form" autocomplete="on">
+          <div class="lf">
+            <label for="lg-user">Username</label>
+            <input type="text" id="lg-user" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Your first name">
+          </div>
+          <div class="lf">
+            <label for="lg-pw">Password</label>
+            <input type="password" id="lg-pw" name="password" autocomplete="current-password" placeholder="Your password">
+          </div>
+          <p class="ub-err" id="lg-err" hidden></p>
+          <button type="submit" class="btn btn-primary btn-lg" id="lg-go">Sign in</button>
         </form>
-        <p class="ub-err" id="ub-err" hidden></p>
+        <p class="pick-note" id="pick-note"></p>
       </div>
-
-      <p class="pick-note" id="pick-note"></p>
 
       <div class="setupbox" id="setupbox" hidden>
         <p class="eyebrow">First time on this device</p>
@@ -2020,26 +2020,68 @@ async function hashPw(salt, id, pw){
   }
   return "fb" + h1.toString(16).padStart(8,"0") + h2.toString(16).padStart(8,"0");
 }
-let unlocked = {};           // profiles opened in this browsing session
-let pendingId = null;        // profile waiting on a password
+let pendingId = null;   // unused by the login form, kept for the setup flow
 
 function authOn(){ return !!loadAuth(); }
-function needsPassword(id){ return authOn() && !unlocked[id]; }
 
-/* --- setting them up --- */
-function paintSetup(){
+/* --- signing in --- */
+const LAST_USER = "fortymarks.lastuser.v1";
+
+function findProfile(name){
+  const n = String(name || "").trim().toLowerCase();
+  if (!n) return null;
+  return PROFILES.find(p => p.id === n || p.name.toLowerCase() === n) || null;
+}
+
+function paintLogin(){
   const on = authOn();
   $("setupbox").hidden = on;
-  $("pick-note").innerHTML = on
-    ? "<b>Passwords protect these profiles on this device.</b> They are stored scrambled in this browser and never written into the page. Be clear-eyed about the limit: anyone who clears this browser&rsquo;s data, or opens the developer tools, gets past them. Real privacy comes from each of you using your own device."
-    : "<b>No passwords are set yet.</b> Until they are, anyone using this browser can open any profile.";
+  $("loginbox").hidden = !on;
   if (!on){
     $("su-fields").innerHTML = PROFILES.map(p =>
       '<div class="su-f"><label for="su-' + p.id + '">' + p.name + '</label>' +
       '<input type="password" id="su-' + p.id + '" autocomplete="new-password" placeholder="Choose a password" aria-label="Password for ' + p.name + '">' +
       '<span class="rl">' + p.role + "</span></div>").join("");
+    return;
   }
+  $("pick-note").innerHTML =
+    "<b>What this protects, and what it does not.</b> Your password keeps the others out of your record on this device. " +
+    "It cannot do more than that: anyone who clears this browser&rsquo;s data gets past it. Real privacy comes from using your own phone or laptop.";
+  let last = "";
+  try { last = localStorage.getItem(LAST_USER) || ""; } catch(e){}
+  $("lg-user").value = last;
+  $("lg-pw").value = "";
+  $("lg-err").hidden = true;
+  setTimeout(() => { (last ? $("lg-pw") : $("lg-user")).focus(); }, 60);
 }
+
+$("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn = $("lg-go");
+  const auth = loadAuth();
+  if (!auth) return;
+  btn.disabled = true;
+  const p = findProfile($("lg-user").value);
+  let ok = false;
+  if (p){
+    const h = await hashPw(auth.salt, p.id, $("lg-pw").value);
+    ok = (h === auth.pw[p.id]);
+  }
+  btn.disabled = false;
+  if (!ok){
+    // the same message either way, so the form never confirms who exists
+    $("lg-err").hidden = false;
+    $("lg-err").textContent = "Username or password not recognised.";
+    $("lg-pw").select();
+    return;
+  }
+  try { localStorage.setItem(LAST_USER, p.name); } catch(err){}
+  $("lg-err").hidden = true;
+  $("lg-pw").value = "";
+  setWho(p.id);
+});
+
+/* --- setting them up --- */
 $("su-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const vals = PROFILES.map(p => ({ p, v: $("su-" + p.id).value }));
@@ -2053,57 +2095,9 @@ $("su-form").addEventListener("submit", async (e) => {
   for (const x of vals) pw[x.p.id] = await hashPw(salt, x.p.id, x.v);
   try { localStorage.setItem(AUTH_KEY, JSON.stringify({ salt, pw })); }
   catch(err){ $("su-err").hidden = false; $("su-err").textContent = "This browser refused to store the passwords, so they cannot be set here."; return; }
-  unlocked = {};
   $("su-err").hidden = true;
-  paintSetup();
-  paintPicker();
+  paintLogin();
 });
-
-/* --- asking for one --- */
-function askPassword(id){
-  pendingId = id;
-  const p = PROFILES.find(x => x.id === id);
-  $("ub-name").textContent = p.name;
-  $("ub-err").hidden = true;
-  $("ub-pw").value = "";
-  $("unlockbox").hidden = false;
-  $("ub-pw").focus();
-}
-$("ub-cancel").addEventListener("click", () => { pendingId = null; $("unlockbox").hidden = true; });
-$("ub-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const a = loadAuth();
-  if (!a || !pendingId) return;
-  const h = await hashPw(a.salt, pendingId, $("ub-pw").value);
-  if (h !== a.pw[pendingId]){
-    $("ub-err").hidden = false;
-    $("ub-err").textContent = "That password does not match. Try again, or ask whoever set this device up.";
-    $("ub-pw").select();
-    return;
-  }
-  unlocked[pendingId] = true;
-  $("unlockbox").hidden = true;
-  const id = pendingId; pendingId = null;
-  setWho(id);
-});
-
-function paintPicker(){
-  $("pick-grid").innerHTML = PROFILES.map(p => {
-    const log = loadHistory(p.id);
-    const sub = p.role === "assessor" ? "Admin and assessor"
-      : (log.length ? log.length + " attempt" + (log.length === 1 ? "" : "s") + " logged" : "No attempts yet");
-    return '<button class="pick ' + p.role + '" data-id="' + p.id + '">' +
-           '<span class="av">' + initials(p.name) + '</span>' +
-           '<span><span class="pn">' + p.name + '</span><span class="pr">' + sub + "</span></span></button>";
-  }).join("");
-  $("pick-grid").querySelectorAll(".pick").forEach(b =>
-    b.addEventListener("click", () => {
-      if (needsPassword(b.dataset.id)) askPassword(b.dataset.id);
-      else setWho(b.dataset.id);
-    }));
-  paintSetup();
-}
-
 function setWho(id){
   who = PROFILES.find(p => p.id === id) || null;
   if (!who){ $("picker").hidden = false; $("whobar").hidden = true; return; }
@@ -2121,10 +2115,7 @@ function setWho(id){
   setSubject(subjectKey);
 }
 
-$("who-lock").addEventListener("click", () => {
-  unlocked = {};
-  $("who-switch").click();
-});
+$("who-lock").addEventListener("click", () => { $("who-switch").click(); });
 $("who-switch").addEventListener("click", () => {
   who = null;
   try { localStorage.removeItem(WHO_KEY); } catch(e){}
@@ -2133,9 +2124,7 @@ $("who-switch").addEventListener("click", () => {
   $("record").hidden = true;
   $("assess").hidden = true;
   $("picker").hidden = false;
-  $("unlockbox").hidden = true;
-  pendingId = null;
-  paintPicker();
+  paintLogin();
   window.scrollTo({top:0, behavior:"instant"});
 });
 
@@ -2146,15 +2135,14 @@ $("who-lock").hidden = false;
 $("as-pw").addEventListener("click", () => {
   if (!confirm("Set new passwords for all three profiles? The current ones stop working immediately. Records are not affected.")) return;
   try { localStorage.removeItem(AUTH_KEY); } catch(e){}
-  unlocked = {};
+  paintLogin();
   $("who-switch").click();
 });
 $("as-reset").addEventListener("click", () => {
   if (!confirm("Remove passwords from this device? Anyone using this browser will then be able to open any profile. Records are not affected.")) return;
   try { localStorage.removeItem(AUTH_KEY); } catch(e){}
-  unlocked = {};
-  paintSetup();
-  alert("Passwords removed. The setup panel is back on the profile screen whenever you want to set them again.");
+  paintLogin();
+  $("who-switch").click();
 });
 $("as-save").addEventListener("click", () => {
   const v = $("as-email").value.trim();
@@ -2384,14 +2372,8 @@ function paintStart(){
   paintRecord();
 }
 
-paintPicker();
-(function restoreWho(){
-  let saved = null;
-  try { saved = localStorage.getItem(WHO_KEY); } catch(e){}
-  if (!saved || !PROFILES.some(p => p.id === saved)) return;
-  if (needsPassword(saved)) askPassword(saved);   // reopening the page asks again
-  else setWho(saved);
-})();
+paintLogin();
+// Nothing is restored automatically: reopening the page always asks to sign in again.
 
 /* ---------------- build a session ---------------- */
 function build(indices, label){
